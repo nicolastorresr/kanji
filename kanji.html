@@ -1,0 +1,2228 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>漢字 · Aprende Kanji</title>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Noto+Sans+JP:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f1e3;--card:#fffaf0;--ink:#2b2220;--red:#c1272d;--mut:#7a6a5f;--ok:#2e7d4f;--bad:#b3261e;--line:#e3d6bd;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d1716;--card:#2a2120;--ink:#f3e9d8;--mut:#b5a595;--line:#43352f;--red:#e0545a}}
+:root[data-theme="dark"]{--bg:#1d1716;--card:#2a2120;--ink:#f3e9d8;--mut:#b5a595;--line:#43352f;--red:#e0545a}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Shippori Mincho','Hiragino Mincho ProN','Yu Mincho',serif;
+background-image:radial-gradient(circle at 100% 100%,transparent 55%,var(--line) 56%,var(--line) 58%,transparent 59%),radial-gradient(circle at 0 100%,transparent 55%,var(--line) 56%,var(--line) 58%,transparent 59%);background-size:44px 22px;background-attachment:fixed}
+header{text-align:center;padding:34px 16px 10px}
+.sun{width:64px;height:64px;border-radius:50%;background:var(--red);margin:0 auto 10px;display:grid;place-items:center;color:#fff;font-size:34px;font-weight:700}
+h1{margin:0;font-size:1.9rem;letter-spacing:.15em}header p{margin:4px 0 0;color:var(--mut)}
+nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:14px 12px;max-width:900px;margin:auto}
+button{font:inherit;cursor:pointer}
+.f{border:1.5px solid var(--red);background:var(--card);color:var(--red);padding:7px 14px;border-radius:999px}
+.f.on{background:var(--red);color:#fff}
+.q{display:block;margin:4px auto 10px;background:var(--ink);color:var(--bg);border:0;padding:10px 22px;border-radius:8px;font-weight:700}
+.cnt{text-align:center;color:var(--mut);font-size:.9rem}
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px;max-width:1100px;margin:16px auto;padding:0 16px 40px}
+.c{perspective:900px;height:300px;cursor:pointer}
+.in{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.c.fl .in{transform:rotateY(180deg)}
+.s{position:absolute;inset:0;backface-visibility:hidden;background:var(--card);border:1px solid var(--line);border-top:4px solid var(--red);border-radius:10px;box-shadow:0 3px 10px #0002;padding:12px;overflow:auto}
+.fr{display:grid;place-items:center;text-align:center}
+.fr b{font-size:6rem;font-weight:400;line-height:1}.fr small{color:var(--mut);display:block;margin-top:8px}
+.bk{transform:rotateY(180deg);font-size:.86rem;line-height:1.35}
+.bk .k{font-size:2rem;color:var(--red);float:left;margin-right:8px;line-height:1}
+.bk p{margin:5px 0}.bk i{color:var(--mut)}
+.bk .jp-example,.bk .jp-reading{font-family:'Noto Sans JP','Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif;font-size:1.12rem;font-weight:500;line-height:1.65;letter-spacing:.01em}
+#quiz{max-width:560px;margin:20px auto 40px;padding:24px 16px;text-align:center;background:var(--card);border:1px solid var(--line);border-radius:12px}
+#quiz .big{font-size:7rem;line-height:1.1;color:var(--red)}
+.o{display:block;width:100%;margin:8px 0;padding:11px;border:1.5px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.o.ok{background:var(--ok);color:#fff;border-color:var(--ok)}.o.bad{background:var(--bad);color:#fff;border-color:var(--bad)}
+.msg{min-height:28px;font-weight:700}
+[hidden]{display:none!important}
+</style></head><body>
+<header><div class="sun">字</div><h1>漢字 · KANJI</h1><p>Aprende kanji de primaria y secundaria · 日本の漢字</p></header>
+<div id="home">
+<nav id="nav"></nav>
+<button class="q" id="qb"></button>
+<div class="cnt" id="cnt"></div>
+<div id="grid"></div>
+</div>
+<div id="quiz" hidden></div>
+<script>
+// kanji|nivel|lectura|romaji|significado|frase|romaji frase|español
+const RAW=`一|1|いち・ひと(つ)|ichi, hito(tsu)|uno|りんごが一つあります。|Ringo ga hitotsu arimasu.|Hay una manzana.
+右|1|う・みぎ|u, migi|derecha|右に曲がります。|Migi ni magarimasu.|Giro a la derecha.
+雨|1|う・あめ|u, ame|lluvia|雨が降っています。|Ame ga futte imasu.|Está lloviendo.
+円|1|えん・まる(い)|en, maru(i)|yen, círculo|これは千円です。|Kore wa sen'en desu.|Esto cuesta mil yenes.
+王|1|おう|ō|rey|王様は優しいです。|Ōsama wa yasashii desu.|El rey es amable.
+音|1|おん・おと|on, oto|sonido|音楽を聞きます。|Ongaku o kikimasu.|Escucho música.
+下|1|か・した|ka, shita|abajo, debajo|机の下に猫がいます。|Tsukue no shita ni neko ga imasu.|Hay un gato bajo el escritorio.
+火|1|か・ひ|ka, hi|fuego|火に気をつけて。|Hi ni ki o tsukete.|Ten cuidado con el fuego.
+花|1|か・はな|ka, hana|flor|花がきれいです。|Hana ga kirei desu.|Las flores son bonitas.
+貝|1|かい|kai|concha, molusco|海で貝を拾います。|Umi de kai o hiroimasu.|Recojo conchas en el mar.
+学|1|がく・まな(ぶ)|gaku, mana(bu)|estudiar, aprender|日本語を学びます。|Nihongo o manabimasu.|Estudio japonés.
+気|1|き・け|ki, ke|ánimo, energía|元気ですか。|Genki desu ka.|¿Cómo estás?
+九|1|きゅう・ここの(つ)|kyū, kokono(tsu)|nueve|九時に起きます。|Kuji ni okimasu.|Me levanto a las nueve.
+休|1|きゅう・やす(む)|kyū, yasu(mu)|descansar|今日は休みです。|Kyō wa yasumi desu.|Hoy es día libre.
+玉|1|ぎょく・たま|gyoku, tama|bola, joya|目玉焼きを作ります。|Medamayaki o tsukurimasu.|Preparo un huevo frito.
+金|1|きん・かね|kin, kane|oro, dinero|お金がありません。|Okane ga arimasen.|No tengo dinero.
+空|1|くう・そら|kū, sora|cielo, vacío|空が青いです。|Sora ga aoi desu.|El cielo es azul.
+月|1|げつ・つき|getsu, tsuki|luna, mes|月がきれいですね。|Tsuki ga kirei desu ne.|La luna es hermosa, ¿verdad?
+犬|1|けん・いぬ|ken, inu|perro|犬が好きです。|Inu ga suki desu.|Me gustan los perros.
+見|1|けん・み(る)|ken, mi(ru)|ver, mirar|映画を見ます。|Eiga o mimasu.|Veo una película.
+五|1|ご・いつ(つ)|go, itsu(tsu)|cinco|五人家族です。|Gonin kazoku desu.|Somos una familia de cinco.
+口|1|こう・くち|kō, kuchi|boca|口を開けてください。|Kuchi o akete kudasai.|Abra la boca, por favor.
+校|1|こう|kō|escuela|学校に行きます。|Gakkō ni ikimasu.|Voy a la escuela.
+左|1|さ・ひだり|sa, hidari|izquierda|左に曲がってください。|Hidari ni magatte kudasai.|Gire a la izquierda.
+三|1|さん・みっ(つ)|san, mit(tsu)|tres|三月に旅行します。|Sangatsu ni ryokō shimasu.|Viajo en marzo.
+山|1|さん・やま|san, yama|montaña|山に登ります。|Yama ni noborimasu.|Subo a la montaña.
+子|1|し・こ|shi, ko|niño, hijo|子供が遊んでいます。|Kodomo ga asonde imasu.|Los niños están jugando.
+四|1|し・よん|shi, yon|cuatro|四時に会いましょう。|Yoji ni aimashō.|Veámonos a las cuatro.
+糸|1|し・いと|shi, ito|hilo|糸が切れました。|Ito ga kiremashita.|Se cortó el hilo.
+字|1|じ|ji|letra, carácter|漢字を書きます。|Kanji o kakimasu.|Escribo kanji.
+耳|1|じ・みみ|ji, mimi|oreja, oído|耳が痛いです。|Mimi ga itai desu.|Me duele el oído.
+七|1|しち・なな|shichi, nana|siete|七時に寝ます。|Shichiji ni nemasu.|Me acuesto a las siete.
+車|1|しゃ・くるま|sha, kuruma|coche|車で行きます。|Kuruma de ikimasu.|Voy en coche.
+手|1|しゅ・て|shu, te|mano|手を洗います。|Te o araimasu.|Me lavo las manos.
+十|1|じゅう・とお|jū, tō|diez|十分待ちました。|Juppun machimashita.|Esperé diez minutos.
+出|1|しゅつ・で(る)|shutsu, de(ru)|salir|家を出ます。|Ie o demasu.|Salgo de casa.
+女|1|じょ・おんな|jo, onna|mujer|女の人が歌います。|Onna no hito ga utaimasu.|Una mujer canta.
+小|1|しょう・ちい(さい)|shō, chii(sai)|pequeño|小さい犬です。|Chiisai inu desu.|Es un perro pequeño.
+上|1|じょう・うえ|jō, ue|arriba, encima|本は机の上です。|Hon wa tsukue no ue desu.|El libro está sobre el escritorio.
+森|1|しん・もり|shin, mori|bosque|森を歩きます。|Mori o arukimasu.|Camino por el bosque.
+人|1|じん・ひと|jin, hito|persona|あの人は先生です。|Ano hito wa sensei desu.|Esa persona es profesor.
+水|1|すい・みず|sui, mizu|agua|水をください。|Mizu o kudasai.|Agua, por favor.
+正|1|せい・ただ(しい)|sei, tada(shii)|correcto|その答えは正しいです。|Sono kotae wa tadashii desu.|Esa respuesta es correcta.
+生|1|せい・い(きる)・う(まれる)|sei, i(kiru), u(mareru)|vida, nacer|東京で生まれました。|Tōkyō de umaremashita.|Nací en Tokio.
+青|1|せい・あお|sei, ao|azul|海は青いです。|Umi wa aoi desu.|El mar es azul.
+夕|1|せき・ゆう|seki, yū|tarde, atardecer|夕日がきれいです。|Yūhi ga kirei desu.|El atardecer es hermoso.
+石|1|せき・いし|seki, ishi|piedra|石を投げます。|Ishi o nagemasu.|Lanzo una piedra.
+赤|1|せき・あか|seki, aka|rojo|赤い花があります。|Akai hana ga arimasu.|Hay una flor roja.
+千|1|せん・ち|sen, chi|mil|千円ください。|Sen'en kudasai.|Deme mil yenes.
+川|1|せん・かわ|sen, kawa|río|川で泳ぎます。|Kawa de oyogimasu.|Nado en el río.
+先|1|せん・さき|sen, saki|antes, anterior|お先にどうぞ。|Osaki ni dōzo.|Adelante, usted primero.
+早|1|そう・はや(い)|sō, haya(i)|temprano|朝早く起きます。|Asa hayaku okimasu.|Me levanto temprano.
+草|1|そう・くさ|sō, kusa|hierba|草の上に座ります。|Kusa no ue ni suwarimasu.|Me siento sobre la hierba.
+足|1|そく・あし|soku, ashi|pie, pierna|足が速いです。|Ashi ga hayai desu.|Corro rápido.
+村|1|そん・むら|son, mura|aldea|小さな村に住んでいます。|Chiisana mura ni sunde imasu.|Vivo en una aldea pequeña.
+大|1|だい・おお(きい)|dai, ō(kii)|grande|大きい家です。|Ōkii ie desu.|Es una casa grande.
+男|1|だん・おとこ|dan, otoko|hombre|男の子が走ります。|Otoko no ko ga hashirimasu.|El niño corre.
+竹|1|ちく・たけ|chiku, take|bambú|竹の森があります。|Take no mori ga arimasu.|Hay un bosque de bambú.
+中|1|ちゅう・なか|chū, naka|dentro, centro|かばんの中に本があります。|Kaban no naka ni hon ga arimasu.|Hay un libro en la mochila.
+虫|1|ちゅう・むし|chū, mushi|insecto|虫が飛んでいます。|Mushi ga tonde imasu.|Un insecto vuela.
+町|1|ちょう・まち|chō, machi|pueblo, ciudad|町を散歩します。|Machi o sanpo shimasu.|Paseo por el pueblo.
+天|1|てん|ten|cielo|今日は天気がいいです。|Kyō wa tenki ga ii desu.|Hoy hace buen tiempo.
+田|1|でん・た|den, ta|arrozal|田で米を作ります。|Ta de kome o tsukurimasu.|Cultivo arroz en el arrozal.
+土|1|ど・つち|do, tsuchi|tierra|土曜日は休みです。|Doyōbi wa yasumi desu.|El sábado es día libre.
+二|1|に・ふた(つ)|ni, futa(tsu)|dos|二人で行きます。|Futari de ikimasu.|Vamos los dos.
+日|1|にち・ひ|nichi, hi|día, sol|今日はいい日です。|Kyō wa ii hi desu.|Hoy es un buen día.
+入|1|にゅう・はい(る)|nyū, hai(ru)|entrar|部屋に入ります。|Heya ni hairimasu.|Entro en la habitación.
+年|1|ねん・とし|nen, toshi|año|来年日本に行きます。|Rainen Nihon ni ikimasu.|El próximo año iré a Japón.
+白|1|はく・しろ(い)|haku, shiro(i)|blanco|白い雲です。|Shiroi kumo desu.|Es una nube blanca.
+八|1|はち・やっ(つ)|hachi, yat(tsu)|ocho|八時に家を出ます。|Hachiji ni ie o demasu.|Salgo de casa a las ocho.
+百|1|ひゃく|hyaku|cien|百円です。|Hyaku-en desu.|Son cien yenes.
+文|1|ぶん・もん|bun, mon|texto, frase|文を書きます。|Bun o kakimasu.|Escribo una frase.
+木|1|もく・き|moku, ki|árbol, madera|木の下で休みます。|Ki no shita de yasumimasu.|Descanso bajo un árbol.
+本|1|ほん・もと|hon, moto|libro, origen|本を読みます。|Hon o yomimasu.|Leo un libro.
+名|1|めい・な|mei, na|nombre|名前は何ですか。|Namae wa nan desu ka.|¿Cómo te llamas?
+目|1|もく・め|moku, me|ojo|目が大きいです。|Me ga ōkii desu.|Tiene ojos grandes.
+立|1|りつ・た(つ)|ritsu, ta(tsu)|ponerse de pie|立ってください。|Tatte kudasai.|Póngase de pie, por favor.
+力|1|りょく・ちから|ryoku, chikara|fuerza|力があります。|Chikara ga arimasu.|Tengo fuerza.
+林|1|りん・はやし|rin, hayashi|arboleda|林の中を歩きます。|Hayashi no naka o arukimasu.|Camino por la arboleda.
+六|1|ろく・むっ(つ)|roku, mut(tsu)|seis|六時に食べます。|Rokuji ni tabemasu.|Ceno a las seis.
+引|2|いん・ひ(く)|in, hi(ku)|tirar, jalar|引き出しを開けます。|Hikidashi o akemasu.|Abro el cajón.
+羽|2|う・はね|u, hane|pluma, ala|鳥の羽は軽いです。|Tori no hane wa karui desu.|Las plumas del ave son ligeras.
+雲|2|うん・くも|un, kumo|nube|空に雲があります。|Sora ni kumo ga arimasu.|Hay nubes en el cielo.
+園|2|えん・その|en, sono|jardín, parque|公園で遊びます。|Kōen de asobimasu.|Juego en el parque.
+遠|2|えん・とお(い)|en, tō(i)|lejos|駅は遠いです。|Eki wa tōi desu.|La estación está lejos.
+何|2|か・なに|ka, nani|qué|これは何ですか。|Kore wa nan desu ka.|¿Qué es esto?
+科|2|か|ka|asignatura, departamento|理科が好きです。|Rika ga suki desu.|Me gustan las ciencias.
+夏|2|か・なつ|ka, natsu|verano|夏は暑いです。|Natsu wa atsui desu.|El verano es caluroso.
+家|2|か・いえ|ka, ie|casa, familia|家に帰ります。|Ie ni kaerimasu.|Vuelvo a casa.
+歌|2|か・うた(う)|ka, uta(u)|canción, cantar|歌を歌います。|Uta o utaimasu.|Canto una canción.
+画|2|が・かく|ga, kaku|dibujo, imagen|映画を見ました。|Eiga o mimashita.|Vi una película.
+回|2|かい・まわ(る)|kai, mawa(ru)|girar, vez|一回行きました。|Ikkai ikimashita.|Fui una vez.
+会|2|かい・あ(う)|kai, a(u)|reunirse, encontrarse|友達に会います。|Tomodachi ni aimasu.|Me encuentro con un amigo.
+海|2|かい・うみ|kai, umi|mar|海で泳ぎます。|Umi de oyogimasu.|Nado en el mar.
+絵|2|かい・え|kai, e|pintura, dibujo|絵を描きます。|E o kakimasu.|Dibujo un cuadro.
+外|2|がい・そと|gai, soto|afuera, extranjero|外は寒いです。|Soto wa samui desu.|Afuera hace frío.
+角|2|かく・かど|kaku, kado|esquina, ángulo|角を右に曲がります。|Kado o migi ni magarimasu.|Giro a la derecha en la esquina.
+楽|2|がく・たの(しい)|gaku, tano(shii)|divertido, música|旅行は楽しいです。|Ryokō wa tanoshii desu.|El viaje es divertido.
+活|2|かつ|katsu|vitalidad, actividad|生活は大変です。|Seikatsu wa taihen desu.|La vida diaria es dura.
+間|2|かん・あいだ|kan, aida|intervalo, entre|時間がありません。|Jikan ga arimasen.|No tengo tiempo.
+丸|2|がん・まる(い)|gan, maru(i)|redondo|丸い月です。|Marui tsuki desu.|Es una luna redonda.
+岩|2|がん・いわ|gan, iwa|roca|大きな岩があります。|Ōkina iwa ga arimasu.|Hay una roca grande.
+顔|2|がん・かお|gan, kao|cara|顔を洗います。|Kao o araimasu.|Me lavo la cara.
+汽|2|き|ki|vapor|汽車に乗ります。|Kisha ni norimasu.|Subo al tren de vapor.
+記|2|き・しる(す)|ki, shiru(su)|anotar, registrar|日記を書きます。|Nikki o kakimasu.|Escribo mi diario.
+帰|2|き・かえ(る)|ki, kae(ru)|volver|六時に帰ります。|Rokuji ni kaerimasu.|Vuelvo a las seis.
+弓|2|きゅう・ゆみ|kyū, yumi|arco|弓で矢を射ります。|Yumi de ya o irimasu.|Disparo una flecha con el arco.
+牛|2|ぎゅう・うし|gyū, ushi|vaca, buey|牛乳を飲みます。|Gyūnyū o nomimasu.|Bebo leche.
+魚|2|ぎょ・さかな|gyo, sakana|pez, pescado|魚を食べます。|Sakana o tabemasu.|Como pescado.
+京|2|きょう|kyō|capital|東京に住んでいます。|Tōkyō ni sunde imasu.|Vivo en Tokio.
+強|2|きょう・つよ(い)|kyō, tsuyo(i)|fuerte|風が強いです。|Kaze ga tsuyoi desu.|El viento es fuerte.
+教|2|きょう・おし(える)|kyō, oshi(eru)|enseñar|英語を教えます。|Eigo o oshiemasu.|Enseño inglés.
+近|2|きん・ちか(い)|kin, chika(i)|cerca|駅に近いです。|Eki ni chikai desu.|Está cerca de la estación.
+兄|2|けい・あに|kei, ani|hermano mayor|兄は先生です。|Ani wa sensei desu.|Mi hermano mayor es profesor.
+形|2|けい・かたち|kei, katachi|forma|丸い形です。|Marui katachi desu.|Tiene forma redonda.
+計|2|けい・はか(る)|kei, haka(ru)|medir, plan|時計を見ます。|Tokei o mimasu.|Miro el reloj.
+元|2|げん・もと|gen, moto|origen, principio|元に戻します。|Moto ni modoshimasu.|Lo devuelvo a su lugar.
+言|2|げん・い(う)|gen, i(u)|decir|何を言いましたか。|Nani o iimashita ka.|¿Qué dijiste?
+原|2|げん・はら|gen, hara|llanura, origen|原っぱで遊びます。|Harappa de asobimasu.|Juego en el prado.
+戸|2|こ・と|ko, to|puerta corrediza|戸を閉めます。|To o shimemasu.|Cierro la puerta.
+古|2|こ・ふる(い)|ko, furu(i)|viejo, antiguo|古い本です。|Furui hon desu.|Es un libro viejo.
+午|2|ご|go|mediodía|午前に行きます。|Gozen ni ikimasu.|Voy por la mañana.
+後|2|ご・あと|go, ato|después, atrás|食後に薬を飲みます。|Shokugo ni kusuri o nomimasu.|Tomo la medicina después de comer.
+語|2|ご・かた(る)|go, kata(ru)|idioma, palabra|日本語は楽しいです。|Nihongo wa tanoshii desu.|El japonés es divertido.
+工|2|こう|kō|artesanía, obra|工場で働きます。|Kōjō de hatarakimasu.|Trabajo en una fábrica.
+公|2|こう・おおやけ|kō, ōyake|público|公園に行きます。|Kōen ni ikimasu.|Voy al parque.
+広|2|こう・ひろ(い)|kō, hiro(i)|amplio|広い部屋です。|Hiroi heya desu.|Es una habitación amplia.
+交|2|こう・まじ(わる)|kō, maji(waru)|intercambiar, cruzar|交番はどこですか。|Kōban wa doko desu ka.|¿Dónde está el puesto de policía?
+光|2|こう・ひかり|kō, hikari|luz|光が見えます。|Hikari ga miemasu.|Veo una luz.
+考|2|こう・かんが(える)|kō, kanga(eru)|pensar|よく考えます。|Yoku kangaemasu.|Lo pienso bien.
+行|2|こう・い(く)|kō, i(ku)|ir|日本へ行きます。|Nihon e ikimasu.|Voy a Japón.
+高|2|こう・たか(い)|kō, taka(i)|alto, caro|山が高いです。|Yama ga takai desu.|La montaña es alta.
+黄|2|おう・き|ō, ki|amarillo|黄色い花です。|Kiiroi hana desu.|Es una flor amarilla.
+合|2|ごう・あ(う)|gō, a(u)|encajar, unir|時間に合います。|Jikan ni aimasu.|Llego a tiempo.
+谷|2|こく・たに|koku, tani|valle|深い谷です。|Fukai tani desu.|Es un valle profundo.
+国|2|こく・くに|koku, kuni|país|日本は小さい国です。|Nihon wa chiisai kuni desu.|Japón es un país pequeño.
+黒|2|こく・くろ(い)|koku, kuro(i)|negro|黒い犬がいます。|Kuroi inu ga imasu.|Hay un perro negro.
+今|2|こん・いま|kon, ima|ahora|今、何時ですか。|Ima, nanji desu ka.|¿Qué hora es ahora?
+才|2|さい|sai|talento, años de edad|十才です。|Jussai desu.|Tengo diez años.
+細|2|さい・ほそ(い)|sai, hoso(i)|delgado, fino|細い道です。|Hosoi michi desu.|Es un camino estrecho.
+作|2|さく・つく(る)|saku, tsuku(ru)|hacer, crear|料理を作ります。|Ryōri o tsukurimasu.|Preparo la comida.
+算|2|さん|san|calcular|算数が好きです。|Sansū ga suki desu.|Me gustan las matemáticas.
+止|2|し・と(まる)|shi, to(maru)|detenerse|車が止まります。|Kuruma ga tomarimasu.|El coche se detiene.
+市|2|し・いち|shi, ichi|ciudad, mercado|市場に行きます。|Ichiba ni ikimasu.|Voy al mercado.
+矢|2|し・や|shi, ya|flecha|矢が飛びます。|Ya ga tobimasu.|La flecha vuela.
+姉|2|し・あね|shi, ane|hermana mayor|姉は歌が上手です。|Ane wa uta ga jōzu desu.|Mi hermana canta bien.
+思|2|し・おも(う)|shi, omo(u)|pensar, creer|そう思います。|Sō omoimasu.|Eso creo.
+紙|2|し・かみ|shi, kami|papel|紙に書きます。|Kami ni kakimasu.|Escribo en el papel.
+寺|2|じ・てら|ji, tera|templo|古い寺です。|Furui tera desu.|Es un templo antiguo.
+自|2|じ・みずか(ら)|ji, mizuka(ra)|uno mismo|自分でやります。|Jibun de yarimasu.|Lo hago yo mismo.
+時|2|じ・とき|ji, toki|tiempo, hora|何時に起きますか。|Nanji ni okimasu ka.|¿A qué hora te levantas?
+室|2|しつ|shitsu|habitación|教室に入ります。|Kyōshitsu ni hairimasu.|Entro al aula.
+社|2|しゃ・やしろ|sha, yashiro|empresa, santuario|会社で働きます。|Kaisha de hatarakimasu.|Trabajo en una empresa.
+弱|2|じゃく・よわ(い)|jaku, yowa(i)|débil|体が弱いです。|Karada ga yowai desu.|Tengo el cuerpo débil.
+首|2|しゅ・くび|shu, kubi|cuello, cabeza|首が痛いです。|Kubi ga itai desu.|Me duele el cuello.
+秋|2|しゅう・あき|shū, aki|otoño|秋は涼しいです。|Aki wa suzushii desu.|El otoño es fresco.
+週|2|しゅう|shū|semana|来週会いましょう。|Raishū aimashō.|Veámonos la próxima semana.
+春|2|しゅん・はる|shun, haru|primavera|春に花が咲きます。|Haru ni hana ga sakimasu.|En primavera florecen las flores.
+書|2|しょ・か(く)|sho, ka(ku)|escribir|手紙を書きます。|Tegami o kakimasu.|Escribo una carta.
+少|2|しょう・すこ(し)|shō, suko(shi)|poco|少し待ってください。|Sukoshi matte kudasai.|Espere un poco, por favor.
+場|2|じょう・ば|jō, ba|lugar|場所を教えてください。|Basho o oshiete kudasai.|Dígame el lugar, por favor.
+色|2|しょく・いろ|shoku, iro|color|好きな色は何ですか。|Sukina iro wa nan desu ka.|¿Cuál es tu color favorito?
+心|2|しん・こころ|shin, kokoro|corazón, mente|心が温かいです。|Kokoro ga atatakai desu.|Tiene un corazón cálido.
+新|2|しん・あたら(しい)|shin, atara(shii)|nuevo|新しい靴を買います。|Atarashii kutsu o kaimasu.|Compro zapatos nuevos.
+親|2|しん・おや|shin, oya|padres, íntimo|親に電話します。|Oya ni denwa shimasu.|Llamo a mis padres.
+図|2|ず・と・はか(る)|zu, to, haka(ru)|plano, dibujo|図書館で勉強します。|Toshokan de benkyō shimasu.|Estudio en la biblioteca.
+数|2|すう・かず|sū, kazu|número|数を数えます。|Kazu o kazoemasu.|Cuento los números.
+西|2|せい・にし|sei, nishi|oeste|太陽は西に沈みます。|Taiyō wa nishi ni shizumimasu.|El sol se pone por el oeste.
+声|2|せい・こえ|sei, koe|voz|大きな声で話します。|Ōkina koe de hanashimasu.|Hablo en voz alta.
+星|2|せい・ほし|sei, hoshi|estrella|星が見えます。|Hoshi ga miemasu.|Se ven las estrellas.
+晴|2|せい・は(れる)|sei, ha(reru)|despejado|明日は晴れです。|Ashita wa hare desu.|Mañana estará despejado.
+切|2|せつ・き(る)|setsu, ki(ru)|cortar, importante|紙を切ります。|Kami o kirimasu.|Corto el papel.
+雪|2|せつ・ゆき|setsu, yuki|nieve|雪が降っています。|Yuki ga futte imasu.|Está nevando.
+船|2|せん・ふね|sen, fune|barco|船で島へ行きます。|Fune de shima e ikimasu.|Voy a la isla en barco.
+線|2|せん|sen|línea|線を引きます。|Sen o hikimasu.|Trazo una línea.
+前|2|ぜん・まえ|zen, mae|antes, delante|駅の前で会います。|Eki no mae de aimasu.|Nos vemos frente a la estación.
+組|2|そ・く(む)|so, ku(mu)|grupo, clase|一年二組です。|Ichinen nikumi desu.|Soy del grupo 2 de primer año.
+走|2|そう・はし(る)|sō, hashi(ru)|correr|毎朝走ります。|Maiasa hashirimasu.|Corro cada mañana.
+多|2|た・おお(い)|ta, ō(i)|mucho|人が多いです。|Hito ga ōi desu.|Hay mucha gente.
+太|2|たい・ふと(い)|tai, futo(i)|grueso, gordo|太い木です。|Futoi ki desu.|Es un árbol grueso.
+体|2|たい・からだ|tai, karada|cuerpo|体を大切にします。|Karada o taisetsu ni shimasu.|Cuido mi cuerpo.
+台|2|だい・たい|dai, tai|pedestal, mostrador|台所で料理します。|Daidokoro de ryōri shimasu.|Cocino en la cocina.
+地|2|ち・じ|chi, ji|tierra, suelo|地図を見ます。|Chizu o mimasu.|Miro el mapa.
+池|2|ち・いけ|chi, ike|estanque|池に魚がいます。|Ike ni sakana ga imasu.|Hay peces en el estanque.
+知|2|ち・し(る)|chi, shi(ru)|saber, conocer|彼を知っています。|Kare o shitte imasu.|Lo conozco.
+茶|2|ちゃ・さ|cha, sa|té|お茶を飲みます。|Ocha o nomimasu.|Bebo té.
+昼|2|ちゅう・ひる|chū, hiru|mediodía|昼ご飯を食べます。|Hirugohan o tabemasu.|Almuerzo.
+長|2|ちょう・なが(い)|chō, naga(i)|largo, jefe|髪が長いです。|Kami ga nagai desu.|Tiene el pelo largo.
+鳥|2|ちょう・とり|chō, tori|ave|鳥が鳴いています。|Tori ga naite imasu.|Los pájaros cantan.
+朝|2|ちょう・あさ|chō, asa|mañana|朝六時に起きます。|Asa rokuji ni okimasu.|Me levanto a las seis de la mañana.
+直|2|ちょく・なお(す)|choku, nao(su)|arreglar, directo|机を直します。|Tsukue o naoshimasu.|Arreglo la mesa.
+通|2|つう・とお(る)|tsū, tō(ru)|pasar, circular|学校に通います。|Gakkō ni kayoimasu.|Voy a la escuela con regularidad.
+弟|2|てい・おとうと|tei, otōto|hermano menor|弟は小学生です。|Otōto wa shōgakusei desu.|Mi hermano menor es escolar.
+店|2|てん・みせ|ten, mise|tienda|店は何時までですか。|Mise wa nanji made desu ka.|¿Hasta qué hora abre la tienda?
+点|2|てん|ten|punto, nota|百点を取りました。|Hyakuten o torimashita.|Saqué cien puntos.
+電|2|でん|den|electricidad|電車に乗ります。|Densha ni norimasu.|Subo al tren.
+刀|2|とう・かたな|tō, katana|espada|刀は危ないです。|Katana wa abunai desu.|La espada es peligrosa.
+冬|2|とう・ふゆ|tō, fuyu|invierno|冬は寒いです。|Fuyu wa samui desu.|El invierno es frío.
+当|2|とう・あ(たる)|tō, a(taru)|acertar, golpear|予想が当たりました。|Yosō ga atarimashita.|Mi predicción acertó.
+東|2|とう・ひがし|tō, higashi|este|日は東から昇ります。|Hi wa higashi kara noborimasu.|El sol sale por el este.
+答|2|とう・こた(える)|tō, kota(eru)|responder|質問に答えます。|Shitsumon ni kotaemasu.|Respondo la pregunta.
+頭|2|とう・あたま|tō, atama|cabeza|頭が痛いです。|Atama ga itai desu.|Me duele la cabeza.
+同|2|どう・おな(じ)|dō, ona(ji)|mismo|同じ年です。|Onaji toshi desu.|Tenemos la misma edad.
+読|2|どく・よ(む)|doku, yo(mu)|leer|新聞を読みます。|Shinbun o yomimasu.|Leo el periódico.
+内|2|ない・うち|nai, uchi|interior|国内を旅行します。|Kokunai o ryokō shimasu.|Viajo por el país.
+南|2|なん・みなみ|nan, minami|sur|南の島に行きます。|Minami no shima ni ikimasu.|Voy a una isla del sur.
+肉|2|にく|niku|carne|肉を焼きます。|Niku o yakimasu.|Asa carne.
+馬|2|ば・うま|ba, uma|caballo|馬に乗ります。|Uma ni norimasu.|Monto a caballo.
+売|2|ばい・う(る)|bai, u(ru)|vender|野菜を売っています。|Yasai o utte imasu.|Venden verduras.
+買|2|ばい・か(う)|bai, ka(u)|comprar|本を買います。|Hon o kaimasu.|Compro un libro.
+麦|2|ばく・むぎ|baku, mugi|trigo, cebada|麦茶を飲みます。|Mugicha o nomimasu.|Bebo té de cebada.
+半|2|はん・なか(ば)|han, naka(ba)|mitad|半分食べます。|Hanbun tabemasu.|Como la mitad.
+番|2|ばん|ban|turno, número|次はあなたの番です。|Tsugi wa anata no ban desu.|Ahora es tu turno.
+父|2|ふ・ちち|fu, chichi|padre|父は会社員です。|Chichi wa kaishain desu.|Mi padre es oficinista.
+風|2|ふう・かぜ|fū, kaze|viento|風が冷たいです。|Kaze ga tsumetai desu.|El viento es frío.
+分|2|ぶん・わ(かる)|bun, wa(karu)|minuto, entender|分かりました。|Wakarimashita.|Entendido.
+聞|2|ぶん・き(く)|bun, ki(ku)|oír, preguntar|先生に聞きます。|Sensei ni kikimasu.|Le pregunto al profesor.
+米|2|べい・こめ|bei, kome|arroz crudo|お米を洗います。|Okome o araimasu.|Lavo el arroz.
+歩|2|ほ・ある(く)|ho, aru(ku)|caminar|駅まで歩きます。|Eki made arukimasu.|Camino hasta la estación.
+母|2|ぼ・はは|bo, haha|madre|母は料理が上手です。|Haha wa ryōri ga jōzu desu.|Mi madre cocina bien.
+方|2|ほう・かた|hō, kata|dirección, persona|駅の方へ行きます。|Eki no hō e ikimasu.|Voy hacia la estación.
+北|2|ほく・きた|hoku, kita|norte|北は寒いです。|Kita wa samui desu.|El norte es frío.
+毎|2|まい|mai|cada|毎週会います。|Maishū aimasu.|Nos vemos cada semana.
+妹|2|まい・いもうと|mai, imōto|hermana menor|妹は歌が好きです。|Imōto wa uta ga suki desu.|A mi hermana menor le gusta cantar.
+万|2|まん・ばん|man, ban|diez mil|一万円です。|Ichiman'en desu.|Son diez mil yenes.
+明|2|めい・あか(るい)|mei, aka(rui)|claro, brillante|明るい部屋です。|Akarui heya desu.|Es una habitación luminosa.
+鳴|2|めい・な(く)|mei, na(ku)|cantar, sonar|犬が鳴いています。|Inu ga naite imasu.|El perro ladra.
+毛|2|もう・け|mō, ke|pelo|猫の毛は柔らかいです。|Neko no ke wa yawarakai desu.|El pelo del gato es suave.
+門|2|もん|mon|portón|門を開けます。|Mon o akemasu.|Abro el portón.
+夜|2|や・よる|ya, yoru|noche|夜は静かです。|Yoru wa shizuka desu.|La noche es tranquila.
+野|2|や・の|ya, no|campo|野原で遊びます。|Nohara de asobimasu.|Juego en el campo.
+用|2|よう・もち(いる)|yō, mochi(iru)|uso, asunto|用事があります。|Yōji ga arimasu.|Tengo un asunto pendiente.
+曜|2|よう|yō|día de la semana|何曜日ですか。|Nan'yōbi desu ka.|¿Qué día es hoy?
+来|2|らい・く(る)|rai, ku(ru)|venir|友達が来ます。|Tomodachi ga kimasu.|Viene un amigo.
+里|2|り・さと|ri, sato|pueblo natal|里に帰ります。|Sato ni kaerimasu.|Vuelvo a mi pueblo natal.
+理|2|り|ri|razón, orden|理由を話します。|Riyū o hanashimasu.|Explico la razón.
+話|2|わ・はな(す)|wa, hana(su)|hablar, conversación|日本語で話します。|Nihongo de hanashimasu.|Hablo en japonés.
+食|2|しょく・た(べる)|shoku, ta(beru)|comer|朝ご飯を食べます。|Asagohan o tabemasu.|Desayuno.
+道|2|どう・みち|dō, michi|camino|道を教えてください。|Michi o oshiete kudasai.|Indíqueme el camino, por favor.
+友|2|ゆう・とも|yū, tomo|amigo|友達と遊びます。|Tomodachi to asobimasu.|Juego con mis amigos.
+悪|3|あく・わる(い)|aku, waru(i)|malo|天気が悪いです。|Tenki ga warui desu.|El tiempo está malo.
+安|3|あん・やす(い)|an, yasu(i)|barato, seguro|この店は安いです。|Kono mise wa yasui desu.|Esta tienda es barata.
+暗|3|あん・くら(い)|an, kura(i)|oscuro|部屋が暗いです。|Heya ga kurai desu.|La habitación está oscura.
+医|3|い|i|medicina|医者に行きます。|Isha ni ikimasu.|Voy al médico.
+委|3|い|i|encargar|委員になります。|Iin ni narimasu.|Seré miembro del comité.
+意|3|い|i|intención, sentido|意味が分かります。|Imi ga wakarimasu.|Entiendo el significado.
+育|3|いく・そだ(つ)|iku, soda(tsu)|criar, crecer|花を育てます。|Hana o sodatemasu.|Cultivo flores.
+員|3|いん|in|miembro|会社員です。|Kaishain desu.|Soy oficinista.
+院|3|いん|in|institución|病院に行きます。|Byōin ni ikimasu.|Voy al hospital.
+飲|3|いん・の(む)|in, no(mu)|beber|毎朝、水を飲みます。|Maiasa, mizu o nomimasu.|Cada mañana bebo agua.
+運|3|うん・はこ(ぶ)|un, hako(bu)|transportar, suerte|荷物を運びます。|Nimotsu o hakobimasu.|Llevo el equipaje.
+泳|3|えい・およ(ぐ)|ei, oyo(gu)|nadar|毎日泳ぎます。|Mainichi oyogimasu.|Nado todos los días.
+央|3|おう|ō|centro|中央に座ります。|Chūō ni suwarimasu.|Me siento en el centro.
+横|3|おう・よこ|ō, yoko|lado, horizontal|横を見ます。|Yoko o mimasu.|Miro hacia un lado.
+屋|3|おく・や|oku, ya|tienda, techo|花屋に行きます。|Hanaya ni ikimasu.|Voy a la floristería.
+温|3|おん・あたた(かい)|on, atata(kai)|cálido|温かいお茶です。|Atatakai ocha desu.|Es un té caliente.
+化|3|か・ば(ける)|ka, ba(keru)|transformar|文化を学びます。|Bunka o manabimasu.|Estudio la cultura.
+荷|3|か・に|ka, ni|carga|荷物が重いです。|Nimotsu ga omoi desu.|El equipaje pesa.
+界|3|かい|kai|mundo, límite|世界は広いです。|Sekai wa hiroi desu.|El mundo es amplio.
+開|3|かい・あ(ける)|kai, a(keru)|abrir|窓を開けます。|Mado o akemasu.|Abro la ventana.
+階|3|かい|kai|piso|二階に行きます。|Nikai ni ikimasu.|Subo al segundo piso.
+寒|3|かん・さむ(い)|kan, samu(i)|frío|今日は寒いです。|Kyō wa samui desu.|Hoy hace frío.
+感|3|かん|kan|sentir|感動しました。|Kandō shimashita.|Me conmoví.
+漢|3|かん|kan|China, kanji|漢字を勉強します。|Kanji o benkyō shimasu.|Estudio kanji.
+館|3|かん・やかた|kan, yakata|edificio|図書館に行きます。|Toshokan ni ikimasu.|Voy a la biblioteca.
+岸|3|がん・きし|gan, kishi|orilla|岸に着きました。|Kishi ni tsukimashita.|Llegué a la orilla.
+起|3|き・お(きる)|ki, o(kiru)|levantarse|七時に起きます。|Shichiji ni okimasu.|Me levanto a las siete.
+期|3|き|ki|período|学期が始まります。|Gakki ga hajimarimasu.|Empieza el semestre.
+客|3|きゃく|kyaku|cliente, invitado|お客さんが来ます。|Okyaku-san ga kimasu.|Vienen invitados.
+究|3|きゅう・きわ(める)|kyū, kiwa(meru)|investigar a fondo|研究をします。|Kenkyū o shimasu.|Hago investigación.
+急|3|きゅう・いそ(ぐ)|kyū, iso(gu)|apurarse|急いでください。|Isoide kudasai.|Dese prisa, por favor.
+級|3|きゅう|kyū|nivel, grado|日本語の三級です。|Nihongo no sankyū desu.|Es el nivel 3 de japonés.
+宮|3|きゅう・みや|kyū, miya|palacio, santuario|宮に行きます。|Miya ni ikimasu.|Voy al santuario.
+球|3|きゅう・たま|kyū, tama|pelota, esfera|野球をします。|Yakyū o shimasu.|Juego béisbol.
+去|3|きょ・さ(る)|kyo, sa(ru)|irse, pasado|去年日本に行きました。|Kyonen Nihon ni ikimashita.|El año pasado fui a Japón.
+橋|3|きょう・はし|kyō, hashi|puente|橋を渡ります。|Hashi o watarimasu.|Cruzo el puente.
+業|3|ぎょう・わざ|gyō, waza|oficio, negocio|授業が始まります。|Jugyō ga hajimarimasu.|Empieza la clase.
+曲|3|きょく・ま(がる)|kyoku, ma(garu)|curva, melodía|道が曲がっています。|Michi ga magatte imasu.|El camino está curvo.
+局|3|きょく|kyoku|oficina|郵便局に行きます。|Yūbinkyoku ni ikimasu.|Voy al correo.
+銀|3|ぎん|gin|plata|銀行に行きます。|Ginkō ni ikimasu.|Voy al banco.
+区|3|く|ku|distrito|区役所に行きます。|Kuyakusho ni ikimasu.|Voy a la oficina del distrito.
+苦|3|く・くる(しい)・にが(い)|ku, kuru(shii), niga(i)|amargo, penoso|薬が苦いです。|Kusuri ga nigai desu.|La medicina es amarga.
+具|3|ぐ|gu|utensilio|道具を使います。|Dōgu o tsukaimasu.|Uso herramientas.
+君|3|くん・きみ|kun, kimi|tú (a un igual)|君は誰ですか。|Kimi wa dare desu ka.|¿Quién eres tú?
+係|3|けい・かかり|kei, kakari|encargado, relación|係の人に聞きます。|Kakari no hito ni kikimasu.|Le pregunto al encargado.
+軽|3|けい・かる(い)|kei, karu(i)|ligero|このかばんは軽いです。|Kono kaban wa karui desu.|Esta mochila es ligera.
+血|3|けつ・ち|ketsu, chi|sangre|血が出ました。|Chi ga demashita.|Salió sangre.
+決|3|けつ・き(める)|ketsu, ki(meru)|decidir|行くことに決めました。|Iku koto ni kimemashita.|Decidí ir.
+研|3|けん・と(ぐ)|ken, to(gu)|afilar, investigar|刀を研ぎます。|Katana o togimasu.|Afilo la espada.
+県|3|けん|ken|prefectura|何県に住んでいますか。|Nanken ni sunde imasu ka.|¿En qué prefectura vives?
+庫|3|こ・く|ko, ku|almacén|冷蔵庫を開けます。|Reizōko o akemasu.|Abro el refrigerador.
+湖|3|こ・みずうみ|ko, mizuumi|lago|湖はきれいです。|Mizuumi wa kirei desu.|El lago es hermoso.
+向|3|こう・む(く)|kō, mu(ku)|mirar hacia|右を向きます。|Migi o mukimasu.|Miro hacia la derecha.
+幸|3|こう・しあわ(せ)|kō, shiawa(se)|felicidad|幸せです。|Shiawase desu.|Soy feliz.
+港|3|こう・みなと|kō, minato|puerto|港に船が着きます。|Minato ni fune ga tsukimasu.|El barco llega al puerto.
+号|3|ごう|gō|número, señal|一号車に乗ります。|Ichigōsha ni norimasu.|Subo al vagón número 1.
+根|3|こん・ね|kon, ne|raíz|木の根です。|Ki no ne desu.|Es la raíz de un árbol.
+祭|3|さい・まつ(り)|sai, matsu(ri)|festival|夏祭りに行きます。|Natsumatsuri ni ikimasu.|Voy al festival de verano.
+皿|3|さら|sara|plato|皿を洗います。|Sara o araimasu.|Lavo los platos.
+仕|3|し・つか(える)|shi, tsuka(eru)|servir, trabajo|仕事に行きます。|Shigoto ni ikimasu.|Voy al trabajo.
+死|3|し・し(ぬ)|shi, shi(nu)|morir|死ぬほど疲れました。|Shinu hodo tsukaremashita.|Estoy muerto de cansancio.
+使|3|し・つか(う)|shi, tsuka(u)|usar|箸を使います。|Hashi o tsukaimasu.|Uso palillos.
+始|3|し・はじ(める)|shi, haji(meru)|comenzar|勉強を始めます。|Benkyō o hajimemasu.|Empiezo a estudiar.
+指|3|し・ゆび|shi, yubi|dedo, señalar|指が長いです。|Yubi ga nagai desu.|Tiene dedos largos.
+歯|3|し・は|shi, ha|diente|歯を磨きます。|Ha o migakimasu.|Me cepillo los dientes.
+詩|3|し|shi|poema|詩を書きます。|Shi o kakimasu.|Escribo un poema.
+次|3|じ・つぎ|ji, tsugi|siguiente|次の駅で降ります。|Tsugi no eki de orimasu.|Bajo en la próxima estación.
+事|3|じ・こと|ji, koto|asunto, cosa|大事な事です。|Daiji na koto desu.|Es algo importante.
+持|3|じ・も(つ)|ji, mo(tsu)|tener, llevar|かさを持ちます。|Kasa o mochimasu.|Llevo un paraguas.
+式|3|しき|shiki|ceremonia, fórmula|入学式があります。|Nyūgakushiki ga arimasu.|Hay ceremonia de ingreso.
+実|3|じつ・み|jitsu, mi|realidad, fruto|実は忙しいです。|Jitsu wa isogashii desu.|En realidad estoy ocupado.
+写|3|しゃ・うつ(す)|sha, utsu(su)|copiar, fotografiar|写真を撮ります。|Shashin o torimasu.|Tomo una foto.
+者|3|しゃ・もの|sha, mono|persona|学者になります。|Gakusha ni narimasu.|Seré académico.
+主|3|しゅ・ぬし|shu, nushi|principal, dueño|主人は家にいます。|Shujin wa ie ni imasu.|Mi esposo está en casa.
+守|3|しゅ・まも(る)|shu, mamo(ru)|proteger|約束を守ります。|Yakusoku o mamorimasu.|Cumplo la promesa.
+取|3|しゅ・と(る)|shu, to(ru)|tomar|本を取ります。|Hon o torimasu.|Tomo el libro.
+酒|3|しゅ・さけ|shu, sake|licor, sake|お酒は飲みません。|Osake wa nomimasen.|No bebo alcohol.
+受|3|じゅ・う(ける)|ju, u(keru)|recibir|試験を受けます。|Shiken o ukemasu.|Rindo un examen.
+州|3|しゅう・す|shū, su|provincia, estado|九州に行きます。|Kyūshū ni ikimasu.|Voy a Kyushu.
+拾|3|しゅう・ひろ(う)|shū, hiro(u)|recoger|お金を拾いました。|Okane o hiroimashita.|Encontré dinero.
+終|3|しゅう・お(わる)|shū, o(waru)|terminar|仕事が終わります。|Shigoto ga owarimasu.|Termina el trabajo.
+習|3|しゅう・なら(う)|shū, nara(u)|aprender, practicar|ピアノを習います。|Piano o naraimasu.|Aprendo piano.
+集|3|しゅう・あつ(める)|shū, atsu(meru)|reunir|切手を集めます。|Kitte o atsumemasu.|Colecciono sellos.
+住|3|じゅう・す(む)|jū, su(mu)|vivir, residir|町に住んでいます。|Machi ni sunde imasu.|Vivo en la ciudad.
+重|3|じゅう・おも(い)|jū, omo(i)|pesado|この箱は重いです。|Kono hako wa omoi desu.|Esta caja es pesada.
+宿|3|しゅく・やど|shuku, yado|alojamiento|宿に泊まります。|Yado ni tomarimasu.|Me alojo en una posada.
+所|3|しょ・ところ|sho, tokoro|lugar|いい所ですね。|Ii tokoro desu ne.|Es un buen lugar.
+助|3|じょ・たす(ける)|jo, tasu(keru)|ayudar|友達を助けます。|Tomodachi o tasukemasu.|Ayudo a mi amigo.
+昭|3|しょう|shō|brillante, era Showa|昭和の歌です。|Shōwa no uta desu.|Es una canción de la era Showa.
+消|3|しょう・き(える)|shō, ki(eru)|apagar, borrar|電気を消します。|Denki o keshimasu.|Apago la luz.
+商|3|しょう・あきな(う)|shō, akina(u)|comercio|商店街に行きます。|Shōtengai ni ikimasu.|Voy a la calle comercial.
+章|3|しょう|shō|capítulo|第一章を読みます。|Dai-isshō o yomimasu.|Leo el primer capítulo.
+勝|3|しょう・か(つ)|shō, ka(tsu)|ganar|試合に勝ちました。|Shiai ni kachimashita.|Gané el partido.
+乗|3|じょう・の(る)|jō, no(ru)|subir, montar|バスに乗ります。|Basu ni norimasu.|Subo al autobús.
+植|3|しょく・う(える)|shoku, u(eru)|plantar|木を植えます。|Ki o uemasu.|Planto un árbol.
+申|3|しん・もう(す)|shin, mō(su)|decir, solicitar|申し込みをします。|Mōshikomi o shimasu.|Hago la solicitud.
+身|3|しん・み|shin, mi|cuerpo, persona|身長は百六十センチです。|Shinchō wa hyakurokujū senchi desu.|Mido 160 cm.
+神|3|しん・かみ|shin, kami|dios|神様にお願いします。|Kamisama ni onegai shimasu.|Le pido a los dioses.
+真|3|しん・ま|shin, ma|verdad|真剣に聞きます。|Shinken ni kikimasu.|Escucho con seriedad.
+深|3|しん・ふか(い)|shin, fuka(i)|profundo|深い海です。|Fukai umi desu.|Es un mar profundo.
+進|3|しん・すす(む)|shin, susu(mu)|avanzar|前に進みます。|Mae ni susumimasu.|Avanzo.
+世|3|せい・よ|sei, yo|mundo, generación|世の中は広いです。|Yo no naka wa hiroi desu.|El mundo es amplio.
+整|3|せい・ととの(える)|sei, totono(eru)|ordenar|部屋を整えます。|Heya o totonoemasu.|Ordeno la habitación.
+昔|3|せき・むかし|seki, mukashi|antiguamente|昔、ここは海でした。|Mukashi, koko wa umi deshita.|Antes aquí era mar.
+全|3|ぜん・まった(く)|zen, matta(ku)|todo, entero|全部食べました。|Zenbu tabemashita.|Me lo comí todo.
+相|3|そう・あい|sō, ai|mutuo, aspecto|相談します。|Sōdan shimasu.|Consulto.
+送|3|そう・おく(る)|sō, oku(ru)|enviar|手紙を送ります。|Tegami o okurimasu.|Envío una carta.
+想|3|そう|sō|idea, imaginar|想像してみてください。|Sōzō shite mite kudasai.|Imagínelo.
+息|3|そく・いき|soku, iki|aliento|息をします。|Iki o shimasu.|Respiro.
+速|3|そく・はや(い)|soku, haya(i)|veloz|電車は速いです。|Densha wa hayai desu.|El tren es veloz.
+族|3|ぞく|zoku|familia, tribu|家族は四人です。|Kazoku wa yonin desu.|Somos cuatro en la familia.
+他|3|た・ほか|ta, hoka|otro|他の人に聞きます。|Hoka no hito ni kikimasu.|Le pregunto a otra persona.
+打|3|だ・う(つ)|da, u(tsu)|golpear|ボールを打ちます。|Bōru o uchimasu.|Golpeo la pelota.
+対|3|たい・つい|tai, tsui|oponerse, frente a|対戦します。|Taisen shimasu.|Compito contra un rival.
+待|3|たい・ま(つ)|tai, ma(tsu)|esperar|駅で待ちます。|Eki de machimasu.|Espero en la estación.
+代|3|だい・か(わる)|dai, ka(waru)|reemplazar, era|代わりに行きます。|Kawari ni ikimasu.|Voy en su lugar.
+第|3|だい|dai|ordinal|第一歩です。|Daiippo desu.|Es el primer paso.
+題|3|だい|dai|tema, título|宿題をします。|Shukudai o shimasu.|Hago la tarea.
+炭|3|たん・すみ|tan, sumi|carbón|炭で焼きます。|Sumi de yakimasu.|Asa con carbón.
+短|3|たん・みじか(い)|tan, mijika(i)|corto|髪が短いです。|Kami ga mijikai desu.|Tiene el pelo corto.
+談|3|だん|dan|conversar|会談があります。|Kaidan ga arimasu.|Hay una reunión.
+着|3|ちゃく・き(る)・つ(く)|chaku, ki(ru), tsu(ku)|vestir, llegar|服を着ます。|Fuku o kimasu.|Me visto.
+注|3|ちゅう・そそ(ぐ)|chū, soso(gu)|verter, atención|水を注ぎます。|Mizu o sosogimasu.|Sirvo agua.
+柱|3|ちゅう・はしら|chū, hashira|pilar|柱が太いです。|Hashira ga futoi desu.|El pilar es grueso.
+丁|3|ちょう|chō|bloque, cuadra|三丁目に住んでいます。|Sanchōme ni sunde imasu.|Vivo en el tercer bloque.
+帳|3|ちょう|chō|cuaderno|手帳を買います。|Techō o kaimasu.|Compro una agenda.
+調|3|ちょう・しら(べる)|chō, shira(beru)|investigar, tono|辞書で調べます。|Jisho de shirabemasu.|Busco en el diccionario.
+追|3|つい・お(う)|tsui, o(u)|perseguir|犬が猫を追います。|Inu ga neko o oimasu.|El perro persigue al gato.
+定|3|てい・さだ(める)|tei, sada(meru)|fijar|予定があります。|Yotei ga arimasu.|Tengo planes.
+庭|3|てい・にわ|tei, niwa|jardín|庭に花があります。|Niwa ni hana ga arimasu.|Hay flores en el jardín.
+笛|3|てき・ふえ|teki, fue|flauta|笛を吹きます。|Fue o fukimasu.|Toco la flauta.
+鉄|3|てつ|tetsu|hierro|鉄は硬いです。|Tetsu wa katai desu.|El hierro es duro.
+転|3|てん・ころ(ぶ)|ten, koro(bu)|rodar, caer|道で転びました。|Michi de korobimashita.|Me caí en la calle.
+都|3|と・みやこ|to, miyako|capital, metrópoli|東京都に住んでいます。|Tōkyō-to ni sunde imasu.|Vivo en Tokio.
+度|3|ど・たび|do, tabi|grado, vez|今度会いましょう。|Kondo aimashō.|Veámonos la próxima vez.
+投|3|とう・な(げる)|tō, na(geru)|lanzar|ボールを投げます。|Bōru o nagemasu.|Lanzo la pelota.
+豆|3|とう・まめ|tō, mame|frijol|豆を食べます。|Mame o tabemasu.|Como frijoles.
+島|3|とう・しま|tō, shima|isla|小さな島です。|Chiisana shima desu.|Es una isla pequeña.
+湯|3|とう・ゆ|tō, yu|agua caliente|お湯を沸かします。|Oyu o wakashimasu.|Hiervo agua.
+登|3|とう・のぼ(る)|tō, nobo(ru)|subir, escalar|木に登ります。|Ki ni noborimasu.|Trepo a un árbol.
+等|3|とう・ひと(しい)|tō, hito(shii)|igual, clase|平等な社会です。|Byōdō na shakai desu.|Es una sociedad igualitaria.
+動|3|どう・うご(く)|dō, ugo(ku)|moverse|車が動きます。|Kuruma ga ugokimasu.|El coche se mueve.
+童|3|どう・わらべ|dō, warabe|niño|童話を読みます。|Dōwa o yomimasu.|Leo cuentos infantiles.
+農|3|のう|nō|agricultura|農家で働きます。|Nōka de hatarakimasu.|Trabajo en una granja.
+波|3|は・なみ|ha, nami|ola|波が高いです。|Nami ga takai desu.|Las olas son altas.
+配|3|はい・くば(る)|hai, kuba(ru)|repartir, preocupar|紙を配ります。|Kami o kubarimasu.|Reparto papeles.
+倍|3|ばい|bai|doble|二倍になります。|Nibai ni narimasu.|Se duplica.
+箱|3|そう・はこ|sō, hako|caja|箱を開けます。|Hako o akemasu.|Abro la caja.
+畑|3|はたけ|hatake|campo de cultivo|畑で野菜を作ります。|Hatake de yasai o tsukurimasu.|Cultivo verduras en el campo.
+発|3|はつ|hatsu|partir, emitir|七時に出発します。|Shichiji ni shuppatsu shimasu.|Salgo a las siete.
+反|3|はん・そ(る)|han, so(ru)|opuesto|反対の意見です。|Hantai no iken desu.|Es una opinión contraria.
+坂|3|はん・さか|han, saka|cuesta|坂を登ります。|Saka o noborimasu.|Subo la cuesta.
+板|3|ばん・いた|ban, ita|tabla|板に絵を描きます。|Ita ni e o kakimasu.|Pinto sobre una tabla.
+皮|3|ひ・かわ|hi, kawa|piel, cáscara|みかんの皮をむきます。|Mikan no kawa o mukimasu.|Pelo la mandarina.
+悲|3|ひ・かな(しい)|hi, kana(shii)|triste|悲しい話です。|Kanashii hanashi desu.|Es una historia triste.
+美|3|び・うつく(しい)|bi, utsuku(shii)|bello|美しい花です。|Utsukushii hana desu.|Es una flor hermosa.
+鼻|3|び・はな|bi, hana|nariz|鼻が高いです。|Hana ga takai desu.|Tiene la nariz alta.
+筆|3|ひつ・ふで|hitsu, fude|pincel|筆で字を書きます。|Fude de ji o kakimasu.|Escribo con pincel.
+氷|3|ひょう・こおり|hyō, kōri|hielo|氷を入れます。|Kōri o iremasu.|Pongo hielo.
+表|3|ひょう・おもて|hyō, omote|tabla, superficie|時間表を見ます。|Jikanhyō o mimasu.|Miro el horario.
+秒|3|びょう|byō|segundo|十秒待ちます。|Jūbyō machimasu.|Espero diez segundos.
+品|3|ひん・しな|hin, shina|artículo|品物を選びます。|Shinamono o erabimasu.|Elijo un artículo.
+負|3|ふ・ま(ける)|fu, ma(keru)|perder|試合に負けました。|Shiai ni makemashita.|Perdí el partido.
+部|3|ぶ|bu|sección, club|野球部に入ります。|Yakyūbu ni hairimasu.|Entro al club de béisbol.
+服|3|ふく|fuku|ropa|服を買います。|Fuku o kaimasu.|Compro ropa.
+福|3|ふく|fuku|fortuna|幸福を祈ります。|Kōfuku o inorimasu.|Deseo felicidad.
+物|3|ぶつ・もの|butsu, mono|cosa|買い物に行きます。|Kaimono ni ikimasu.|Voy de compras.
+平|3|へい・たい(ら)|hei, tai(ra)|plano, paz|平らな道です。|Taira na michi desu.|Es un camino llano.
+返|3|へん・かえ(す)|hen, kae(su)|devolver|本を返します。|Hon o kaeshimasu.|Devuelvo el libro.
+放|3|ほう・はな(す)|hō, hana(su)|soltar|鳥を放します。|Tori o hanashimasu.|Suelto al pájaro.
+味|3|み・あじ|mi, aji|sabor|味がいいです。|Aji ga ii desu.|Tiene buen sabor.
+命|3|めい・いのち|mei, inochi|vida|命は大切です。|Inochi wa taisetsu desu.|La vida es valiosa.
+面|3|めん・おもて|men, omote|cara, superficie|面白い映画です。|Omoshiroi eiga desu.|Es una película divertida.
+問|3|もん・と(う)|mon, to(u)|pregunta|質問があります。|Shitsumon ga arimasu.|Tengo una pregunta.
+役|3|やく・えき|yaku, eki|papel, utilidad|役に立ちます。|Yaku ni tachimasu.|Es útil.
+薬|3|やく・くすり|yaku, kusuri|medicina|薬を飲みます。|Kusuri o nomimasu.|Tomo la medicina.
+由|3|ゆう・よし|yū, yoshi|razón|理由を聞きます。|Riyū o kikimasu.|Pregunto la razón.
+油|3|ゆ・あぶら|yu, abura|aceite|油で焼きます。|Abura de yakimasu.|Frío con aceite.
+有|3|ゆう・あ(る)|yū, a(ru)|tener, existir|有名な店です。|Yūmei na mise desu.|Es una tienda famosa.
+遊|3|ゆう・あそ(ぶ)|yū, aso(bu)|jugar|外で遊びます。|Soto de asobimasu.|Juego afuera.
+予|3|よ|yo|de antemano|予約をします。|Yoyaku o shimasu.|Hago una reserva.
+羊|3|よう・ひつじ|yō, hitsuji|oveja|羊がいます。|Hitsuji ga imasu.|Hay ovejas.
+洋|3|よう|yō|océano, occidental|洋服を着ます。|Yōfuku o kimasu.|Me pongo ropa occidental.
+葉|3|よう・は|yō, ha|hoja|葉が落ちます。|Ha ga ochimasu.|Caen las hojas.
+陽|3|よう|yō|sol|太陽が昇ります。|Taiyō ga noborimasu.|Sale el sol.
+様|3|よう・さま|yō, sama|señor/a, manera|お客様が来ます。|Okyakusama ga kimasu.|Viene un cliente.
+落|3|らく・お(ちる)|raku, o(chiru)|caer|財布を落としました。|Saifu o otoshimashita.|Se me cayó la cartera.
+流|3|りゅう・なが(れる)|ryū, naga(reru)|fluir|川が流れます。|Kawa ga nagaremasu.|El río fluye.
+旅|3|りょ・たび|ryo, tabi|viaje|旅に出ます。|Tabi ni demasu.|Salgo de viaje.
+両|3|りょう|ryō|ambos|両手で持ちます。|Ryōte de mochimasu.|Lo sostengo con ambas manos.
+緑|3|りょく・みどり|ryoku, midori|verde|緑の葉です。|Midori no ha desu.|Es una hoja verde.
+礼|3|れい|rei|cortesía, gratitud|お礼を言います。|Orei o iimasu.|Doy las gracias.
+列|3|れつ|retsu|fila|列に並びます。|Retsu ni narabimasu.|Hago fila.
+練|3|れん・ね(る)|ren, ne(ru)|practicar|毎日練習します。|Mainichi renshū shimasu.|Practico todos los días.
+路|3|ろ・じ|ro, ji|camino|道路を渡ります。|Dōro o watarimasu.|Cruzo la calle.
+和|3|わ・やわ(らぐ)|wa, yawa(ragu)|paz, armonía|平和を願います。|Heiwa o negaimasu.|Deseo la paz.
+駅|3|えき|eki|estación|駅はどこですか。|Eki wa doko desu ka.|¿Dónde está la estación?
+病|3|びょう・や(む)|byō, ya(mu)|enfermedad|病院に行きます。|Byōin ni ikimasu.|Voy al hospital.
+暑|3|しょ・あつ(い)|sho, atsu(i)|calor|今日は暑いです。|Kyō wa atsui desu.|Hoy hace calor.
+案|4|あん|an|plan, idea|いい案です。|Ii an desu.|Es una buena idea.
+以|4|い|i|a partir de|以上です。|Ijō desu.|Eso es todo.
+衣|4|い・ころも|i, koromo|ropa|衣服を洗います。|Ifuku o araimasu.|Lavo la ropa.
+位|4|い・くらい|i, kurai|rango, posición|一位になりました。|Ichi-i ni narimashita.|Quedé en primer lugar.
+茨|4|し・いばら|shi, ibara|espino|茨城県に行きます。|Ibaraki-ken ni ikimasu.|Voy a la prefectura de Ibaraki.
+印|4|いん・しるし|in, shirushi|sello, marca|印を押します。|In o oshimasu.|Pongo el sello.
+英|4|えい|ei|inglés, excelente|英語を話します。|Eigo o hanashimasu.|Hablo inglés.
+栄|4|えい・さか(える)|ei, saka(eru)|prosperar|町が栄えています。|Machi ga sakaete imasu.|El pueblo prospera.
+媛|4|えん|en|dama|愛媛はみかんで有名です。|Ehime wa mikan de yūmei desu.|Ehime es famosa por sus mandarinas.
+塩|4|えん・しお|en, shio|sal|塩を入れます。|Shio o iremasu.|Agrego sal.
+岡|4|こう・おか|kō, oka|colina|福岡に行きます。|Fukuoka ni ikimasu.|Voy a Fukuoka.
+億|4|おく|oku|cien millones|一億円です。|Ichioku-en desu.|Son cien millones de yenes.
+加|4|か・くわ(える)|ka, kuwa(eru)|añadir|砂糖を加えます。|Satō o kuwaemasu.|Añado azúcar.
+果|4|か・は(たす)|ka, ha(tasu)|fruto, resultado|果物が好きです。|Kudamono ga suki desu.|Me gusta la fruta.
+貨|4|か|ka|mercancía|貨物列車です。|Kamotsu ressha desu.|Es un tren de carga.
+課|4|か|ka|lección, sección|第三課を勉強します。|Dai-sanka o benkyō shimasu.|Estudio la lección tres.
+芽|4|が・め|ga, me|brote|芽が出ました。|Me ga demashita.|Brotó una semilla.
+賀|4|が|ga|felicitar|年賀状を書きます。|Nengajō o kakimasu.|Escribo tarjetas de Año Nuevo.
+改|4|かい・あらた(める)|kai, arata(meru)|reformar|改札で待ちます。|Kaisatsu de machimasu.|Espero en el torniquete.
+械|4|かい|kai|aparato|機械を使います。|Kikai o tsukaimasu.|Uso una máquina.
+害|4|がい|gai|daño|害はありません。|Gai wa arimasen.|No hay daño.
+街|4|がい・まち|gai, machi|calle, barrio|街を歩きます。|Machi o arukimasu.|Camino por el barrio.
+各|4|かく・おのおの|kaku, onoono|cada|各自で準備します。|Kakuji de junbi shimasu.|Cada uno se prepara.
+覚|4|かく・おぼ(える)|kaku, obo(eru)|recordar, aprender|単語を覚えます。|Tango o oboemasu.|Memorizo vocabulario.
+潟|4|せき・かた|seki, kata|marisma|新潟は雪が多いです。|Niigata wa yuki ga ōi desu.|En Niigata nieva mucho.
+完|4|かん|kan|completo|宿題が完成しました。|Shukudai ga kansei shimashita.|Terminé la tarea.
+官|4|かん|kan|funcionario|警官に聞きます。|Keikan ni kikimasu.|Le pregunto al policía.
+管|4|かん・くだ|kan, kuda|tubo|水道管が壊れました。|Suidōkan ga kowaremashita.|Se rompió la tubería.
+関|4|かん・せき|kan, seki|conexión, barrera|玄関で待ちます。|Genkan de machimasu.|Espero en la entrada.
+観|4|かん|kan|observar|観光に行きます。|Kankō ni ikimasu.|Voy de turismo.
+願|4|がん・ねが(う)|gan, nega(u)|desear, pedir|お願いします。|Onegai shimasu.|Por favor.
+岐|4|き|ki|bifurcación|岐阜に行きます。|Gifu ni ikimasu.|Voy a Gifu.
+希|4|き|ki|esperanza, raro|希望があります。|Kibō ga arimasu.|Tengo esperanza.
+季|4|き|ki|estación del año|四季があります。|Shiki ga arimasu.|Hay cuatro estaciones.
+旗|4|き・はた|ki, hata|bandera|旗を振ります。|Hata o furimasu.|Agito la bandera.
+器|4|き・うつわ|ki, utsuwa|recipiente, aparato|食器を洗います。|Shokki o araimasu.|Lavo la vajilla.
+機|4|き・はた|ki, hata|máquina, ocasión|飛行機に乗ります。|Hikōki ni norimasu.|Subo al avión.
+議|4|ぎ|gi|debate|会議があります。|Kaigi ga arimasu.|Hay una reunión.
+求|4|きゅう・もと(める)|kyū, moto(meru)|buscar, pedir|答えを求めます。|Kotae o motomemasu.|Busco la respuesta.
+泣|4|きゅう・な(く)|kyū, na(ku)|llorar|赤ちゃんが泣いています。|Akachan ga naite imasu.|El bebé está llorando.
+給|4|きゅう|kyū|suministrar|給料をもらいます。|Kyūryō o moraimasu.|Recibo el sueldo.
+挙|4|きょ・あ(げる)|kyo, a(geru)|levantar, citar|手を挙げます。|Te o agemasu.|Levanto la mano.
+漁|4|ぎょ・りょう|gyo, ryō|pesca|漁に出ます。|Ryō ni demasu.|Salgo a pescar.
+共|4|きょう・とも|kyō, tomo|juntos|共通点があります。|Kyōtsūten ga arimasu.|Hay puntos en común.
+協|4|きょう|kyō|cooperar|協力します。|Kyōryoku shimasu.|Coopero.
+鏡|4|きょう・かがみ|kyō, kagami|espejo|鏡を見ます。|Kagami o mimasu.|Me miro al espejo.
+競|4|きょう・きそ(う)|kyō, kiso(u)|competir|競争します。|Kyōsō shimasu.|Compito.
+極|4|きょく・きわ(める)|kyoku, kiwa(meru)|extremo, polo|北極は寒いです。|Hokkyoku wa samui desu.|El Polo Norte es frío.
+熊|4|ゆう・くま|yū, kuma|oso|熊が出ます。|Kuma ga demasu.|Aparecen osos.
+訓|4|くん|kun|instrucción, lectura kun|訓読みを覚えます。|Kun'yomi o oboemasu.|Aprendo la lectura kun.
+軍|4|ぐん|gun|ejército|軍隊です。|Guntai desu.|Es un ejército.
+郡|4|ぐん|gun|distrito rural|郡に住んでいます。|Gun ni sunde imasu.|Vivo en un distrito rural.
+群|4|ぐん・む(れ)|gun, mu(re)|grupo, rebaño|鳥の群れです。|Tori no mure desu.|Es una bandada de aves.
+径|4|けい|kei|diámetro, sendero|半径を測ります。|Hankei o hakarimasu.|Mido el radio.
+景|4|けい|kei|paisaje|景色がきれいです。|Keshiki ga kirei desu.|El paisaje es hermoso.
+芸|4|げい|gei|arte, destreza|芸術が好きです。|Geijutsu ga suki desu.|Me gusta el arte.
+欠|4|けつ・か(ける)|ketsu, ka(keru)|faltar|今日は欠席です。|Kyō wa kesseki desu.|Hoy estoy ausente.
+結|4|けつ・むす(ぶ)|ketsu, musu(bu)|atar, concluir|ひもを結びます。|Himo o musubimasu.|Ato la cuerda.
+建|4|けん・た(てる)|ken, ta(teru)|construir|家を建てます。|Ie o tatemasu.|Construyo una casa.
+健|4|けん・すこ(やか)|ken, suko(yaka)|saludable|健康です。|Kenkō desu.|Estoy sano.
+固|4|こ・かた(い)|ko, kata(i)|duro|固いパンです。|Katai pan desu.|Es un pan duro.
+功|4|こう|kō|mérito|成功しました。|Seikō shimashita.|Tuve éxito.
+好|4|こう・す(き)|kō, su(ki)|gustar|音楽が好きです。|Ongaku ga suki desu.|Me gusta la música.
+香|4|こう・かお(り)|kō, kao(ri)|aroma|いい香りです。|Ii kaori desu.|Tiene buen aroma.
+候|4|こう・そうろう|kō, sōrō|clima, esperar|天候が悪いです。|Tenkō ga warui desu.|El clima está malo.
+康|4|こう|kō|paz, salud|健康が大切です。|Kenkō ga taisetsu desu.|La salud es importante.
+佐|4|さ|sa|asistir|佐賀県に行きます。|Saga-ken ni ikimasu.|Voy a la prefectura de Saga.
+差|4|さ・さ(す)|sa, sa(su)|diferencia|差があります。|Sa ga arimasu.|Hay una diferencia.
+菜|4|さい・な|sai, na|verdura|野菜を食べます。|Yasai o tabemasu.|Como verduras.
+最|4|さい・もっと(も)|sai, motto(mo)|más|最高です。|Saikō desu.|Es lo máximo.
+埼|4|き・さき|ki, saki|cabo|埼玉に住んでいます。|Saitama ni sunde imasu.|Vivo en Saitama.
+材|4|ざい|zai|material|材料を買います。|Zairyō o kaimasu.|Compro los ingredientes.
+崎|4|き・さき|ki, saki|cabo|長崎に行きます。|Nagasaki ni ikimasu.|Voy a Nagasaki.
+昨|4|さく|saku|pasado|昨日は雨でした。|Kinō wa ame deshita.|Ayer llovió.
+札|4|さつ・ふだ|satsu, fuda|billete, tarjeta|お札を数えます。|Osatsu o kazoemasu.|Cuento los billetes.
+刷|4|さつ・す(る)|satsu, su(ru)|imprimir|紙に印刷します。|Kami ni insatsu shimasu.|Imprimo en papel.
+察|4|さつ|satsu|inferir|警察に電話します。|Keisatsu ni denwa shimasu.|Llamo a la policía.
+参|4|さん・まい(る)|san, mai(ru)|participar, visitar|会に参加します。|Kai ni sanka shimasu.|Participo en la reunión.
+産|4|さん・う(む)|san, u(mu)|producir, dar a luz|日本の産物です。|Nihon no sanbutsu desu.|Es un producto de Japón.
+散|4|さん・ち(る)|san, chi(ru)|dispersar|花が散ります。|Hana ga chirimasu.|Caen los pétalos.
+残|4|ざん・のこ(る)|zan, noko(ru)|quedar|時間が残っています。|Jikan ga nokotte imasu.|Queda tiempo.
+氏|4|し・うじ|shi, uji|apellido, señor|山田氏が来ます。|Yamada-shi ga kimasu.|Viene el señor Yamada.
+司|4|し|shi|administrar|司会をします。|Shikai o shimasu.|Presento el evento.
+試|4|し・こころ(みる)|shi, kokoro(miru)|probar|試合があります。|Shiai ga arimasu.|Hay un partido.
+児|4|じ|ji|niño|児童が遊びます。|Jidō ga asobimasu.|Los niños juegan.
+治|4|じ・なお(る)|ji, nao(ru)|curar|病気が治りました。|Byōki ga naorimashita.|Me curé de la enfermedad.
+滋|4|じ|ji|nutrir|滋賀県に行きます。|Shiga-ken ni ikimasu.|Voy a la prefectura de Shiga.
+辞|4|じ・や(める)|ji, ya(meru)|renunciar, diccionario|辞書を引きます。|Jisho o hikimasu.|Consulto el diccionario.
+鹿|4|ろく・しか|roku, shika|ciervo|奈良に鹿がいます。|Nara ni shika ga imasu.|Hay ciervos en Nara.
+失|4|しつ・うしな(う)|shitsu, ushina(u)|perder|失敗しました。|Shippai shimashita.|Fracasé.
+借|4|しゃく・か(りる)|shaku, ka(riru)|pedir prestado|本を借ります。|Hon o karimasu.|Pido prestado un libro.
+種|4|しゅ・たね|shu, tane|semilla, tipo|種をまきます。|Tane o makimasu.|Siembro semillas.
+周|4|しゅう・まわ(り)|shū, mawa(ri)|alrededor|周りを見ます。|Mawari o mimasu.|Miro alrededor.
+祝|4|しゅく・いわ(う)|shuku, iwa(u)|celebrar|誕生日を祝います。|Tanjōbi o iwaimasu.|Celebro el cumpleaños.
+順|4|じゅん|jun|orden, turno|順番を待ちます。|Junban o machimasu.|Espero mi turno.
+初|4|しょ・はじ(め)|sho, haji(me)|primero|初めまして。|Hajimemashite.|Mucho gusto.
+松|4|しょう・まつ|shō, matsu|pino|松の木です。|Matsu no ki desu.|Es un pino.
+唱|4|しょう・とな(える)|shō, tona(eru)|cantar, recitar|合唱します。|Gasshō shimasu.|Canto en coro.
+焼|4|しょう・や(く)|shō, ya(ku)|asar, quemar|魚を焼きます。|Sakana o yakimasu.|Asa pescado.
+象|5|しょう・ぞう|shō, zō|elefante, forma|象は大きいです。|Zō wa ōkii desu.|El elefante es grande.
+照|4|しょう・て(らす)|shō, te(rasu)|iluminar|日が照っています。|Hi ga tette imasu.|El sol brilla.
+賞|5|しょう|shō|premio|賞をもらいました。|Shō o moraimashita.|Recibí un premio.
+臣|4|しん・おみ|shin, omi|vasallo|大臣が話します。|Daijin ga hanashimasu.|El ministro habla.
+信|4|しん|shin|creer, confianza|友達を信じます。|Tomodachi o shinjimasu.|Confío en mi amigo.
+成|4|せい・な(る)|sei, na(ru)|lograrse, convertirse|成功を祈ります。|Seikō o inorimasu.|Deseo éxito.
+省|4|せい・はぶ(く)|sei, habu(ku)|ahorrar, ministerio|外務省で働きます。|Gaimushō de hatarakimasu.|Trabajo en el Ministerio de Exteriores.
+清|4|せい・きよ(い)|sei, kiyo(i)|puro|清い水です。|Kiyoi mizu desu.|Es agua pura.
+静|4|せい・しず(か)|sei, shizu(ka)|tranquilo|静かな夜です。|Shizuka na yoru desu.|Es una noche tranquila.
+席|4|せき|seki|asiento|席に座ります。|Seki ni suwarimasu.|Me siento en mi asiento.
+積|4|せき・つ(む)|seki, tsu(mu)|acumular|荷物を積みます。|Nimotsu o tsumimasu.|Cargo el equipaje.
+折|4|せつ・お(る)|setsu, o(ru)|doblar, romper|紙を折ります。|Kami o orimasu.|Doblo el papel.
+節|4|せつ・ふし|setsu, fushi|estación, nudo|季節が変わります。|Kisetsu ga kawarimasu.|Cambia la estación.
+説|4|せつ・と(く)|setsu, to(ku)|explicar|先生が説明します。|Sensei ga setsumei shimasu.|El profesor explica.
+浅|4|せん・あさ(い)|sen, asa(i)|poco profundo|浅い川です。|Asai kawa desu.|Es un río poco profundo.
+戦|4|せん・たたか(う)|sen, tataka(u)|luchar|試合で戦います。|Shiai de tatakaimasu.|Compito en el partido.
+選|4|せん・えら(ぶ)|sen, era(bu)|elegir|好きなものを選びます。|Sukina mono o erabimasu.|Elijo lo que me gusta.
+然|4|ぜん・ねん|zen, nen|naturaleza, así|自然が好きです。|Shizen ga suki desu.|Me gusta la naturaleza.
+争|4|そう・あらそ(う)|sō, araso(u)|disputar|争いはやめましょう。|Arasoi wa yamemashō.|Dejemos de pelear.
+倉|4|そう・くら|sō, kura|almacén|倉に荷物を入れます。|Kura ni nimotsu o iremasu.|Guardo el equipaje en el almacén.
+巣|4|そう・す|sō, su|nido|鳥の巣です。|Tori no su desu.|Es un nido de pájaros.
+束|4|そく・たば|soku, taba|manojo|花束をあげます。|Hanataba o agemasu.|Regalo un ramo.
+側|4|そく・がわ|soku, gawa|lado|右側を歩きます。|Migigawa o arukimasu.|Camino por el lado derecho.
+続|4|ぞく・つづ(く)|zoku, tsuzu(ku)|continuar|雨が続きます。|Ame ga tsuzukimasu.|La lluvia continúa.
+卒|4|そつ|sotsu|graduarse|卒業します。|Sotsugyō shimasu.|Me gradúo.
+孫|4|そん・まご|son, mago|nieto|孫が来ます。|Mago ga kimasu.|Viene mi nieto.
+帯|4|たい・おび|tai, obi|cinta, faja|帯を結びます。|Obi o musubimasu.|Anudo el obi.
+隊|4|たい|tai|tropa, equipo|救助隊が来ました。|Kyūjotai ga kimashita.|Llegó el equipo de rescate.
+達|4|たつ・たち|tatsu, tachi|alcanzar, plural|上達しました。|Jōtatsu shimashita.|Mejoré.
+単|4|たん|tan|simple|簡単です。|Kantan desu.|Es fácil.
+置|4|ち・お(く)|chi, o(ku)|colocar|本を机に置きます。|Hon o tsukue ni okimasu.|Pongo el libro en el escritorio.
+仲|4|ちゅう・なか|chū, naka|relación|仲がいいです。|Naka ga ii desu.|Nos llevamos bien.
+貯|5|ちょ・た(める)|cho, ta(meru)|ahorrar|お金を貯めます。|Okane o tamemasu.|Ahorro dinero.
+兆|4|ちょう・きざ(し)|chō, kiza(shi)|billón, presagio|一兆円です。|Icchōen desu.|Es un billón de yenes.
+腸|6|ちょう|chō|intestino|腸が悪いです。|Chō ga warui desu.|Tengo mal el intestino.
+低|4|てい・ひく(い)|tei, hiku(i)|bajo|低い山です。|Hikui yama desu.|Es una montaña baja.
+底|4|てい・そこ|tei, soko|fondo|海の底です。|Umi no soko desu.|Es el fondo del mar.
+停|5|てい|tei|detener|バス停で待ちます。|Basutei de machimasu.|Espero en la parada de autobús.
+的|4|てき・まと|teki, mato|objetivo, -tico|的に当てます。|Mato ni atemasu.|Acierto en el blanco.
+典|4|てん|ten|norma, ceremonia|辞典を引きます。|Jiten o hikimasu.|Consulto el diccionario.
+伝|4|でん・つた(える)|den, tsuta(eru)|transmitir|話を伝えます。|Hanashi o tsutaemasu.|Transmito el mensaje.
+徒|4|と|to|discípulo, a pie|生徒が来ます。|Seito ga kimasu.|Vienen los alumnos.
+努|4|ど・つと(める)|do, tsuto(meru)|esforzarse|努力します。|Doryoku shimasu.|Me esfuerzo.
+灯|4|とう・ひ|tō, hi|luz, lámpara|灯を点けます。|Hi o tsukemasu.|Enciendo la luz.
+堂|5|どう|dō|sala, templo|食堂で食べます。|Shokudō de tabemasu.|Como en el comedor.
+働|4|どう・はたら(く)|dō, hatara(ku)|trabajar|一生懸命働きます。|Isshōkenmei hatarakimasu.|Trabajo con esmero.
+特|4|とく|toku|especial|特別な日です。|Tokubetsu na hi desu.|Es un día especial.
+得|5|とく・え(る)|toku, e(ru)|obtener|点を得ます。|Ten o emasu.|Obtengo puntos.
+毒|5|どく|doku|veneno|毒があります。|Doku ga arimasu.|Es venenoso.
+熱|4|ねつ・あつ(い)|netsu, atsu(i)|fiebre, calor|熱があります。|Netsu ga arimasu.|Tengo fiebre.
+念|4|ねん|nen|deseo, pensamiento|残念です。|Zannen desu.|Qué lástima.
+敗|4|はい・やぶ(れる)|hai, yabu(reru)|perder, fracasar|試合に敗れました。|Shiai ni yaburemashita.|Perdí el partido.
+梅|4|ばい・うめ|bai, ume|ciruelo|梅の花が咲きます。|Ume no hana ga sakimasu.|Florecen los ciruelos.
+博|4|はく・ばく|haku, baku|extenso|博物館に行きます。|Hakubutsukan ni ikimasu.|Voy al museo.
+飯|4|はん・めし|han, meshi|arroz cocido, comida|ご飯を食べます。|Gohan o tabemasu.|Como arroz.
+飛|4|ひ・と(ぶ)|hi, to(bu)|volar|鳥が飛びます。|Tori ga tobimasu.|Vuelan las aves.
+費|5|ひ・つい(やす)|hi, tsui(yasu)|gastar|費用がかかります。|Hiyō ga kakarimasu.|Cuesta dinero.
+必|4|ひつ・かなら(ず)|hitsu, kanara(zu)|sin falta|必ず行きます。|Kanarazu ikimasu.|Iré sin falta.
+票|4|ひょう|hyō|voto, boleto|投票します。|Tōhyō shimasu.|Voto.
+標|4|ひょう|hyō|señal, objetivo|目標があります。|Mokuhyō ga arimasu.|Tengo una meta.
+不|4|ふ・ぶ|fu, bu|no, des-|不安です。|Fuan desu.|Estoy inquieto.
+夫|4|ふ・おっと|fu, otto|marido|夫は先生です。|Otto wa sensei desu.|Mi marido es profesor.
+付|4|ふ・つ(ける)|fu, tsu(keru)|adjuntar, pegar|気を付けて。|Ki o tsukete.|Ten cuidado.
+府|4|ふ|fu|prefectura urbana, gobierno|大阪府に住んでいます。|Ōsaka-fu ni sunde imasu.|Vivo en la prefectura de Osaka.
+副|4|ふく|fuku|adjunto|副社長です。|Fukushachō desu.|Es vicepresidente.
+粉|5|ふん・こな|fun, kona|polvo, harina|粉を混ぜます。|Kona o mazemasu.|Mezclo la harina.
+兵|4|へい・ひょう|hei, hyō|soldado|兵士です。|Heishi desu.|Es un soldado.
+別|4|べつ・わか(れる)|betsu, waka(reru)|separar, otro|別の本を読みます。|Betsu no hon o yomimasu.|Leo otro libro.
+辺|4|へん・あた(り)|hen, ata(ri)|alrededores|この辺に住んでいます。|Kono hen ni sunde imasu.|Vivo por aquí.
+変|4|へん・か(わる)|hen, ka(waru)|cambiar, raro|天気が変わります。|Tenki ga kawarimasu.|Cambia el tiempo.
+便|4|べん・びん|ben, bin|cómodo, correo|便利な店です。|Benri na mise desu.|Es una tienda práctica.
+包|4|ほう・つつ(む)|hō, tsutsu(mu)|envolver|プレゼントを包みます。|Purezento o tsutsumimasu.|Envuelvo el regalo.
+法|4|ほう|hō|ley, método|法律を守ります。|Hōritsu o mamorimasu.|Cumplo la ley.
+望|4|ぼう・のぞ(む)|bō, nozo(mu)|desear|平和を望みます。|Heiwa o nozomimasu.|Deseo la paz.
+牧|4|ぼく・まき|boku, maki|pastoreo|牧場に行きます。|Bokujō ni ikimasu.|Voy a la granja ganadera.
+末|4|まつ・すえ|matsu, sue|fin|週末に会います。|Shūmatsu ni aimasu.|Nos vemos el fin de semana.
+満|4|まん・み(ちる)|man, mi(chiru)|lleno|満員です。|Manin desu.|Está lleno.
+未|4|み|mi|aún no|未来は明るいです。|Mirai wa akarui desu.|El futuro es brillante.
+脈|5|みゃく|myaku|pulso|脈を測ります。|Myaku o hakarimasu.|Tomo el pulso.
+民|4|みん・たみ|min, tami|pueblo|国民が集まります。|Kokumin ga atsumarimasu.|Se reúne el pueblo.
+無|4|む・ぶ・な(い)|mu, bu, na(i)|nada, sin|問題は無いです。|Mondai wa nai desu.|No hay problema.
+約|4|やく|yaku|promesa, aprox.|約束します。|Yakusoku shimasu.|Lo prometo.
+勇|4|ゆう・いさ(ましい)|yū, isa(mashii)|valiente|勇気を出します。|Yūki o dashimasu.|Armo valor.
+要|4|よう・い(る)|yō, i(ru)|necesitar|お金が要ります。|Okane ga irimasu.|Necesito dinero.
+養|4|よう・やしな(う)|yō, yashina(u)|criar, nutrir|家族を養います。|Kazoku o yashinaimasu.|Mantengo a mi familia.
+浴|4|よく・あ(びる)|yoku, a(biru)|bañarse|シャワーを浴びます。|Shawā o abimasu.|Me ducho.
+利|4|り・き(く)|ri, ki(ku)|provecho|利用します。|Riyō shimasu.|Lo utilizo.
+陸|4|りく|riku|tierra firme|陸に着きます。|Riku ni tsukimasu.|Llego a tierra.
+良|4|りょう・よ(い)|ryō, yo(i)|bueno|良い天気です。|Yoi tenki desu.|Hace buen tiempo.
+料|4|りょう|ryō|material, tarifa|料金は無料です。|Ryōkin wa muryō desu.|La tarifa es gratuita.
+量|4|りょう・はか(る)|ryō, haka(ru)|cantidad|量が多いです。|Ryō ga ōi desu.|La cantidad es grande.
+輪|4|りん・わ|rin, wa|rueda, anillo|輪になります。|Wa ni narimasu.|Hacemos un círculo.
+類|4|るい・たぐい|rui, tagui|tipo|種類が多いです。|Shurui ga ōi desu.|Hay muchos tipos.
+令|4|れい|rei|orden|命令します。|Meirei shimasu.|Ordeno.
+冷|4|れい・つめ(たい)|rei, tsume(tai)|frío|冷たい水です。|Tsumetai mizu desu.|Es agua fría.
+例|4|れい・たと(える)|rei, tato(eru)|ejemplo|例を挙げます。|Rei o agemasu.|Doy un ejemplo.
+歴|5|れき|reki|historia|歴史を学びます。|Rekishi o manabimasu.|Estudio historia.
+連|4|れん・つ(れる)|ren, tsu(reru)|llevar consigo|友達を連れて行きます。|Tomodachi o tsurete ikimasu.|Llevo a un amigo.
+老|4|ろう・お(いる)|rō, o(iru)|anciano|老人が歩きます。|Rōjin ga arukimasu.|Un anciano camina.
+労|4|ろう|rō|trabajo, esfuerzo|苦労しました。|Kurō shimashita.|Pasé penurias.
+録|4|ろく|roku|registrar|録音します。|Rokuon shimasu.|Grabo audio.
+愛|4|あい|ai|amor|家族を愛しています。|Kazoku o aishite imasu.|Amo a mi familia.
+笑|4|しょう・わら(う)|shō, wara(u)|reír|たくさん笑いました。|Takusan waraimashita.|Me reí mucho.
+験|4|けん|ken|prueba, examen|明日は試験です。|Ashita wa shiken desu.|Mañana hay examen.
+夢|5|む・ゆめ|mu, yume|sueño|夢を持っています。|Yume o motte imasu.|Tengo un sueño.
+勉|3|べん|ben|esforzarse|毎日勉強します。|Mainichi benkyō shimasu.|Estudio todos los días.
+圧|5|あつ|atsu|presión|水圧が高いです。|Suiatsu ga takai desu.|La presión del agua es alta.
+移|5|い・うつ(る)|i, utsu(ru)|mudarse, trasladar|東京に移ります。|Tōkyō ni utsurimasu.|Me mudo a Tokio.
+因|5|いん・よ(る)|in, yo(ru)|causa|原因を調べます。|Gen'in o shirabemasu.|Investigo la causa.
+永|5|えい・なが(い)|ei, naga(i)|eterno|永遠に続きます。|Eien ni tsuzukimasu.|Continúa eternamente.
+営|5|えい・いとな(む)|ei, itona(mu)|administrar|店を経営します。|Mise o keiei shimasu.|Administro una tienda.
+衛|5|えい|ei|defender|衛生に気をつけます。|Eisei ni ki o tsukemasu.|Cuido la higiene.
+易|5|い・やさ(しい)|i, yasa(shii)|fácil, cambiar|易しい問題です。|Yasashii mondai desu.|Es un problema fácil.
+益|5|えき・やく|eki, yaku|beneficio|利益が出ました。|Rieki ga demashita.|Hubo ganancias.
+液|5|えき|eki|líquido|液体です。|Ekitai desu.|Es un líquido.
+演|5|えん|en|actuar|劇を演じます。|Geki o enjimasu.|Actúo en una obra.
+往|5|おう|ō|ir|往復で千円です。|Ōfuku de sen'en desu.|Ida y vuelta cuesta mil yenes.
+応|5|おう・こた(える)|ō, kota(eru)|responder|応援します。|Ōen shimasu.|Animo a mi equipo.
+恩|6|おん|on|favor|先生に恩があります。|Sensei ni on ga arimasu.|Le debo un favor al profesor.
+仮|5|か・かり|ka, kari|provisional|仮の名前です。|Kari no namae desu.|Es un nombre provisional.
+価|5|か・あたい|ka, atai|valor, precio|価格が安いです。|Kakaku ga yasui desu.|El precio es bajo.
+可|5|か|ka|posible|可能です。|Kanō desu.|Es posible.
+河|5|か・かわ|ka, kawa|río grande|大きな河です。|Ōkina kawa desu.|Es un río grande.
+過|5|か・す(ぎる)|ka, su(giru)|pasar, exceder|時間が過ぎます。|Jikan ga sugimasu.|El tiempo pasa.
+快|5|かい・こころよ(い)|kai, kokoroyo(i)|agradable|快適な部屋です。|Kaiteki na heya desu.|Es una habitación cómoda.
+解|5|かい・と(く)|kai, to(ku)|resolver, entender|問題を解きます。|Mondai o tokimasu.|Resuelvo el problema.
+格|5|かく|kaku|norma, categoría|合格しました。|Gōkaku shimashita.|Aprobé.
+確|5|かく・たし(か)|kaku, tashi(ka)|seguro|確かです。|Tashika desu.|Es seguro.
+額|5|がく・ひたい|gaku, hitai|frente, monto|額に汗をかきます。|Hitai ni ase o kakimasu.|Sudo en la frente.
+刊|5|かん|kan|publicar|新刊を買います。|Shinkan o kaimasu.|Compro una novedad editorial.
+幹|5|かん・みき|kan, miki|tronco|木の幹です。|Ki no miki desu.|Es el tronco de un árbol.
+慣|5|かん・な(れる)|kan, na(reru)|acostumbrarse|仕事に慣れました。|Shigoto ni naremashita.|Me acostumbré al trabajo.
+眼|5|がん・め|gan, me|ojo|眼鏡をかけます。|Megane o kakemasu.|Me pongo gafas.
+紀|5|き|ki|crónica, era|二十一世紀です。|Nijūisseiki desu.|Es el siglo XXI.
+基|5|き・もと|ki, moto|base|基本が大切です。|Kihon ga taisetsu desu.|Lo básico es importante.
+寄|5|き・よ(る)|ki, yo(ru)|acercarse|店に寄ります。|Mise ni yorimasu.|Paso por la tienda.
+規|5|き|ki|regla|規則を守ります。|Kisoku o mamorimasu.|Cumplo las reglas.
+喜|5|き・よろこ(ぶ)|ki, yoroko(bu)|alegrarse|合格を喜びます。|Gōkaku o yorokobimasu.|Me alegro de aprobar.
+技|5|ぎ・わざ|gi, waza|técnica|技を磨きます。|Waza o migakimasu.|Perfecciono mi técnica.
+義|5|ぎ|gi|justicia, significado|正義を信じます。|Seigi o shinjimasu.|Creo en la justicia.
+逆|5|ぎゃく・さか|gyaku, saka|inverso|逆に進みます。|Gyaku ni susumimasu.|Avanzo al revés.
+久|5|きゅう・ひさ(しい)|kyū, hisa(shii)|largo tiempo|お久しぶりです。|Ohisashiburi desu.|Cuánto tiempo.
+旧|5|きゅう|kyū|antiguo|旧友に会います。|Kyūyū ni aimasu.|Veo a un viejo amigo.
+居|5|きょ・い(る)|kyo, i(ru)|residir, estar|家に居ます。|Ie ni imasu.|Estoy en casa.
+許|5|きょ・ゆる(す)|kyo, yuru(su)|permitir, perdonar|許してください。|Yurushite kudasai.|Perdóname.
+境|5|きょう・さかい|kyō, sakai|frontera|国境を越えます。|Kokkyō o koemasu.|Cruzo la frontera.
+均|5|きん|kin|uniforme, promedio|平均点です。|Heikinten desu.|Es el promedio.
+禁|5|きん|kin|prohibir|禁煙です。|Kin'en desu.|Prohibido fumar.
+句|5|く|ku|frase, verso|俳句を読みます。|Haiku o yomimasu.|Leo un haiku.
+潔|5|けつ・いさぎよ(い)|ketsu, isagiyo(i)|limpio, puro|清潔な部屋です。|Seiketsu na heya desu.|Es una habitación limpia.
+件|5|けん|ken|asunto|事件が起きました。|Jiken ga okimashita.|Ocurrió un incidente.
+券|6|けん|ken|billete|入場券を買います。|Nyūjōken o kaimasu.|Compro la entrada.
+険|5|けん・けわ(しい)|ken, kewa(shii)|peligroso|危険です。|Kiken desu.|Es peligroso.
+検|5|けん|ken|examinar|検査を受けます。|Kensa o ukemasu.|Me hago un examen médico.
+限|5|げん・かぎ(る)|gen, kagi(ru)|límite|時間に限りがあります。|Jikan ni kagiri ga arimasu.|El tiempo es limitado.
+現|5|げん・あらわ(れる)|gen, araware(ru)|presente, aparecer|現在の時間です。|Genzai no jikan desu.|Es la hora actual.
+減|5|げん・へ(る)|gen, he(ru)|disminuir|人が減りました。|Hito ga herimashita.|La gente disminuyó.
+故|5|こ・ゆえ|ko, yue|causa, difunto|事故がありました。|Jiko ga arimashita.|Hubo un accidente.
+個|5|こ|ko|individual, pieza|りんごを三個買います。|Ringo o sanko kaimasu.|Compro tres manzanas.
+護|5|ご|go|proteger|看護師になります。|Kangoshi ni narimasu.|Seré enfermera.
+効|5|こう・き(く)|kō, ki(ku)|efecto|薬が効きます。|Kusuri ga kikimasu.|La medicina hace efecto.
+厚|5|こう・あつ(い)|kō, atsu(i)|grueso|厚い本です。|Atsui hon desu.|Es un libro grueso.
+耕|5|こう・たがや(す)|kō, tagaya(su)|arar|畑を耕します。|Hatake o tagayashimasu.|Aro el campo.
+航|5|こう|kō|navegar|航空券を買います。|Kōkūken o kaimasu.|Compro un pasaje aéreo.
+鉱|5|こう|kō|mineral|鉱山で働きます。|Kōzan de hatarakimasu.|Trabajo en una mina.
+構|5|こう・かま(える)|kō, kama(eru)|estructura|構いません。|Kamaimasen.|No importa.
+興|5|こう・きょう|kō, kyō|interés|興味があります。|Kyōmi ga arimasu.|Tengo interés.
+講|5|こう|kō|conferencia|講義を聞きます。|Kōgi o kikimasu.|Escucho la clase.
+告|5|こく・つ(げる)|koku, tsu(geru)|informar|友達に告げます。|Tomodachi ni tsugemasu.|Se lo digo a un amigo.
+混|5|こん・こ(む)|kon, ko(mu)|mezclar, abarrotado|電車が混んでいます。|Densha ga konde imasu.|El tren está lleno.
+査|5|さ|sa|investigar|調査します。|Chōsa shimasu.|Investigo.
+再|5|さい・ふたた(び)|sai, futata(bi)|de nuevo|再来週会いましょう。|Saraishū aimashō.|Veámonos en dos semanas.
+災|5|さい・わざわ(い)|sai, wazawa(i)|desastre|災害が起きます。|Saigai ga okimasu.|Ocurre un desastre.
+妻|5|さい・つま|sai, tsuma|esposa|妻は医者です。|Tsuma wa isha desu.|Mi esposa es médica.
+採|5|さい・と(る)|sai, to(ru)|recoger, adoptar|きのこを採ります。|Kinoko o torimasu.|Recojo hongos.
+際|5|さい・きわ|sai, kiwa|ocasión|国際的な町です。|Kokusaiteki na machi desu.|Es una ciudad internacional.
+在|5|ざい・あ(る)|zai, a(ru)|existir|現在、東京にいます。|Genzai, Tōkyō ni imasu.|Ahora estoy en Tokio.
+財|5|ざい・さいふ|zai, saifu|riqueza|財布を忘れました。|Saifu o wasuremashita.|Olvidé la cartera.
+罪|5|ざい・つみ|zai, tsumi|crimen|罪を認めます。|Tsumi o mitomemasu.|Admito el delito.
+雑|5|ざつ|zatsu|mezclado|雑誌を読みます。|Zasshi o yomimasu.|Leo una revista.
+酸|5|さん・す(い)|san, su(i)|ácido|酸っぱいです。|Suppai desu.|Es ácido.
+賛|5|さん|san|apoyar|賛成です。|Sansei desu.|Estoy de acuerdo.
+支|5|し・ささ(える)|shi, sasa(eru)|apoyar|友達を支えます。|Tomodachi o sasaemasu.|Apoyo a mi amigo.
+志|5|し・こころざ(す)|shi, kokoroza(su)|voluntad|志を持ちます。|Kokorozashi o mochimasu.|Tengo una aspiración.
+枝|5|し・えだ|shi, eda|rama|木の枝です。|Ki no eda desu.|Es la rama de un árbol.
+師|5|し|shi|maestro|医師になります。|Ishi ni narimasu.|Seré médico.
+資|5|し|shi|recursos|資料を集めます。|Shiryō o atsumemasu.|Reúno materiales.
+飼|5|し・か(う)|shi, ka(u)|criar animales|犬を飼っています。|Inu o katte imasu.|Tengo un perro.
+示|5|じ・しめ(す)|ji, shime(su)|mostrar|例を示します。|Rei o shimeshimasu.|Muestro un ejemplo.
+似|5|じ・に(る)|ji, ni(ru)|parecerse|母に似ています。|Haha ni nite imasu.|Me parezco a mi madre.
+識|5|しき|shiki|conocer|知識が増えます。|Chishiki ga fuemasu.|Aumenta el conocimiento.
+質|5|しつ・しち|shitsu, shichi|calidad, naturaleza|品質がいいです。|Hinshitsu ga ii desu.|La calidad es buena.
+舎|5|しゃ|sha|edificio|校舎に入ります。|Kōsha ni hairimasu.|Entro al edificio escolar.
+謝|5|しゃ・あやま(る)|sha, ayama(ru)|disculparse, agradecer|謝ります。|Ayamarimasu.|Me disculpo.
+授|5|じゅ・さず(ける)|ju, sazu(keru)|otorgar|授業を受けます。|Jugyō o ukemasu.|Asisto a clase.
+修|5|しゅう・おさ(める)|shū, osa(meru)|estudiar, reparar|車を修理します。|Kuruma o shūri shimasu.|Reparo el coche.
+述|5|じゅつ・の(べる)|jutsu, no(beru)|exponer|意見を述べます。|Iken o nobemasu.|Expreso mi opinión.
+術|5|じゅつ|jutsu|técnica|美術が好きです。|Bijutsu ga suki desu.|Me gusta el arte.
+準|5|じゅん|jun|preparar|準備をします。|Junbi o shimasu.|Me preparo.
+序|5|じょ|jo|orden, preludio|順序を守ります。|Junjo o mamorimasu.|Respeto el orden.
+招|5|しょう・まね(く)|shō, mane(ku)|invitar|友達を招きます。|Tomodachi o manekimasu.|Invito a un amigo.
+証|5|しょう|shō|prueba|証明書をもらいます。|Shōmeisho o moraimasu.|Recibo un certificado.
+条|5|じょう|jō|cláusula|条件があります。|Jōken ga arimasu.|Hay condiciones.
+状|5|じょう|jō|estado, carta|招待状を送ります。|Shōtaijō o okurimasu.|Envío una invitación.
+常|5|じょう・つね|jō, tsune|habitual, normal|日常の生活です。|Nichijō no seikatsu desu.|Es la vida cotidiana.
+情|5|じょう・なさ(け)|jō, nasa(ke)|sentimiento|感情が豊かです。|Kanjō ga yutaka desu.|Tiene emociones ricas.
+織|5|しょく・お(る)|shoku, o(ru)|tejer|布を織ります。|Nuno o orimasu.|Tejo tela.
+職|5|しょく|shoku|empleo|職業は何ですか。|Shokugyō wa nan desu ka.|¿A qué te dedicas?
+制|5|せい|sei|sistema, control|制服を着ます。|Seifuku o kimasu.|Me pongo el uniforme.
+性|5|せい・しょう|sei, shō|naturaleza, sexo|性格がいいです。|Seikaku ga ii desu.|Tiene buen carácter.
+政|5|せい・まつりごと|sei, matsurigoto|política|政治に関心があります。|Seiji ni kanshin ga arimasu.|Me interesa la política.
+勢|5|せい・いきお(い)|sei, ikio(i)|fuerza, impulso|勢いがあります。|Ikioi ga arimasu.|Tiene empuje.
+精|5|せい・しょう|sei, shō|espíritu, refinado|精神が大切です。|Seishin ga taisetsu desu.|El espíritu es importante.
+製|5|せい|sei|fabricar|日本製の車です。|Nihonsei no kuruma desu.|Es un coche hecho en Japón.
+税|5|ぜい|zei|impuesto|税金を払います。|Zeikin o haraimasu.|Pago impuestos.
+責|5|せき・せ(める)|seki, se(meru)|responsabilidad|責任があります。|Sekinin ga arimasu.|Tengo responsabilidad.
+績|5|せき|seki|logro|成績がいいです。|Seiseki ga ii desu.|Tengo buenas notas.
+接|5|せつ・つ(ぐ)|setsu, tsu(gu)|conectar, tocar|電話を接続します。|Denwa o setsuzoku shimasu.|Conecto el teléfono.
+設|5|せつ・もう(ける)|setsu, mō(keru)|establecer|施設を使います。|Shisetsu o tsukaimasu.|Uso las instalaciones.
+舌|6|ぜつ・した|zetsu, shita|lengua|舌を出します。|Shita o dashimasu.|Saco la lengua.
+絶|5|ぜつ・た(える)|zetsu, ta(eru)|cortar, extinguir|絶対に行きます。|Zettai ni ikimasu.|Iré sin falta.
+銭|6|せん・ぜに|sen, zeni|moneda|小銭がありません。|Kozeni ga arimasen.|No tengo cambio.
+祖|5|そ|so|antepasado|祖父は元気です。|Sofu wa genki desu.|Mi abuelo está bien.
+素|5|そ・す|so, su|elemento, simple|素晴らしいです。|Subarashii desu.|Es maravilloso.
+総|5|そう|sō|total|総理大臣です。|Sōri daijin desu.|Es el primer ministro.
+造|5|ぞう・つく(る)|zō, tsuku(ru)|construir|船を造ります。|Fune o tsukurimasu.|Construyo un barco.
+像|5|ぞう|zō|imagen, estatua|仏像を見ます。|Butsuzō o mimasu.|Veo una estatua de Buda.
+増|5|ぞう・ふ(える)|zō, fu(eru)|aumentar|人が増えます。|Hito ga fuemasu.|Aumenta la gente.
+則|5|そく|soku|regla|原則です。|Gensoku desu.|Es la regla general.
+測|5|そく・はか(る)|soku, haka(ru)|medir|長さを測ります。|Nagasa o hakarimasu.|Mido la longitud.
+属|5|ぞく|zoku|pertenecer|野球部に所属します。|Yakyūbu ni shozoku shimasu.|Pertenezco al club de béisbol.
+率|5|りつ・ひき(いる)|ritsu, hiki(iru)|tasa, dirigir|確率が高いです。|Kakuritsu ga takai desu.|La probabilidad es alta.
+損|5|そん・そこ(なう)|son, soko(nau)|pérdida|損をしました。|Son o shimashita.|Tuve una pérdida.
+退|6|たい・しりぞ(く)|tai, shirizo(ku)|retirarse|退院します。|Taiin shimasu.|Me dan el alta.
+貸|5|たい・か(す)|tai, ka(su)|prestar|本を貸します。|Hon o kashimasu.|Presto un libro.
+態|5|たい|tai|estado, actitud|態度がいいです。|Taido ga ii desu.|Tiene buena actitud.
+団|5|だん・とん|dan, ton|grupo|団体で行きます。|Dantai de ikimasu.|Vamos en grupo.
+断|5|だん・ことわ(る)|dan, kotowa(ru)|rechazar|誘いを断ります。|Sasoi o kotowarimasu.|Rechazo la invitación.
+築|5|ちく・きず(く)|chiku, kizu(ku)|construir|城を築きます。|Shiro o kizukimasu.|Construyo un castillo.
+張|5|ちょう・は(る)|chō, ha(ru)|estirar|頑張ります。|Ganbarimasu.|Daré lo mejor.
+提|5|てい・さ(げる)|tei, sa(geru)|presentar|意見を提出します。|Iken o teishutsu shimasu.|Presento mi opinión.
+程|5|てい・ほど|tei, hodo|grado|三日程かかります。|Mikka hodo kakarimasu.|Tarda unos tres días.
+適|5|てき|teki|adecuado|適当な方法です。|Tekitō na hōhō desu.|Es un método adecuado.
+統|5|とう・す(べる)|tō, su(beru)|unificar|伝統を守ります。|Dentō o mamorimasu.|Preservo la tradición.
+銅|5|どう|dō|cobre|銅メダルを取りました。|Dō-medaru o torimashita.|Gané la medalla de bronce.
+導|5|どう・みちび(く)|dō, michibi(ku)|guiar|客を導きます。|Kyaku o michibikimasu.|Guío al cliente.
+独|5|どく・ひと(り)|doku, hito(ri)|solo|独りで行きます。|Hitori de ikimasu.|Voy solo.
+任|5|にん・まか(せる)|nin, maka(seru)|encargar|任せてください。|Makasete kudasai.|Déjemelo a mí.
+燃|5|ねん・も(える)|nen, mo(eru)|arder|火が燃えます。|Hi ga moemasu.|El fuego arde.
+能|5|のう|nō|capacidad|才能があります。|Sainō ga arimasu.|Tiene talento.
+破|5|は・やぶ(る)|ha, yabu(ru)|romper|紙を破ります。|Kami o yaburimasu.|Rompo el papel.
+犯|5|はん・おか(す)|han, oka(su)|delito|犯人を捕まえます。|Hannin o tsukamaemasu.|Atrapo al criminal.
+判|5|はん・ばん|han, ban|juzgar, sello|判断します。|Handan shimasu.|Juzgo.
+版|5|はん|han|edición|新しい版です。|Atarashii han desu.|Es una edición nueva.
+比|5|ひ・くら(べる)|hi, kura(beru)|comparar|二つを比べます。|Futatsu o kurabemasu.|Comparo los dos.
+肥|5|ひ・こ(える)|hi, ko(eru)|engordar, abono|肥料をまきます。|Hiryō o makimasu.|Echo abono.
+非|5|ひ|hi|no, error|非常に大きいです。|Hijō ni ōkii desu.|Es enorme.
+備|5|び・そな(える)|bi, sona(eru)|preparar|地震に備えます。|Jishin ni sonaemasu.|Me preparo para un sismo.
+俵|6|ひょう・たわら|hyō, tawara|saco de paja|米俵を運びます。|Komedawara o hakobimasu.|Llevo un saco de arroz.
+評|5|ひょう|hyō|evaluar|評判がいいです。|Hyōban ga ii desu.|Tiene buena reputación.
+貧|5|ひん・まず(しい)|hin, mazu(shii)|pobre|貧しい家に育ちました。|Mazushii ie ni sodachimashita.|Crecí en un hogar pobre.
+布|5|ふ・ぬの|fu, nuno|tela|布で包みます。|Nuno de tsutsumimasu.|Envuelvo en tela.
+婦|5|ふ|fu|mujer casada|主婦です。|Shufu desu.|Soy ama de casa.
+富|4|ふ・と(む)|fu, to(mu)|riqueza|富士山に登ります。|Fujisan ni noborimasu.|Subo el monte Fuji.
+武|5|ぶ・む|bu, mu|militar|武士は強いです。|Bushi wa tsuyoi desu.|El samurái es fuerte.
+復|5|ふく|fuku|volver, restaurar|復習します。|Fukushū shimasu.|Repaso.
+複|5|ふく|fuku|múltiple|複雑です。|Fukuzatsu desu.|Es complicado.
+仏|5|ぶつ・ほとけ|butsu, hotoke|Buda|仏様に祈ります。|Hotokesama ni inorimasu.|Rezo a Buda.
+編|5|へん・あ(む)|hen, a(mu)|tejer, editar|本を編集します。|Hon o henshū shimasu.|Edito el libro.
+弁|5|べん|ben|discurso, bento|お弁当を食べます。|Obentō o tabemasu.|Como el bento.
+保|5|ほ・たも(つ)|ho, tamo(tsu)|conservar|温度を保ちます。|Ondo o tamochimasu.|Mantengo la temperatura.
+墓|5|ぼ・はか|bo, haka|tumba|墓参りに行きます。|Hakamairi ni ikimasu.|Visito la tumba.
+報|5|ほう・むく(いる)|hō, muku(iru)|informar|天気予報を見ます。|Tenki yohō o mimasu.|Miro el pronóstico del tiempo.
+豊|5|ほう・ゆた(か)|hō, yuta(ka)|abundante|豊かな国です。|Yutaka na kuni desu.|Es un país próspero.
+防|5|ぼう・ふせ(ぐ)|bō, fuse(gu)|prevenir|火事を防ぎます。|Kaji o fusegimasu.|Prevengo incendios.
+貿|5|ぼう|bō|comercio|貿易をします。|Bōeki o shimasu.|Hago comercio.
+暴|5|ぼう・あば(れる)|bō, aba(reru)|violento|暴力はいけません。|Bōryoku wa ikemasen.|La violencia no está bien.
+務|5|む・つと(める)|mu, tsuto(meru)|deber|事務所で働きます。|Jimusho de hatarakimasu.|Trabajo en una oficina.
+迷|5|めい・まよ(う)|mei, mayo(u)|perderse, dudar|道に迷いました。|Michi ni mayoimashita.|Me perdí.
+綿|5|めん・わた|men, wata|algodón|綿のシャツです。|Men no shatsu desu.|Es una camisa de algodón.
+輸|5|ゆ|yu|transportar|輸入品です。|Yunyūhin desu.|Es un producto importado.
+余|5|よ・あま(る)|yo, ama(ru)|sobrar|お金が余ります。|Okane ga amarimasu.|Sobra dinero.
+預|6|よ・あず(ける)|yo, azu(keru)|depositar|荷物を預けます。|Nimotsu o azukemasu.|Dejo el equipaje en custodia.
+容|5|よう|yō|contenido, aceptar|内容が分かりました。|Naiyō ga wakarimashita.|Entendí el contenido.
+略|5|りゃく|ryaku|abreviar|省略します。|Shōryaku shimasu.|Abrevio.
+留|5|りゅう・と(める)|ryū, to(meru)|quedarse|日本に留学します。|Nihon ni ryūgaku shimasu.|Estudio en Japón.
+領|5|りょう|ryō|territorio|領土を守ります。|Ryōdo o mamorimasu.|Defiendo el territorio.
+経|5|けい・へ(る)|kei, he(ru)|pasar, experimentar|経験が大切です。|Keiken ga taisetsu desu.|La experiencia es importante.
+異|6|い・こと(なる)|i, koto(naru)|diferente|意見が異なります。|Iken ga kotonarimasu.|Las opiniones difieren.
+遺|6|い・ゆい|i, yui|legar|遺跡を見ます。|Iseki o mimasu.|Veo las ruinas.
+域|6|いき|iki|región|地域で集まります。|Chiiki de atsumarimasu.|Nos reunimos en la comunidad.
+映|6|えい・うつ(る)|ei, utsu(ru)|reflejar, proyectar|鏡に顔が映ります。|Kagami ni kao ga utsurimasu.|La cara se refleja en el espejo.
+延|6|えん・の(びる)|en, no(biru)|prolongar|時間が延びます。|Jikan ga nobimasu.|El tiempo se alarga.
+沿|6|えん・そ(う)|en, so(u)|seguir a lo largo|川に沿って歩きます。|Kawa ni sotte arukimasu.|Camino a lo largo del río.
+我|6|が・われ|ga, ware|yo, nuestro|我が家です。|Wagaya desu.|Es nuestro hogar.
+灰|6|かい・はい|kai, hai|ceniza|灰色の空です。|Haiiro no sora desu.|Es un cielo gris.
+拡|6|かく|kaku|ampliar|拡大します。|Kakudai shimasu.|Amplío.
+革|6|かく・かわ|kaku, kawa|cuero, reforma|革の靴です。|Kawa no kutsu desu.|Son zapatos de cuero.
+閣|6|かく|kaku|torre, gabinete|内閣が決めました。|Naikaku ga kimemashita.|El gabinete decidió.
+割|6|かつ・わ(る)|katsu, wa(ru)|dividir, romper|お皿を割りました。|Osara o warimashita.|Rompí un plato.
+株|6|しゅ・かぶ|shu, kabu|acción, tocón|株を買います。|Kabu o kaimasu.|Compro acciones.
+干|6|かん・ほ(す)|kan, ho(su)|secar|洗濯物を干します。|Sentakumono o hoshimasu.|Tiendo la ropa.
+巻|6|かん・ま(く)|kan, ma(ku)|enrollar, volumen|第一巻を読みます。|Dai-ikkan o yomimasu.|Leo el primer volumen.
+看|6|かん|kan|vigilar|看病します。|Kanbyō shimasu.|Cuido a un enfermo.
+簡|6|かん|kan|simple|簡潔に話します。|Kanketsu ni hanashimasu.|Hablo con concisión.
+危|6|き・あぶ(ない)|ki, abu(nai)|peligroso|危ないです。|Abunai desu.|Es peligroso.
+机|6|き・つくえ|ki, tsukue|escritorio|机の上を片付けます。|Tsukue no ue o katazukemasu.|Ordeno el escritorio.
+揮|6|き|ki|ejercer|力を発揮します。|Chikara o hakki shimasu.|Demuestro mi fuerza.
+貴|6|き・たっと(い)|ki, tatto(i)|valioso|貴重な経験です。|Kichō na keiken desu.|Es una experiencia valiosa.
+疑|6|ぎ・うたが(う)|gi, utaga(u)|dudar|疑いません。|Utagaimasen.|No dudo.
+吸|6|きゅう・す(う)|kyū, su(u)|inhalar|空気を吸います。|Kūki o suimasu.|Respiro aire.
+供|6|きょう・そな(える)|kyō, sona(eru)|ofrecer|花を供えます。|Hana o sonaemasu.|Ofrezco flores.
+胸|6|きょう・むね|kyō, mune|pecho|胸が痛いです。|Mune ga itai desu.|Me duele el pecho.
+郷|6|ごう・きょう|gō, kyō|pueblo natal|故郷に帰ります。|Kokyō ni kaerimasu.|Vuelvo a mi tierra.
+勤|6|きん・つと(める)|kin, tsuto(meru)|trabajar para|会社に勤めます。|Kaisha ni tsutomemasu.|Trabajo en una empresa.
+筋|6|きん・すじ|kin, suji|músculo, hilo|筋肉が強いです。|Kinniku ga tsuyoi desu.|Tengo músculos fuertes.
+系|6|けい|kei|sistema, linaje|日系人です。|Nikkeijin desu.|Soy de ascendencia japonesa.
+敬|6|けい・うやま(う)|kei, uyama(u)|respetar|先生を敬います。|Sensei o uyamaimasu.|Respeto al profesor.
+警|6|けい|kei|advertir|警告を聞きます。|Keikoku o kikimasu.|Escucho la advertencia.
+劇|6|げき|geki|drama|劇を見ます。|Geki o mimasu.|Veo una obra de teatro.
+激|6|げき・はげ(しい)|geki, hage(shii)|intenso|激しい雨です。|Hageshii ame desu.|Es una lluvia intensa.
+穴|6|けつ・あな|ketsu, ana|agujero|穴を掘ります。|Ana o horimasu.|Cavo un hoyo.
+絹|6|けん・きぬ|ken, kinu|seda|絹の服です。|Kinu no fuku desu.|Es ropa de seda.
+権|6|けん・ごん|ken, gon|derecho, poder|権利があります。|Kenri ga arimasu.|Tengo derecho.
+憲|6|けん|ken|constitución|憲法を学びます。|Kenpō o manabimasu.|Estudio la constitución.
+源|6|げん・みなもと|gen, minamoto|fuente, origen|川の源です。|Kawa no minamoto desu.|Es el nacimiento del río.
+厳|6|げん・きび(しい)|gen, kibi(shii)|estricto|厳しい先生です。|Kibishii sensei desu.|Es un profesor estricto.
+己|6|こ・おのれ|ko, onore|uno mismo|自己紹介をします。|Jiko shōkai o shimasu.|Me presento.
+呼|6|こ・よ(ぶ)|ko, yo(bu)|llamar|名前を呼びます。|Namae o yobimasu.|Digo el nombre.
+誤|6|ご・あやま(る)|go, ayama(ru)|error|誤りを直します。|Ayamari o naoshimasu.|Corrijo el error.
+后|6|こう|kō|emperatriz|皇后です。|Kōgō desu.|Es la emperatriz.
+孝|6|こう|kō|piedad filial|親孝行をします。|Oyakōkō o shimasu.|Cumplo con mis padres.
+皇|6|こう・おう|kō, ō|emperador|天皇陛下です。|Tennō heika desu.|Es Su Majestad el Emperador.
+紅|6|こう・べに|kō, beni|carmesí|紅茶を飲みます。|Kōcha o nomimasu.|Bebo té negro.
+降|6|こう・お(りる)・ふ(る)|kō, o(riru), fu(ru)|bajar, caer|駅で降ります。|Eki de orimasu.|Me bajo en la estación.
+鋼|6|こう・はがね|kō, hagane|acero|鋼は強いです。|Hagane wa tsuyoi desu.|El acero es fuerte.
+刻|6|こく・きざ(む)|koku, kiza(mu)|grabar, hora|時刻を確認します。|Jikoku o kakunin shimasu.|Verifico la hora.
+穀|6|こく|koku|grano|穀物を育てます。|Kokumotsu o sodatemasu.|Cultivo cereales.
+骨|6|こつ・ほね|kotsu, hone|hueso|骨が折れました。|Hone ga oremashita.|Me rompí un hueso.
+困|6|こん・こま(る)|kon, koma(ru)|tener problemas|困っています。|Komatte imasu.|Estoy en apuros.
+砂|6|さ・すな|sa, suna|arena|砂浜を歩きます。|Sunahama o arukimasu.|Camino por la playa.
+座|6|ざ・すわ(る)|za, suwa(ru)|sentarse|椅子に座ります。|Isu ni suwarimasu.|Me siento en la silla.
+済|6|さい・す(む)|sai, su(mu)|terminar|宿題が済みました。|Shukudai ga sumimashita.|Terminé la tarea.
+裁|6|さい・さば(く)|sai, saba(ku)|juzgar, cortar|裁判があります。|Saiban ga arimasu.|Hay un juicio.
+策|6|さく|saku|plan|対策を考えます。|Taisaku o kangaemasu.|Pienso en medidas.
+冊|6|さつ|satsu|contador de libros|本を二冊買いました。|Hon o nisatsu kaimashita.|Compré dos libros.
+蚕|6|さん・かいこ|san, kaiko|gusano de seda|蚕を育てます。|Kaiko o sodatemasu.|Crío gusanos de seda.
+至|6|し・いた(る)|shi, ita(ru)|llegar|東京に至ります。|Tōkyō ni itarimasu.|Se llega a Tokio.
+私|6|し・わたし|shi, watashi|yo, privado|私は学生です。|Watashi wa gakusei desu.|Soy estudiante.
+姿|6|し・すがた|shi, sugata|figura|姿を見せます。|Sugata o misemasu.|Aparezco.
+視|6|し|shi|mirar|視力が悪いです。|Shiryoku ga warui desu.|Tengo mala vista.
+詞|6|し|shi|palabra|歌詞を覚えます。|Kashi o oboemasu.|Memorizo la letra de la canción.
+誌|6|し|shi|revista|日誌を書きます。|Nisshi o kakimasu.|Escribo el diario de trabajo.
+磁|6|じ|ji|imán|磁石を使います。|Jishaku o tsukaimasu.|Uso un imán.
+射|6|しゃ・い(る)|sha, i(ru)|disparar|光が射します。|Hikari ga sashimasu.|Entra la luz.
+捨|6|しゃ・す(てる)|sha, su(teru)|tirar|ごみを捨てます。|Gomi o sutemasu.|Tiro la basura.
+尺|6|しゃく|shaku|medida shaku|尺で測ります。|Shaku de hakarimasu.|Mido con el shaku.
+若|6|じゃく・わか(い)|jaku, waka(i)|joven|若い人です。|Wakai hito desu.|Es una persona joven.
+樹|6|じゅ|ju|árbol|大きな樹です。|Ōkina ki desu.|Es un árbol grande.
+収|6|しゅう・おさ(める)|shū, osa(meru)|recoger|収入があります。|Shūnyū ga arimasu.|Tengo ingresos.
+宗|6|しゅう・そう|shū, sō|religión|宗教を学びます。|Shūkyō o manabimasu.|Estudio religión.
+就|6|しゅう・つ(く)|shū, tsu(ku)|emplearse|就職します。|Shūshoku shimasu.|Consigo empleo.
+衆|6|しゅう|shū|multitud|大衆が集まります。|Taishū ga atsumarimasu.|La multitud se reúne.
+従|6|じゅう・したが(う)|jū, shitaga(u)|obedecer|規則に従います。|Kisoku ni shitagaimasu.|Sigo las reglas.
+縦|6|じゅう・たて|jū, tate|vertical|縦に書きます。|Tate ni kakimasu.|Escribo en vertical.
+縮|6|しゅく・ちぢ(む)|shuku, chiji(mu)|encoger|服が縮みました。|Fuku ga chijimimashita.|La ropa encogió.
+熟|6|じゅく・う(れる)|juku, u(reru)|madurar|果物が熟れます。|Kudamono ga uremasu.|La fruta madura.
+純|6|じゅん|jun|puro|純粋な心です。|Junsui na kokoro desu.|Es un corazón puro.
+処|6|しょ|sho|lidiar|処理します。|Shori shimasu.|Lo gestiono.
+署|6|しょ|sho|oficina|警察署に行きます。|Keisatsusho ni ikimasu.|Voy a la comisaría.
+諸|6|しょ・もろもろ|sho, moromoro|varios|諸国を旅します。|Shokoku o tabi shimasu.|Viajo por varios países.
+除|6|じょ・のぞ(く)|jo, nozo(ku)|eliminar|雪を除きます。|Yuki o nozokimasu.|Quito la nieve.
+承|6|しょう・うけたまわ(る)|shō, uketamawa(ru)|aceptar|承知しました。|Shōchi shimashita.|Entendido.
+将|6|しょう|shō|futuro, general|将来は医者になります。|Shōrai wa isha ni narimasu.|En el futuro seré médico.
+傷|6|しょう・きず|shō, kizu|herida|傷が痛いです。|Kizu ga itai desu.|Me duele la herida.
+障|6|しょう・さわ(る)|shō, sawa(ru)|obstáculo|故障しました。|Koshō shimashita.|Se averió.
+蒸|6|じょう・む(す)|jō, mu(su)|cocer al vapor|野菜を蒸します。|Yasai o mushimasu.|Cuezo verduras al vapor.
+針|6|しん・はり|shin, hari|aguja|針で縫います。|Hari de nuimasu.|Coso con aguja.
+仁|6|じん・に|jin, ni|benevolencia|仁義を守ります。|Jingi o mamorimasu.|Respeto el honor.
+垂|6|すい・た(れる)|sui, ta(reru)|colgar|水が垂れます。|Mizu ga taremasu.|Gotea agua.
+推|6|すい・お(す)|sui, o(su)|deducir|推理します。|Suiri shimasu.|Deduzco.
+寸|6|すん|sun|pulgada|寸法を測ります。|Sunpō o hakarimasu.|Mido las dimensiones.
+盛|6|せい・も(る)|sei, mo(ru)|llenar, próspero|ご飯を盛ります。|Gohan o morimasu.|Sirvo el arroz.
+聖|6|せい・ひじり|sei, hijiri|sagrado|聖書を読みます。|Seisho o yomimasu.|Leo la Biblia.
+胃|6|い|i|estómago|胃が痛いです。|I ga itai desu.|Me duele el estómago.
+誠|6|せい・まこと|sei, makoto|sinceridad|誠実な人です。|Seijitsu na hito desu.|Es una persona sincera.
+宣|6|せん|sen|declarar|宣言します。|Sengen shimasu.|Lo declaro.
+専|6|せん・もっぱ(ら)|sen, moppa(ra)|especializado|専門は何ですか。|Senmon wa nan desu ka.|¿Cuál es tu especialidad?
+泉|6|せん・いずみ|sen, izumi|manantial|泉の水は冷たいです。|Izumi no mizu wa tsumetai desu.|El agua del manantial es fría.
+洗|6|せん・あら(う)|sen, ara(u)|lavar|手を洗います。|Te o araimasu.|Me lavo las manos.
+染|6|せん・そ(める)|sen, so(meru)|teñir|布を染めます。|Nuno o somemasu.|Tiño la tela.
+善|6|ぜん・よ(い)|zen, yo(i)|bueno, virtuoso|善い行いをします。|Yoi okonai o shimasu.|Hago buenas acciones.
+奏|6|そう・かな(でる)|sō, kana(deru)|interpretar música|ピアノを演奏します。|Piano o ensō shimasu.|Toco el piano.
+窓|6|そう・まど|sō, mado|ventana|窓を開けます。|Mado o akemasu.|Abro la ventana.
+創|6|そう|sō|crear|新しい物を創ります。|Atarashii mono o tsukurimasu.|Creo algo nuevo.
+装|6|そう・よそお(う)|sō, yosoo(u)|vestir, equipar|服装を整えます。|Fukusō o totonoemasu.|Arreglo mi vestimenta.
+層|6|そう|sō|capa, estrato|地層を調べます。|Chisō o shirabemasu.|Investigo los estratos.
+操|6|そう・みさお|sō, misao|manejar|機械を操作します。|Kikai o sōsa shimasu.|Opero la máquina.
+蔵|6|ぞう・くら|zō, kura|almacén, guardar|冷蔵庫に入れます。|Reizōko ni iremasu.|Lo meto en el refrigerador.
+臓|6|ぞう|zō|órgano interno|心臓が速いです。|Shinzō ga hayai desu.|El corazón me late rápido.
+存|6|そん・ぞん|son, zon|existir|存在します。|Sonzai shimasu.|Existe.
+尊|6|そん・とうと(い)|son, tōto(i)|respetable|先生を尊敬します。|Sensei o sonkei shimasu.|Respeto al profesor.
+宅|6|たく|taku|casa|お宅はどこですか。|Otaku wa doko desu ka.|¿Dónde queda su casa?
+担|6|たん・かつ(ぐ)|tan, katsu(gu)|cargar, encargarse|荷物を担ぎます。|Nimotsu o katsugimasu.|Cargo el equipaje.
+探|6|たん・さが(す)|tan, saga(su)|buscar|鍵を探します。|Kagi o sagashimasu.|Busco la llave.
+段|6|だん|dan|escalón, nivel|階段を上ります。|Kaidan o noborimasu.|Subo las escaleras.
+暖|6|だん・あたた(かい)|dan, atata(kai)|templado|暖かい日です。|Atatakai hi desu.|Es un día templado.
+値|6|ち・ね|chi, ne|precio, valor|値段が高いです。|Nedan ga takai desu.|El precio es alto.
+宙|6|ちゅう|chū|aire, espacio|宇宙は広いです。|Uchū wa hiroi desu.|El universo es inmenso.
+忠|6|ちゅう|chū|lealtad|忠告を聞きます。|Chūkoku o kikimasu.|Escucho el consejo.
+著|6|ちょ・あらわ(す)|cho, arawa(su)|escribir (libro), notable|本を著します。|Hon o arawashimasu.|Escribo un libro.
+庁|6|ちょう|chō|oficina gubernamental|県庁に行きます。|Kenchō ni ikimasu.|Voy a la sede de la prefectura.
+頂|6|ちょう・いただ(く)|chō, itada(ku)|cima, recibir|頂上に着きました。|Chōjō ni tsukimashita.|Llegué a la cima.
+潮|6|ちょう・しお|chō, shio|marea|潮が満ちます。|Shio ga michimasu.|Sube la marea.
+賃|6|ちん|chin|alquiler, tarifa|家賃を払います。|Yachin o haraimasu.|Pago el alquiler.
+痛|6|つう・いた(い)|tsū, ita(i)|dolor|頭が痛いです。|Atama ga itai desu.|Me duele la cabeza.
+敵|6|てき・かたき|teki, kataki|enemigo|敵に勝ちます。|Teki ni kachimasu.|Venzo al enemigo.
+展|6|てん|ten|exhibir|展覧会に行きます。|Tenrankai ni ikimasu.|Voy a una exposición.
+討|6|とう・う(つ)|tō, u(tsu)|debatir, atacar|意見を検討します。|Iken o kentō shimasu.|Estudio la opinión.
+党|6|とう|tō|partido|政党に入ります。|Seitō ni hairimasu.|Me uno a un partido político.
+糖|6|とう|tō|azúcar|砂糖を入れます。|Satō o iremasu.|Pongo azúcar.
+届|6|とど(ける)|todo(keru)|entregar, llegar|荷物が届きました。|Nimotsu ga todokimashita.|Llegó el paquete.
+難|6|なん・むずか(しい)|nan, muzuka(shii)|difícil|難しい問題です。|Muzukashii mondai desu.|Es un problema difícil.
+乳|6|にゅう・ちち|nyū, chichi|leche, pecho|牛乳を飲みます。|Gyūnyū o nomimasu.|Bebo leche.
+認|6|にん・みと(める)|nin, mito(meru)|reconocer|間違いを認めます。|Machigai o mitomemasu.|Admito el error.
+納|6|のう・おさ(める)|nō, osa(meru)|entregar, guardar|税金を納めます。|Zeikin o osamemasu.|Pago los impuestos.
+脳|6|のう|nō|cerebro|脳は大切です。|Nō wa taisetsu desu.|El cerebro es importante.
+派|6|は|ha|facción, estilo|派手な服です。|Hade na fuku desu.|Es ropa llamativa.
+拝|6|はい・おが(む)|hai, oga(mu)|rezar, venerar|神社で拝みます。|Jinja de ogamimasu.|Rezo en el santuario.
+背|6|はい・せ|hai, se|espalda, estatura|背が高いです。|Se ga takai desu.|Es alto.
+肺|6|はい|hai|pulmón|肺が丈夫です。|Hai ga jōbu desu.|Tengo pulmones fuertes.
+俳|6|はい|hai|actor, haiku|俳句を作ります。|Haiku o tsukurimasu.|Compongo un haiku.
+班|6|はん|han|grupo, equipo|班で話し合います。|Han de hanashiaimasu.|Dialogamos en el grupo.
+晩|6|ばん|ban|noche|今晩は寒いです。|Konban wa samui desu.|Esta noche hace frío.
+否|6|ひ・いな|hi, ina|negar, no|賛否が分かれます。|Sanpi ga wakaremasu.|Las opiniones están divididas.
+批|6|ひ|hi|criticar|批評を聞きます。|Hihyō o kikimasu.|Escucho la crítica.
+秘|6|ひ・ひ(める)|hi, hi(meru)|secreto|秘密です。|Himitsu desu.|Es un secreto.
+腹|6|ふく・はら|fuku, hara|vientre|お腹が空きました。|Onaka ga sukimashita.|Tengo hambre.
+奮|6|ふん・ふる(う)|fun, furu(u)|animarse|興奮しました。|Kōfun shimashita.|Me emocioné.
+並|6|へい・なら(べる)|hei, nara(beru)|alinear, hacer fila|本を並べます。|Hon o narabemasu.|Alineo los libros.
+陛|6|へい|hei|majestad|陛下にお会いします。|Heika ni oai shimasu.|Me reúno con Su Majestad.
+閉|6|へい・し(める)|hei, shi(meru)|cerrar|ドアを閉めます。|Doa o shimemasu.|Cierro la puerta.
+片|6|へん・かた|hen, kata|un lado, fragmento|片手で持ちます。|Katate de mochimasu.|Lo sostengo con una mano.
+補|6|ほ・おぎな(う)|ho, ogina(u)|compensar|不足を補います。|Fusoku o oginaimasu.|Compenso la falta.
+暮|6|ぼ・く(らす)|bo, ku(rasu)|vivir, anochecer|日本で暮らします。|Nihon de kurashimasu.|Vivo en Japón.
+宝|6|ほう・たから|hō, takara|tesoro|宝物を探します。|Takaramono o sagashimasu.|Busco un tesoro.
+訪|6|ほう・おとず(れる)|hō, otozu(reru)|visitar|友達を訪ねます。|Tomodachi o tazunemasu.|Visito a un amigo.
+亡|6|ぼう・な(くなる)|bō, na(kunaru)|morir, perder|亡くなった祖父です。|Nakunatta sofu desu.|Es mi abuelo fallecido.
+忘|6|ぼう・わす(れる)|bō, wasu(reru)|olvidar|宿題を忘れました。|Shukudai o wasuremashita.|Olvidé la tarea.
+棒|6|ぼう|bō|palo, vara|棒で突きます。|Bō de tsukimasu.|Empujo con un palo.
+枚|6|まい|mai|contador de hojas|紙を三枚ください。|Kami o sanmai kudasai.|Deme tres hojas de papel.
+幕|6|まく・ばく|maku, baku|telón|幕が上がります。|Maku ga agarimasu.|Se levanta el telón.
+密|6|みつ|mitsu|denso, secreto|密集しています。|Misshū shite imasu.|Están muy apiñados.
+盟|6|めい|mei|alianza|同盟を結びます。|Dōmei o musubimasu.|Formo una alianza.
+模|6|も・ぼ|mo, bo|modelo, imitar|模型を作ります。|Mokei o tsukurimasu.|Construyo una maqueta.
+訳|6|やく・わけ|yaku, wake|traducir, motivo|日本語を訳します。|Nihongo o yakushimasu.|Traduzco japonés.
+郵|6|ゆう|yū|correo|郵便を出します。|Yūbin o dashimasu.|Envío una carta.
+幼|6|よう・おさな(い)|yō, osana(i)|infantil|幼い子供です。|Osanai kodomo desu.|Es un niño pequeño.
+欲|6|よく・ほっ(する)|yoku, hos(suru)|desear|欲しいです。|Hoshii desu.|Lo quiero.
+翌|6|よく|yoku|siguiente|翌日に行きます。|Yokujitsu ni ikimasu.|Iré al día siguiente.
+乱|6|らん・みだ(れる)|ran, mida(reru)|desordenar|髪が乱れます。|Kami ga midaremasu.|Se me despeina el cabello.
+卵|6|らん・たまご|ran, tamago|huevo|卵を食べます。|Tamago o tabemasu.|Como huevo.
+覧|6|らん|ran|ver, mirar|ご覧ください。|Goran kudasai.|Por favor, mire.
+裏|6|り・うら|ri, ura|reverso, parte trasera|裏口から入ります。|Uraguchi kara hairimasu.|Entro por la puerta trasera.
+律|6|りつ・りち|ritsu, richi|ley, ritmo|法律を守ります。|Hōritsu o mamorimasu.|Cumplo la ley.
+臨|6|りん・のぞ(む)|rin, nozo(mu)|enfrentar, asistir|試験に臨みます。|Shiken ni nozomimasu.|Me enfrento al examen.
+朗|6|ろう・ほが(らか)|rō, hoga(raka)|alegre, claro|朗らかな人です。|Hogaraka na hito desu.|Es una persona alegre.
+論|6|ろん|ron|argumento, debate|論文を書きます。|Ronbun o kakimasu.|Escribo un ensayo.
+囲|5|い・かこ(む)|i, kako(mu)|rodear|友達に囲まれます。|Tomodachi ni kakomaremasu.|Me rodean mis amigos.
+桜|5|おう・さくら|ō, sakura|cerezo|桜が咲きます。|Sakura ga sakimasu.|Florecen los cerezos.
+救|5|きゅう・すく(う)|kyū, suku(u)|salvar|人を救います。|Hito o sukuimasu.|Salvo a una persona.
+型|5|けい・かた|kei, kata|molde, tipo|新しい型です。|Atarashii kata desu.|Es un modelo nuevo.
+殺|5|さつ・ころ(す)|satsu, koro(su)|matar|虫を殺します。|Mushi o koroshimasu.|Mato un insecto.
+士|5|し|shi|caballero, profesional|消防士になります。|Shōbōshi ni narimasu.|Seré bombero.
+史|5|し|shi|historia|歴史を学びます。|Rekishi o manabimasu.|Estudio historia.
+宇|6|う|u|cosmos, techo|宇宙は広いです。|Uchū wa hiroi desu.|El universo es inmenso.
+誕|6|たん|tan|nacer|誕生日おめでとう。|Tanjōbi omedetō.|¡Feliz cumpleaños!
+優|6|ゆう・やさ(しい)|yū, yasa(shii)|amable, superior|彼は優しいです。|Kare wa yasashii desu.|Él es amable.
+憂|S|ゆう・うれ(い)|yū, ure(i)|melancolía|憂鬱な朝です。|Yūutsu na asa desu.|Es una mañana melancólica.
+輝|S|き・かがや(く)|ki, kagaya(ku)|brillar|星が輝いています。|Hoshi ga kagayaite imasu.|Las estrellas brillan.
+湿|S|しつ・しめ(る)|shitsu, shime(ru)|húmedo|今日は湿気が多いです。|Kyō wa shikke ga ōi desu.|Hoy hay mucha humedad.
+憧|S|しょう・あこが(れる)|shō, akoga(reru)|admirar, anhelar|先生に憧れています。|Sensei ni akogarete imasu.|Admiro a mi profesor.
+恋|S|れん・こい|ren, koi|amor romántico|恋をしています。|Koi o shite imasu.|Estoy enamorado/a.
+挑|S|ちょう・いど(む)|chō, ido(mu)|desafiar|新しいことに挑みます。|Atarashii koto ni idomimasu.|Me enfrento a algo nuevo.
+城|4|じょう・しろ|jō, shiro|castillo|城を見ます。|Shiro o mimasu.|Veo el castillo.
+縄|4|じょう・なわ|jō, nawa|cuerda|縄で結びます。|Nawa de musubimasu.|Ato con una cuerda.
+井|4|せい・い|sei, i|pozo|井戸の水です。|Ido no mizu desu.|Es agua del pozo.
+沖|4|ちゅう・おき|chū, oki|mar adentro|沖に船が見えます。|Oki ni fune ga miemasu.|Se ve un barco mar adentro.
+徳|4|とく|toku|virtud|徳の高い人です。|Toku no takai hito desu.|Es una persona virtuosa.
+栃|4|とち|tochi|castaño|栃木県に行きます。|Tochigi-ken ni ikimasu.|Voy a la prefectura de Tochigi.
+奈|4|な・ない|na, nai|(nombre propio)|奈良に行きます。|Nara ni ikimasu.|Voy a Nara.
+梨|4|り・なし|ri, nashi|pera japonesa|梨を食べます。|Nashi o tabemasu.|Como pera.
+阪|4|はん|han|cuesta, Osaka|大阪に住んでいます。|Ōsaka ni sunde imasu.|Vivo en Osaka.
+阜|4|ふ|fu|colina|岐阜は山が多いです。|Gifu wa yama ga ōi desu.|Gifu tiene muchas montañas.
+亜|S|あ|a|sub-, Asia|亜熱帯の気候です。|A-netsutai no kikō desu.|Es un clima subtropical.
+哀|S|あい・あわ(れ)|ai, awa(re)|tristeza|哀愁が漂います。|Aishū ga tadayoimasu.|Flota la melancolía.
+挨|S|あい|ai|acercarse|挨拶をします。|Aisatsu o shimasu.|Saludo.
+曖|S|あい|ai|ambiguo|曖昧な返事です。|Aimai na henji desu.|Es una respuesta ambigua.
+握|S|あく・にぎ(る)|aku, nigi(ru)|agarrar|手を握ります。|Te o nigirimasu.|Estrecho la mano.
+扱|S|そう・あつか(う)|sō, atsuka(u)|manejar|丁寧に扱います。|Teinei ni atsukaimasu.|Lo manejo con cuidado.
+宛|S|えん・あ(てる)|en, a(teru)|dirigido a|宛名を書きます。|Atena o kakimasu.|Escribo el destinatario.
+嵐|S|らん・あらし|ran, arashi|tormenta|嵐が来ます。|Arashi ga kimasu.|Llega una tormenta.
+依|S|い・え|i, e|depender|友達に依頼します。|Tomodachi ni irai shimasu.|Le pido un favor a un amigo.
+威|S|い|i|autoridad|威力があります。|Iryoku ga arimasu.|Tiene poder.
+為|S|い・ため|i, tame|por, hacer|家族の為に働きます。|Kazoku no tame ni hatarakimasu.|Trabajo por mi familia.
+畏|S|い・おそ(れる)|i, oso(reru)|temer, reverenciar|畏敬の念を抱きます。|Ikei no nen o idakimasu.|Siento reverencia.
+尉|S|い|i|oficial|大尉です。|Taii desu.|Es capitán.
+萎|S|い・な(える)|i, na(eru)|marchitarse|花が萎れます。|Hana ga shioremasu.|La flor se marchita.
+偉|S|い・えら(い)|i, era(i)|grandioso|偉い人です。|Erai hito desu.|Es una persona importante.
+椅|S|い|i|silla|椅子を買います。|Isu o kaimasu.|Compro una silla.
+彙|S|い|i|reunir|語彙が増えます。|Goi ga fuemasu.|Crece el vocabulario.
+慰|S|い・なぐさ(める)|i, nagusa(meru)|consolar|友達を慰めます。|Tomodachi o nagusamemasu.|Consuelo a mi amigo.
+緯|S|い|i|latitud|緯度を調べます。|Ido o shirabemasu.|Reviso la latitud.
+壱|S|いち|ichi|uno (formal)|壱万円札です。|Ichiman'en satsu desu.|Es un billete de diez mil yenes.
+逸|S|いつ|itsu|escapar|逸話を聞きます。|Itsuwa o kikimasu.|Escucho una anécdota.
+芋|S|う・いも|u, imo|patata|芋を焼きます。|Imo o yakimasu.|Asa batatas.
+咽|S|いん・のど|in, nodo|garganta|咽頭が痛いです。|Intō ga itai desu.|Me duele la faringe.
+姻|S|いん|in|matrimonio|婚姻届を出します。|Kon'intodoke o dashimasu.|Presento el acta de matrimonio.
+陰|S|いん・かげ|in, kage|sombra|木の陰で休みます。|Ki no kage de yasumimasu.|Descanso a la sombra.
+隠|S|いん・かく(す)|in, kaku(su)|esconder|宝物を隠します。|Takaramono o kakushimasu.|Escondo un tesoro.
+韻|S|いん|in|rima|韻を踏みます。|In o fumimasu.|Rimo.
+唄|S|ばい・うた|bai, uta|canción folclórica|子守唄を歌います。|Komoriuta o utaimasu.|Canto una nana.
+鬱|S|うつ|utsu|melancolía, frondoso|鬱蒼とした森です。|Utsusō to shita mori desu.|Es un bosque frondoso.
+畝|S|ほ・うね|ho, une|surco|畑に畝を作ります。|Hatake ni une o tsukurimasu.|Hago surcos en el campo.
+浦|S|ほ・うら|ho, ura|bahía|浦に船が着きます。|Ura ni fune ga tsukimasu.|Un barco llega a la bahía.
+詠|S|えい・よ(む)|ei, yo(mu)|recitar poesía|歌を詠みます。|Uta o yomimasu.|Compongo un poema.
+影|S|えい・かげ|ei, kage|sombra, imagen|影が長いです。|Kage ga nagai desu.|La sombra es larga.
+鋭|S|えい・するど(い)|ei, surudo(i)|afilado|鋭い刃物です。|Surudoi hamono desu.|Es una hoja afilada.
+疫|S|えき・やく|eki, yaku|epidemia|疫病が広がります。|Ekibyō ga hirogarimasu.|Se propaga la epidemia.
+悦|S|えつ|etsu|alegría|満悦の笑顔です。|Man'etsu no egao desu.|Es una sonrisa de satisfacción.
+越|S|えつ・こ(える)|etsu, ko(eru)|cruzar|山を越えます。|Yama o koemasu.|Cruzo la montaña.
+謁|S|えつ|etsu|audiencia|謁見します。|Ekken shimasu.|Tengo una audiencia.
+閲|S|えつ|etsu|revisar|本を閲覧します。|Hon o etsuran shimasu.|Consulto el libro.
+炎|S|えん・ほのお|en, honoo|llama|炎が燃えます。|Honoo ga moemasu.|La llama arde.
+怨|S|えん・おん|en, on|rencor|怨みを持ちます。|Urami o mochimasu.|Guardo rencor.
+宴|S|えん・うたげ|en, utage|banquete|宴会があります。|Enkai ga arimasu.|Hay un banquete.
+援|S|えん|en|ayudar|援助を求めます。|Enjo o motomemasu.|Pido ayuda.
+煙|S|えん・けむり|en, kemuri|humo|煙が出ます。|Kemuri ga demasu.|Sale humo.
+猿|S|えん・さる|en, saru|mono|猿が木に登ります。|Saru ga ki ni noborimasu.|El mono trepa al árbol.
+鉛|S|えん・なまり|en, namari|plomo|鉛筆を使います。|Enpitsu o tsukaimasu.|Uso un lápiz.
+縁|S|えん・ふち|en, fuchi|vínculo, borde|ご縁があります。|Goen ga arimasu.|Hay un vínculo del destino.
+艶|S|えん・つや|en, tsuya|brillo|艶のある髪です。|Tsuya no aru kami desu.|Es un cabello brillante.
+汚|S|お・よご(れる)|o, yogo(reru)|ensuciar|服が汚れました。|Fuku ga yogoremashita.|Se ensució la ropa.
+凹|S|おう・へこ(む)|ō, heko(mu)|cóncavo|凹んだ缶です。|Hekonda kan desu.|Es una lata abollada.
+押|S|おう・お(す)|ō, o(su)|empujar|ボタンを押します。|Botan o oshimasu.|Presiono el botón.
+旺|S|おう|ō|próspero|食欲が旺盛です。|Shokuyoku ga ōsei desu.|Tengo mucho apetito.
+欧|S|おう|ō|Europa|欧州に行きます。|Ōshū ni ikimasu.|Voy a Europa.
+殴|S|おう・なぐ(る)|ō, nagu(ru)|golpear|人を殴ってはいけません。|Hito o nagutte wa ikemasen.|No se debe golpear a nadie.
+翁|S|おう・おきな|ō, okina|anciano|翁の面です。|Okina no men desu.|Es la máscara del anciano.
+奥|S|おう・おく|ō, oku|interior|奥の部屋です。|Oku no heya desu.|Es la habitación del fondo.
+憶|S|おく|oku|recordar|記憶が曖昧です。|Kioku ga aimai desu.|Mi memoria es vaga.
+臆|S|おく|oku|timidez|臆病な猫です。|Okubyō na neko desu.|Es un gato miedoso.
+虞|S|ぐ・おそれ|gu, osore|temor, riesgo|雨の虞があります。|Ame no osore ga arimasu.|Existe el riesgo de lluvia.
+乙|S|おつ・いつ|otsu, itsu|segundo, elegante|乙な味です。|Otsu na aji desu.|Es un sabor refinado.
+俺|S|おれ|ore|yo (masc., informal)|俺は元気だ。|Ore wa genki da.|Estoy bien.
+卸|S|しゃ・おろ(す)|sha, oro(su)|mayoreo|卸売りの店です。|Oroshiuri no mise desu.|Es una tienda mayorista.
+穏|S|おん・おだ(やか)|on, oda(yaka)|tranquilo|穏やかな海です。|Odayaka na umi desu.|Es un mar tranquilo.
+佳|S|か|ka|bello|佳作に選ばれました。|Kasaku ni erabaremashita.|Obtuve una mención de honor.
+苛|S|か・いじ(める)|ka, iji(meru)|atormentar|苛烈な戦いです。|Karetsu na tatakai desu.|Es una lucha feroz.
+架|S|か・か(ける)|ka, ka(keru)|tender|橋を架けます。|Hashi o kakemasu.|Construyo un puente.
+華|S|か・はな|ka, hana|esplendor|華やかな舞台です。|Hanayaka na butai desu.|Es un escenario esplendoroso.
+菓|S|か|ka|dulce|お菓子を食べます。|Okashi o tabemasu.|Como dulces.
+渦|S|か・うず|ka, uzu|remolino|渦ができます。|Uzu ga dekimasu.|Se forma un remolino.
+嫁|S|か・よめ|ka, yome|nuera, novia|嫁に行きます。|Yome ni ikimasu.|Se casa.
+暇|S|か・ひま|ka, hima|tiempo libre|暇な日です。|Hima na hi desu.|Es un día libre.
+禍|S|か|ka|desgracia|災禍に遭いました。|Saika ni aimashita.|Sufrí una desgracia.
+靴|S|か・くつ|ka, kutsu|zapato|靴を履きます。|Kutsu o hakimasu.|Me pongo los zapatos.
+寡|S|か|ka|escaso, viudo|寡黙な人です。|Kamoku na hito desu.|Es una persona callada.
+箇|S|か|ka|contador|三箇所あります。|Sankasho arimasu.|Hay tres lugares.
+稼|S|か・かせ(ぐ)|ka, kase(gu)|ganar dinero|お金を稼ぎます。|Okane o kasegimasu.|Gano dinero.
+蚊|S|ぶん・か|bun, ka|mosquito|蚊に刺されました。|Ka ni sasaremashita.|Me picó un mosquito.
+牙|S|が・きば|ga, kiba|colmillo|象の牙です。|Zō no kiba desu.|Es el colmillo de un elefante.
+瓦|S|が・かわら|ga, kawara|teja|瓦の屋根です。|Kawara no yane desu.|Es un techo de tejas.
+雅|S|が|ga|elegante|優雅な動きです。|Yūga na ugoki desu.|Es un movimiento elegante.
+餓|S|が|ga|hambre|飢餓に苦しみます。|Kiga ni kurushimimasu.|Sufren hambruna.
+介|S|かい|kai|mediar|介護をします。|Kaigo o shimasu.|Cuido a una persona dependiente.
+戒|S|かい・いまし(める)|kai, imashi(meru)|advertir|警戒します。|Keikai shimasu.|Estoy en alerta.
+怪|S|かい・あや(しい)|kai, aya(shii)|extraño|怪しい人です。|Ayashii hito desu.|Es una persona sospechosa.
+拐|S|かい|kai|secuestrar|誘拐事件です。|Yūkai jiken desu.|Es un caso de secuestro.
+悔|S|かい・く(いる)|kai, ku(iru)|arrepentirse|後悔しています。|Kōkai shite imasu.|Me arrepiento.
+皆|S|かい・みな|kai, mina|todos|皆さん、こんにちは。|Mina-san, konnichiwa.|Hola a todos.
+塊|S|かい・かたまり|kai, katamari|bloque|氷の塊です。|Kōri no katamari desu.|Es un bloque de hielo.
+楷|S|かい|kai|estilo regular|楷書で書きます。|Kaisho de kakimasu.|Escribo en estilo regular.
+潰|S|かい・つぶ(す)|kai, tsubu(su)|aplastar|箱を潰します。|Hako o tsubushimasu.|Aplasto la caja.
+壊|S|かい・こわ(す)|kai, kowa(su)|romper|時計が壊れました。|Tokei ga kowaremashita.|Se rompió el reloj.
+懐|S|かい・なつ(かしい)|kai, natsu(kashii)|nostálgico|懐かしい歌です。|Natsukashii uta desu.|Es una canción nostálgica.
+諧|S|かい|kai|armonía|俳諧を学びます。|Haikai o manabimasu.|Estudio haikai.
+劾|S|がい|gai|acusar|弾劾されます。|Dangai saremasu.|Es sometido a juicio político.
+崖|S|がい・がけ|gai, gake|acantilado|崖の上に立ちます。|Gake no ue ni tachimasu.|Me paro sobre el acantilado.
+涯|S|がい|gai|límite|生涯学びます。|Shōgai manabimasu.|Aprendo toda la vida.
+慨|S|がい|gai|indignación|感慨深いです。|Kangai bukai desu.|Me llena de emoción.
+蓋|S|がい・ふた|gai, futa|tapa|蓋を閉めます。|Futa o shimemasu.|Cierro la tapa.
+該|S|がい|gai|dicho, correspondiente|該当します。|Gaitō shimasu.|Corresponde.
+概|S|がい|gai|general|概要を説明します。|Gaiyō o setsumei shimasu.|Explico el resumen.
+骸|S|がい|gai|restos|骸骨の模型です。|Gaikotsu no mokei desu.|Es un modelo de esqueleto.
+垣|S|えん・かき|en, kaki|cerca|垣根を作ります。|Kakine o tsukurimasu.|Hago una cerca.
+柿|S|し・かき|shi, kaki|caqui|柿を食べます。|Kaki o tabemasu.|Como caqui.
+核|S|かく|kaku|núcleo|核心を突きます。|Kakushin o tsukimasu.|Voy al fondo del asunto.
+殻|S|かく・から|kaku, kara|cáscara|卵の殻です。|Tamago no kara desu.|Es la cáscara del huevo.
+郭|S|かく|kaku|recinto|輪郭を描きます。|Rinkaku o egakimasu.|Dibujo el contorno.
+較|S|かく|kaku|comparar|比較します。|Hikaku shimasu.|Comparo.
+隔|S|かく・へだ(てる)|kaku, heda(teru)|separar|間隔を空けます。|Kankaku o akemasu.|Dejo espacio.
+獲|S|かく・え(る)|kaku, e(ru)|capturar|魚を獲ります。|Sakana o torimasu.|Pesco peces.
+嚇|S|かく|kaku|amenazar|威嚇します。|Ikaku shimasu.|Intimido.
+穫|S|かく|kaku|cosechar|米を収穫します。|Kome o shūkaku shimasu.|Cosecho arroz.
+岳|S|がく・たけ|gaku, take|pico|山岳地帯です。|Sangaku chitai desu.|Es una zona montañosa.
+顎|S|がく・あご|gaku, ago|mandíbula|顎が痛いです。|Ago ga itai desu.|Me duele la mandíbula.
+掛|S|か(ける)|ka(keru)|colgar|絵を壁に掛けます。|E o kabe ni kakemasu.|Cuelgo el cuadro en la pared.
+括|S|かつ|katsu|agrupar|一括で払います。|Ikkatsu de haraimasu.|Pago de una vez.
+喝|S|かつ|katsu|grito|喝采を浴びます。|Kassai o abimasu.|Recibo aplausos.
+渇|S|かつ・かわ(く)|katsu, kawa(ku)|tener sed|喉が渇きました。|Nodo ga kawakimashita.|Tengo sed.
+葛|S|かつ・くず|katsu, kuzu|kuzu|葛湯を飲みます。|Kuzuyu o nomimasu.|Bebo kuzuyu.
+滑|S|かつ・すべ(る)|katsu, sube(ru)|resbalar|雪の上で滑ります。|Yuki no ue de suberimasu.|Resbalo sobre la nieve.
+褐|S|かつ|katsu|marrón|褐色の肌です。|Kasshoku no hada desu.|Es una piel morena.
+轄|S|かつ|katsu|jurisdicción|管轄の警察です。|Kankatsu no keisatsu desu.|Es la policía competente.
+且|S|しょ・か(つ)|sho, ka(tsu)|además|安く且つおいしいです。|Yasuku katsu oishii desu.|Es barato y además delicioso.
+釜|S|ふ・かま|fu, kama|olla|釜でご飯を炊きます。|Kama de gohan o takimasu.|Cuezo arroz en la olla.
+鎌|S|れん・かま|ren, kama|hoz|鎌で草を刈ります。|Kama de kusa o karimasu.|Corto la hierba con la hoz.
+刈|S|か(る)|ka(ru)|segar|草を刈ります。|Kusa o karimasu.|Corto el césped.
+甘|S|かん・あま(い)|kan, ama(i)|dulce|甘いお菓子です。|Amai okashi desu.|Es un dulce.
+汗|S|かん・あせ|kan, ase|sudor|汗をかきます。|Ase o kakimasu.|Sudo.
+缶|S|かん|kan|lata|缶を捨てます。|Kan o sutemasu.|Tiro la lata.
+肝|S|かん・きも|kan, kimo|hígado|肝心なことです。|Kanjin na koto desu.|Es lo esencial.
+冠|S|かん・かんむり|kan, kanmuri|corona|冠をかぶります。|Kanmuri o kaburimasu.|Me pongo la corona.
+陥|S|かん・おちい(る)|kan, ochii(ru)|caer en|危険に陥ります。|Kiken ni ochiirimasu.|Caigo en peligro.
+乾|S|かん・かわ(く)|kan, kawa(ku)|secarse|洗濯物が乾きます。|Sentakumono ga kawakimasu.|Se seca la ropa.
+勘|S|かん|kan|intuición|勘が鋭いです。|Kan ga surudoi desu.|Tiene buena intuición.
+患|S|かん・わずら(う)|kan, wazura(u)|enfermedad|患者が来ます。|Kanja ga kimasu.|Llega un paciente.
+貫|S|かん・つらぬ(く)|kan, tsuranu(ku)|atravesar|意志を貫きます。|Ishi o tsuranukimasu.|Mantengo mi determinación.
+喚|S|かん|kan|gritar|喚起します。|Kanki shimasu.|Despierto la atención.
+堪|S|かん・た(える)|kan, ta(eru)|soportar|痛みに堪えます。|Itami ni taemasu.|Soporto el dolor.
+換|S|かん・か(える)|kan, ka(eru)|cambiar|電車を乗り換えます。|Densha o norikaemasu.|Hago transbordo de tren.
+敢|S|かん|kan|atreverse|勇敢な人です。|Yūkan na hito desu.|Es una persona valiente.
+棺|S|かん|kan|ataúd|棺に花を入れます。|Kan ni hana o iremasu.|Pongo flores en el ataúd.
+款|S|かん|kan|cláusula|定款を読みます。|Teikan o yomimasu.|Leo los estatutos.
+閑|S|かん|kan|ocio|閑静な町です。|Kansei na machi desu.|Es un pueblo tranquilo.
+勧|S|かん・すす(める)|kan, susu(meru)|recomendar|本を勧めます。|Hon o susumemasu.|Recomiendo un libro.
+寛|S|かん|kan|generoso|寛大な人です。|Kandai na hito desu.|Es una persona generosa.
+歓|S|かん|kan|alegría|歓迎します。|Kangei shimasu.|Doy la bienvenida.
+監|S|かん|kan|supervisar|監督します。|Kantoku shimasu.|Superviso.
+緩|S|かん・ゆる(い)|kan, yuru(i)|flojo|緩い坂です。|Yurui saka desu.|Es una cuesta suave.
+憾|S|かん|kan|pesar|遺憾です。|Ikan desu.|Es lamentable.
+還|S|かん|kan|volver|返還します。|Henkan shimasu.|Devuelvo.
+環|S|かん・わ|kan, wa|anillo|環境を守ります。|Kankyō o mamorimasu.|Protejo el medio ambiente.
+韓|S|かん|kan|Corea|韓国に行きます。|Kankoku ni ikimasu.|Voy a Corea.
+艦|S|かん|kan|buque de guerra|軍艦です。|Gunkan desu.|Es un buque de guerra.
+鑑|S|かん・かんが(みる)|kan, kangami(ru)|espejo, apreciar|図鑑を見ます。|Zukan o mimasu.|Miro la enciclopedia ilustrada.
+含|S|がん・ふく(む)|gan, fuku(mu)|contener|水分を含みます。|Suibun o fukumimasu.|Contiene humedad.
+玩|S|がん|gan|juguete|玩具で遊びます。|Gangu de asobimasu.|Juego con juguetes.
+頑|S|がん|gan|terco|頑固な人です。|Ganko na hito desu.|Es una persona terca.
+企|S|き・くわだ(てる)|ki, kuwada(teru)|planear|企画を立てます。|Kikaku o tatemasu.|Elaboro un plan.
+伎|S|ぎ|gi|habilidad|歌舞伎を見ます。|Kabuki o mimasu.|Veo kabuki.
+忌|S|き・い(む)|ki, i(mu)|tabú, luto|忌まわしい記憶です。|Imawashii kioku desu.|Es un recuerdo funesto.
+奇|S|き|ki|raro|奇跡が起きました。|Kiseki ga okimashita.|Ocurrió un milagro.
+祈|S|き・いの(る)|ki, ino(ru)|rezar|平和を祈ります。|Heiwa o inorimasu.|Rezo por la paz.
+軌|S|き|ki|rastro|軌道に乗ります。|Kidō ni norimasu.|Todo va por buen camino.
+既|S|き・すで(に)|ki, sude(ni)|ya|既に終わりました。|Sude ni owarimashita.|Ya terminó.
+飢|S|き・う(える)|ki, ue(ru)|pasar hambre|飢えた人を助けます。|Ueta hito o tasukemasu.|Ayudo a quien pasa hambre.
+鬼|S|き・おに|ki, oni|demonio|鬼が出ます。|Oni ga demasu.|Aparece un ogro.
+亀|S|き・かめ|ki, kame|tortuga|亀がゆっくり歩きます。|Kame ga yukkuri arukimasu.|La tortuga camina despacio.
+幾|S|き・いく|ki, iku|cuántos|幾つありますか。|Ikutsu arimasu ka.|¿Cuántos hay?
+棋|S|き|ki|ajedrez japonés|将棋をします。|Shōgi o shimasu.|Juego shōgi.
+棄|S|き|ki|descartar|権利を放棄します。|Kenri o hōki shimasu.|Renuncio al derecho.
+毀|S|き・こぼ(つ)|ki, kobo(tsu)|dañar|名誉毀損です。|Meiyo kison desu.|Es difamación.
+畿|S|き|ki|zona capital|近畿地方です。|Kinki chihō desu.|Es la región de Kinki.
+騎|S|き|ki|montar a caballo|騎士が戦います。|Kishi ga tatakaimasu.|El caballero lucha.
+宜|S|ぎ|gi|adecuado|宜しくお願いします。|Yoroshiku onegai shimasu.|Encantado de conocerle.
+偽|S|ぎ・にせ|gi, nise|falso|偽物です。|Nisemono desu.|Es una falsificación.
+欺|S|ぎ・あざむ(く)|gi, azamu(ku)|engañar|人を欺きません。|Hito o azamukimasen.|No engaño a nadie.
+儀|S|ぎ|gi|ceremonia|儀式があります。|Gishiki ga arimasu.|Hay una ceremonia.
+戯|S|ぎ・たわむ(れる)|gi, tawamu(reru)|jugar|遊戯をします。|Yūgi o shimasu.|Juego un juego.
+擬|S|ぎ|gi|imitar|擬音語を学びます。|Giongo o manabimasu.|Estudio las onomatopeyas.
+犠|S|ぎ|gi|sacrificio|犠牲になります。|Gisei ni narimasu.|Me sacrifico.
+菊|S|きく|kiku|crisantemo|菊の花です。|Kiku no hana desu.|Es un crisantemo.
+吉|S|きち・きつ|kichi, kitsu|buena suerte|大吉を引きました。|Daikichi o hikimashita.|Saqué la mejor suerte.
+喫|S|きつ|kitsu|consumir|喫茶店に行きます。|Kissaten ni ikimasu.|Voy a la cafetería.
+詰|S|きつ・つ(める)|kitsu, tsu(meru)|rellenar|箱に詰めます。|Hako ni tsumemasu.|Lo meto en la caja.
+却|S|きゃく|kyaku|rechazar|返却します。|Henkyaku shimasu.|Devuelvo.
+脚|S|きゃく・あし|kyaku, ashi|pierna|脚が長いです。|Ashi ga nagai desu.|Tiene piernas largas.
+虐|S|ぎゃく・しいた(げる)|gyaku, shiita(geru)|maltratar|虐待はいけません。|Gyakutai wa ikemasen.|El maltrato no está bien.
+及|S|きゅう・およ(ぶ)|kyū, oyo(bu)|alcanzar|影響が及びます。|Eikyō ga oyobimasu.|Se extiende la influencia.
+丘|S|きゅう・おか|kyū, oka|colina|丘の上に家があります。|Oka no ue ni ie ga arimasu.|Hay una casa en la colina.
+朽|S|きゅう・く(ちる)|kyū, ku(chiru)|pudrirse|木が朽ちます。|Ki ga kuchimasu.|La madera se pudre.
+臼|S|きゅう・うす|kyū, usu|mortero|臼で餅をつきます。|Usu de mochi o tsukimasu.|Hago mochi con el mortero.
+糾|S|きゅう|kyū|retorcer|紛糾します。|Funkyū shimasu.|Se complica la discusión.
+嗅|S|きゅう・か(ぐ)|kyū, ka(gu)|oler|匂いを嗅ぎます。|Nioi o kagimasu.|Huelo el aroma.
+窮|S|きゅう・きわ(める)|kyū, kiwa(meru)|extremo|生活に困窮します。|Seikatsu ni konkyū shimasu.|Paso penurias.
+巨|S|きょ|kyo|gigante|巨大な木です。|Kyodai na ki desu.|Es un árbol enorme.
+拒|S|きょ・こば(む)|kyo, koba(mu)|rechazar|誘いを拒みます。|Sasoi o kobamimasu.|Rechazo la invitación.
+拠|S|きょ・こ|kyo, ko|base, fundamento|拠点を作ります。|Kyoten o tsukurimasu.|Establezco una base.
+虚|S|きょ|kyo|vacío, falso|虚しい気持ちです。|Munashii kimochi desu.|Siento un vacío.
+距|S|きょ|kyo|distancia|距離が遠いです。|Kyori ga tōi desu.|La distancia es larga.
+御|S|ぎょ・ご・おん|gyo, go, on|honorífico|御礼を申し上げます。|Orei o mōshiagemasu.|Le expreso mi agradecimiento.
+凶|S|きょう|kyō|mala suerte, maligno|凶を引きました。|Kyō o hikimashita.|Me salió mala suerte.
+叫|S|きょう・さけ(ぶ)|kyō, sake(bu)|gritar|大声で叫びます。|Ōgoe de sakebimasu.|Grito fuerte.
+狂|S|きょう・くる(う)|kyō, kuru(u)|enloquecer|時計が狂います。|Tokei ga kuruimasu.|El reloj se desajusta.
+享|S|きょう|kyō|disfrutar|自由を享受します。|Jiyū o kyōju shimasu.|Disfruto de la libertad.
+況|S|きょう|kyō|situación|状況を説明します。|Jōkyō o setsumei shimasu.|Explico la situación.
+峡|S|きょう|kyō|desfiladero|海峡を渡ります。|Kaikyō o watarimasu.|Cruzo el estrecho.
+挟|S|きょう・はさ(む)|kyō, hasa(mu)|pellizcar, insertar|本に紙を挟みます。|Hon ni kami o hasamimasu.|Meto un papel en el libro.
+狭|S|きょう・せま(い)|kyō, sema(i)|estrecho|狭い部屋です。|Semai heya desu.|Es una habitación estrecha.
+恐|S|きょう・おそ(れる)|kyō, oso(reru)|temer|恐い話です。|Kowai hanashi desu.|Es una historia de miedo.
+恭|S|きょう・うやうや(しい)|kyō, uyauya(shii)|respetuoso|恭しく頭を下げます。|Uyauyashiku atama o sagemasu.|Hago una reverencia respetuosa.
+脅|S|きょう・おびや(かす)|kyō, obiya(kasu)|amenazar|脅しに屈しません。|Odoshi ni kusshimasen.|No cedo ante las amenazas.
+矯|S|きょう・た(める)|kyō, ta(meru)|corregir|歯を矯正します。|Ha o kyōsei shimasu.|Me corrijo los dientes.
+響|S|きょう・ひび(く)|kyō, hibi(ku)|resonar|音が響きます。|Oto ga hibikimasu.|El sonido resuena.
+驚|S|きょう・おどろ(く)|kyō, odoro(ku)|sorprenderse|結果に驚きました。|Kekka ni odorokimashita.|Me sorprendió el resultado.
+仰|S|ぎょう・あお(ぐ)|gyō, ao(gu)|mirar hacia arriba|空を仰ぎます。|Sora o aogimasu.|Miro al cielo.
+暁|S|ぎょう・あかつき|gyō, akatsuki|amanecer|暁の空です。|Akatsuki no sora desu.|Es el cielo del alba.
+凝|S|ぎょう・こ(る)|gyō, ko(ru)|concentrarse, endurecerse|肩が凝ります。|Kata ga korimasu.|Tengo los hombros tensos.
+巾|S|きん・はば|kin|paño|雑巾で拭きます。|Zōkin de fukimasu.|Limpio con un trapo.
+斤|S|きん|kin|libra (peso)|パンを一斤買います。|Pan o ikkin kaimasu.|Compro una barra de pan.
+菌|S|きん|kin|bacteria, hongo|菌が増えます。|Kin ga fuemasu.|Aumentan las bacterias.
+琴|S|きん・こと|kin, koto|koto (arpa japonesa)|琴を弾きます。|Koto o hikimasu.|Toco el koto.
+僅|S|きん・わず(か)|kin, waza(ka)|apenas|僅かな時間です。|Wazuka na jikan desu.|Es muy poco tiempo.
+緊|S|きん|kin|tenso|緊張します。|Kinchō shimasu.|Estoy nervioso.
+錦|S|きん・にしき|kin, nishiki|brocado|錦の旗です。|Nishiki no hata desu.|Es una bandera de brocado.
+謹|S|きん・つつし(む)|kin, tsutsushi(mu)|respetuoso|謹んでお祝いします。|Tsutsushinde oiwai shimasu.|Felicito con todo respeto.
+襟|S|きん・えり|kin, eri|cuello (prenda)|襟を正します。|Eri o tadashimasu.|Me compongo el cuello.
+吟|S|ぎん|gin|recitar, saborear|詩を吟じます。|Shi o ginjimasu.|Recito un poema.
+駆|S|く・か(ける)|ku, ka(keru)|correr, galopar|馬が駆けます。|Uma ga kakemasu.|El caballo galopa.
+惧|S|ぐ|gu|temor|危惧しています。|Kigu shite imasu.|Me preocupa.
+愚|S|ぐ・おろ(か)|gu, oro(ka)|tonto|愚かな行いです。|Oroka na okonai desu.|Es una acción necia.
+偶|S|ぐう|gū|casualidad|偶然会いました。|Gūzen aimashita.|Nos encontramos por casualidad.
+遇|S|ぐう|gū|encontrar, trato|待遇がいいです。|Taigū ga ii desu.|Las condiciones son buenas.
+隅|S|ぐう・すみ|gū, sumi|rincón|部屋の隅です。|Heya no sumi desu.|Es un rincón de la habitación.
+串|S|かん・くし|kan, kushi|brocheta|串に刺します。|Kushi ni sashimasu.|Lo ensarto en la brocheta.
+屈|S|くつ|kutsu|doblar, ceder|膝を屈めます。|Hiza o kagamemasu.|Doblo las rodillas.
+掘|S|くつ・ほ(る)|kutsu, ho(ru)|cavar|穴を掘ります。|Ana o horimasu.|Cavo un hoyo.
+窟|S|くつ|kutsu|cueva|洞窟に入ります。|Dōkutsu ni hairimasu.|Entro en una cueva.
+繰|S|く(る)|ku(ru)|devanar, repetir|ページを繰ります。|Pēji o kurimasu.|Paso las páginas.
+勲|S|くん|kun|mérito, condecoración|勲章をもらいます。|Kunshō o moraimasu.|Recibo una condecoración.
+薫|S|くん・かお(る)|kun, kao(ru)|aroma|風が薫ります。|Kaze ga kaorimasu.|El viento huele bien.
+刑|S|けい|kei|castigo|刑を受けます。|Kei o ukemasu.|Cumplo la condena.
+茎|S|けい・くき|kei, kuki|tallo|花の茎が長いです。|Hana no kuki ga nagai desu.|El tallo de la flor es largo.
+契|S|けい・ちぎ(る)|kei, chigi(ru)|contrato, jurar|契約を結びます。|Keiyaku o musubimasu.|Firmo un contrato.
+恵|S|けい・え・めぐ(む)|kei, e, megu(mu)|bendición|恵まれた環境です。|Megumareta kankyō desu.|Es un entorno privilegiado.
+啓|S|けい|kei|abrir, instruir|啓発されました。|Keihatsu saremashita.|Me sentí inspirado.
+掲|S|けい・かか(げる)|kei, kakag(eru)|izar, exhibir|旗を掲げます。|Hata o kakagemasu.|Izo la bandera.
+渓|S|けい|kei|valle fluvial|渓谷を歩きます。|Keikoku o arukimasu.|Camino por el cañón.
+蛍|S|けい・ほたる|kei, hotaru|luciérnaga|蛍が光ります。|Hotaru ga hikarimasu.|Brillan las luciérnagas.
+傾|S|けい・かたむ(く)|kei, katamu(ku)|inclinarse|船が傾きます。|Fune ga katamukimasu.|El barco se inclina.
+携|S|けい・たずさ(える)|kei, tazusa(eru)|llevar consigo|携帯電話を持ちます。|Keitai denwa o mochimasu.|Llevo un teléfono móvil.
+継|S|けい・つ(ぐ)|kei, tsu(gu)|heredar, continuar|仕事を継ぎます。|Shigoto o tsugimasu.|Continúo el negocio.
+詣|S|けい・もう(でる)|kei, mō(deru)|visitar un templo|神社に初詣に行きます。|Jinja ni hatsumōde ni ikimasu.|Visito el santuario en Año Nuevo.
+慶|S|けい|kei|celebración|慶事です。|Keiji desu.|Es un motivo de alegría.
+憬|S|けい|kei|anhelar|憧憬を抱きます。|Dōkei o idakimasu.|Siento admiración.
+稽|S|けい|kei|practicar|稽古をします。|Keiko o shimasu.|Practico.
+憩|S|けい・いこ(う)|kei, iko(u)|descansar|公園で憩います。|Kōen de ikoimasu.|Descanso en el parque.
+鶏|S|けい・にわとり|kei, niwatori|gallina|鶏が鳴きます。|Niwatori ga nakimasu.|Canta el gallo.
+迎|S|げい・むか(える)|gei, mukae(ru)|recibir|友達を迎えます。|Tomodachi o mukaemasu.|Recibo a un amigo.
+鯨|S|げい・くじら|gei, kujira|ballena|鯨が泳ぎます。|Kujira ga oyogimasu.|La ballena nada.
+隙|S|げき・すき|geki, suki|rendija, descuido|隙を見せません。|Suki o misemasen.|No bajo la guardia.
+撃|S|げき・う(つ)|geki, u(tsu)|golpear, disparar|攻撃を防ぎます。|Kōgeki o fusegimasu.|Detengo el ataque.
+桁|S|けた|keta|dígito|桁が多いです。|Keta ga ōi desu.|Tiene muchos dígitos.
+傑|S|けつ|ketsu|sobresaliente|傑作を読みます。|Kessaku o yomimasu.|Leo una obra maestra.
+肩|S|けん・かた|ken, kata|hombro|肩が痛いです。|Kata ga itai desu.|Me duele el hombro.
+倹|S|けん|ken|frugal|倹約します。|Ken'yaku shimasu.|Ahorro.
+兼|S|けん・か(ねる)|ken, ka(neru)|combinar|居間と食堂を兼ねます。|Ima to shokudō o kanemasu.|La sala sirve también de comedor.
+剣|S|けん・つるぎ|ken, tsurugi|espada|剣を持ちます。|Ken o mochimasu.|Sostengo una espada.
+拳|S|けん・こぶし|ken, kobushi|puño|拳を握ります。|Kobushi o nigirimasu.|Cierro el puño.
+軒|S|けん・のき|ken, noki|alero|軒下で雨宿りします。|Nokishita de amayadori shimasu.|Me refugio bajo el alero.
+圏|S|けん|ken|esfera, zona|首都圏に住んでいます。|Shutoken ni sunde imasu.|Vivo en el área metropolitana.
+堅|S|けん・かた(い)|ken, kata(i)|firme|堅い決意です。|Katai ketsui desu.|Es una decisión firme.
+嫌|S|けん・きら(い)|ken, kira(i)|detestar|野菜が嫌いです。|Yasai ga kirai desu.|No me gustan las verduras.
+献|S|けん・こん|ken, kon|ofrecer|血を献血します。|Chi o kenketsu shimasu.|Dono sangre.
+遣|S|けん・つか(う)|ken, tsuka(u)|enviar, usar|気を遣います。|Ki o tsukaimasu.|Soy considerado.
+賢|S|けん・かしこ(い)|ken, kashiko(i)|sabio|賢い子供です。|Kashikoi kodomo desu.|Es un niño inteligente.
+謙|S|けん|ken|humilde|謙虚な人です。|Kenkyo na hito desu.|Es una persona humilde.
+鍵|S|けん・かぎ|ken, kagi|llave|鍵をかけます。|Kagi o kakemasu.|Echo la llave.
+繭|S|けん・まゆ|ken, mayu|capullo|蚕が繭を作ります。|Kaiko ga mayu o tsukurimasu.|El gusano de seda hace su capullo.
+顕|S|けん|ken|manifiesto|顕微鏡で見ます。|Kenbikyō de mimasu.|Miro con el microscopio.
+懸|S|けん・か(ける)|ken, ka(keru)|colgar, apostar|命を懸けます。|Inochi o kakemasu.|Arriesgo mi vida.
+幻|S|げん・まぼろし|gen, maboroshi|ilusión|幻を見ました。|Maboroshi o mimashita.|Vi una ilusión.
+玄|S|げん|gen|misterioso|玄関で靴を脱ぎます。|Genkan de kutsu o nugimasu.|Me quito los zapatos en la entrada.
+弦|S|げん・つる|gen, tsuru|cuerda (instrumento)|弦を張ります。|Gen o harimasu.|Tenso las cuerdas.
+舷|S|げん|gen|borda|船の舷です。|Fune no gen desu.|Es la borda del barco.
+股|S|こ・また|ko, mata|ingle, muslo|股関節が痛いです。|Kokansetsu ga itai desu.|Me duele la articulación de la cadera.
+虎|S|こ・とら|ko, tora|tigre|虎が走ります。|Tora ga hashirimasu.|El tigre corre.
+孤|S|こ|ko|solitario|孤独です。|Kodoku desu.|Estoy solo.
+弧|S|こ|ko|arco|弧を描きます。|Ko o egakimasu.|Dibujo un arco.
+枯|S|こ・か(れる)|ko, ka(reru)|marchitarse|花が枯れます。|Hana ga karemasu.|Se marchita la flor.
+雇|S|こ・やと(う)|ko, yato(u)|contratar|店員を雇います。|Tenin o yatoimasu.|Contrato a un dependiente.
+誇|S|こ・ほこ(る)|ko, hoko(ru)|enorgullecerse|国を誇りに思います。|Kuni o hokori ni omoimasu.|Me enorgullezco de mi país.
+鼓|S|こ・つづみ|ko, tsuzumi|tambor|太鼓を叩きます。|Taiko o tatakimasu.|Toco el tambor.
+錮|S|こ|ko|encerrar|禁錮刑です。|Kinko-kei desu.|Es una pena de prisión.
+顧|S|こ・かえり(みる)|ko, kaeri(miru)|mirar atrás|過去を顧みます。|Kako o kaerimimasu.|Miro hacia el pasado.
+互|S|ご・たが(い)|go, taga(i)|mutuo|互いに助けます。|Tagai ni tasukemasu.|Nos ayudamos mutuamente.
+呉|S|ご・く(れる)|go, ku(reru)|dar (a mí)|友達が本を呉れました。|Tomodachi ga hon o kuremashita.|Mi amigo me dio un libro.
+娯|S|ご|go|entretenimiento|娯楽を楽しみます。|Goraku o tanoshimimasu.|Disfruto del entretenimiento.
+悟|S|ご・さと(る)|go, sato(ru)|darse cuenta|真実を悟ります。|Shinjitsu o satorimasu.|Comprendo la verdad.
+碁|S|ご|go|go (juego)|碁を打ちます。|Go o uchimasu.|Juego al go.
+勾|S|こう|kō|inclinado|勾配が急です。|Kōbai ga kyū desu.|La pendiente es empinada.
+孔|S|こう|kō|agujero|瞳孔が開きます。|Dōkō ga hirakimasu.|Se dilata la pupila.
+巧|S|こう・たく(み)|kō, taku(mi)|hábil|巧みな技です。|Takumi na waza desu.|Es una técnica hábil.
+甲|S|こう・かぶと|kō|caparazón, primero|手の甲です。|Te no kō desu.|Es el dorso de la mano.
+江|S|こう・え|kō, e|bahía, río|江戸時代です。|Edo jidai desu.|Es la época de Edo.
+坑|S|こう|kō|mina, pozo|炭坑で働きます。|Tankō de hatarakimasu.|Trabajo en una mina de carbón.
+抗|S|こう|kō|resistir|抗議します。|Kōgi shimasu.|Protesto.
+攻|S|こう・せ(める)|kō, se(meru)|atacar|攻撃します。|Kōgeki shimasu.|Ataco.
+更|S|こう・さら|kō, sara|aún más, renovar|更に勉強します。|Sara ni benkyō shimasu.|Estudio aún más.
+拘|S|こう|kō|aferrarse|細部に拘ります。|Saibu ni kodawarimasu.|Me importan los detalles.
+肯|S|こう|kō|asentir|肯定します。|Kōtei shimasu.|Afirmo.
+侯|S|こう|kō|marqués|侯爵です。|Kōshaku desu.|Es un marqués.
+恒|S|こう|kō|constante|恒例の行事です。|Kōrei no gyōji desu.|Es un evento tradicional.
+洪|S|こう|kō|inundación, vasto|洪水が起きました。|Kōzui ga okimashita.|Hubo una inundación.
+荒|S|こう・あ(れる)|kō, a(reru)|áspero, agitado|海が荒れています。|Umi ga arete imasu.|El mar está agitado.
+郊|S|こう|kō|afueras|郊外に住んでいます。|Kōgai ni sunde imasu.|Vivo en las afueras.
+貢|S|こう・みつ(ぐ)|kō, mitsu(gu)|contribuir|社会に貢献します。|Shakai ni kōken shimasu.|Contribuyo a la sociedad.
+控|S|こう・ひか(える)|kō, hika(eru)|abstenerse|食事を控えます。|Shokuji o hikaemasu.|Me contengo con la comida.
+梗|S|こう|kō|obstruir|心筋梗塞です。|Shinkin kōsoku desu.|Es un infarto de miocardio.
+喉|S|こう・のど|kō, nodo|garganta|喉が痛いです。|Nodo ga itai desu.|Me duele la garganta.
+慌|S|こう・あわ(てる)|kō, awa(teru)|apurarse|慌てて出かけます。|Awatete dekakemasu.|Salgo apresurado.
+硬|S|こう・かた(い)|kō, kata(i)|duro|硬いパンです。|Katai pan desu.|Es un pan duro.
+絞|S|こう・しぼ(る)|kō, shibo(ru)|exprimir|雑巾を絞ります。|Zōkin o shiborimasu.|Escurro el trapo.
+項|S|こう|kō|ítem, cláusula|項目を確認します。|Kōmoku o kakunin shimasu.|Verifico los elementos.
+溝|S|こう・みぞ|kō, mizo|zanja|溝に落ちました。|Mizo ni ochimashita.|Caí en la zanja.
+綱|S|こう・つな|kō, tsuna|cuerda gruesa|綱を引きます。|Tsuna o hikimasu.|Tiro de la cuerda.
+酵|S|こう|kō|fermentar|発酵させます。|Hakkō sasemasu.|Lo dejo fermentar.
+稿|S|こう|kō|manuscrito|原稿を書きます。|Genkō o kakimasu.|Escribo el manuscrito.
+衡|S|こう|kō|equilibrio|均衡を保ちます。|Kinkō o tamochimasu.|Mantengo el equilibrio.
+購|S|こう|kō|comprar|本を購入します。|Hon o kōnyū shimasu.|Compro un libro.
+乞|S|こつ・こ(う)|kotsu, ko(u)|pedir|許しを乞います。|Yurushi o koimasu.|Pido perdón.
+拷|S|ごう|gō|tortura|拷問は禁止です。|Gōmon wa kinshi desu.|La tortura está prohibida.
+剛|S|ごう|gō|fuerte|剛毅な人です。|Gōki na hito desu.|Es una persona de carácter firme.
+傲|S|ごう|gō|arrogante|傲慢な態度です。|Gōman na taido desu.|Es una actitud arrogante.
+豪|S|ごう|gō|poderoso, magnífico|豪華な食事です。|Gōka na shokuji desu.|Es una comida lujosa.
+克|S|こく|koku|vencer|困難に打ち克ちます。|Konnan ni uchikachimasu.|Supero las dificultades.
+酷|S|こく・ひど(い)|koku, hido(i)|cruel|酷い天気です。|Hidoi tenki desu.|Hace un tiempo terrible.
+獄|S|ごく|goku|prisión|地獄を描いた絵です。|Jigoku o egaita e desu.|Es una pintura del infierno.
+駒|S|く・こま|ku, koma|pieza, potro|将棋の駒です。|Shōgi no koma desu.|Es una pieza de shōgi.
+込|S|こ(む)|ko(mu)|entrar, abarrotado|電車が込んでいます。|Densha ga konde imasu.|El tren está abarrotado.
+頃|S|けい・ころ|kei, koro|alrededor de (tiempo)|三時頃に会います。|Sanji goro ni aimasu.|Nos vemos hacia las tres.
+昆|S|こん|kon|insecto, descendiente|昆虫を集めます。|Konchū o atsumemasu.|Colecciono insectos.
+恨|S|こん・うら(む)|kon, ura(mu)|guardar rencor|恨みを忘れます。|Urami o wasuremasu.|Olvido el rencor.
+婚|S|こん|kon|matrimonio|結婚します。|Kekkon shimasu.|Me caso.
+痕|S|こん・あと|kon, ato|cicatriz, huella|傷の痕です。|Kizu no ato desu.|Es la marca de una herida.
+紺|S|こん|kon|azul marino|紺色の制服です。|Kon'iro no seifuku desu.|Es un uniforme azul marino.
+魂|S|こん・たましい|kon, tamashii|alma|魂を込めます。|Tamashii o komemasu.|Pongo el alma en ello.
+墾|S|こん|kon|roturar|開墾します。|Kaikon shimasu.|Roturo la tierra.
+懇|S|こん・ねんご(ろ)|kon, nengo(ro)|cordial|懇親会に参加します。|Konshinkai ni sanka shimasu.|Participo en la reunión social.
+沙|S|さ|sa|arena fina|沙汰を待ちます。|Sata o machimasu.|Espero noticias.
+唆|S|さ・そそのか(す)|sa, sosonoka(su)|instigar|悪事を唆します。|Akuji o sosonokashimasu.|Incito a hacer el mal.
+詐|S|さ|sa|engaño|詐欺に注意します。|Sagi ni chūi shimasu.|Me cuido de las estafas.
+鎖|S|さ・くさり|sa, kusari|cadena|鎖でつなぎます。|Kusari de tsunagimasu.|Lo ato con una cadena.
+挫|S|ざ|za|torcer, frustrar|足を挫きました。|Ashi o kujikimashita.|Me torcí el pie.
+采|S|さい|sai|dado, aspecto|喝采を浴びます。|Kassai o abimasu.|Recibo aplausos.
+砕|S|さい・くだ(く)|sai, kuda(ku)|romper en pedazos|氷を砕きます。|Kōri o kudakimasu.|Rompo el hielo.
+宰|S|さい|sai|gobernar|宰相です。|Saishō desu.|Es el canciller.
+栽|S|さい|sai|plantar|盆栽を育てます。|Bonsai o sodatemasu.|Cultivo un bonsái.
+彩|S|さい・いろど(る)|sai, irodo(ru)|colorear|彩りが豊かです。|Irodori ga yutaka desu.|Tiene colores ricos.
+斎|S|さい|sai|purificación, sala|書斎で読書します。|Shosai de dokusho shimasu.|Leo en el estudio.
+債|S|さい|sai|deuda|借金の債務です。|Shakkin no saimu desu.|Es una obligación de deuda.
+催|S|さい・もよお(す)|sai, moyoo(su)|organizar|会を開催します。|Kai o kaisai shimasu.|Organizo una reunión.
+塞|S|さい・ふさ(ぐ)|sai, fusa(gu)|tapar|穴を塞ぎます。|Ana o fusagimasu.|Tapo el agujero.
+歳|S|さい・せい|sai, sei|años de edad|二十歳です。|Hatachi desu.|Tengo veinte años.
+載|S|さい・の(せる)|sai, no(seru)|cargar, publicar|記事が載ります。|Kiji ga norimasu.|Se publica el artículo.
+剤|S|ざい|zai|medicamento|薬剤師です。|Yakuzaishi desu.|Es farmacéutico.
+削|S|さく・けず(る)|saku, kezu(ru)|raspar|鉛筆を削ります。|Enpitsu o kezurimasu.|Saco punta al lápiz.
+柵|S|さく|saku|valla|柵を作ります。|Saku o tsukurimasu.|Construyo una valla.
+索|S|さく|saku|buscar, soga|検索します。|Kensaku shimasu.|Busco.
+酢|S|さく・す|saku, su|vinagre|酢を入れます。|Su o iremasu.|Agrego vinagre.
+搾|S|さく・しぼ(る)|saku, shibo(ru)|exprimir|牛乳を搾ります。|Gyūnyū o shiborimasu.|Ordeño la leche.
+錯|S|さく|saku|confundir|錯覚しました。|Sakkaku shimashita.|Tuve una ilusión.
+咲|S|しょう・さ(く)|shō, sa(ku)|florecer|花が咲きます。|Hana ga sakimasu.|Florecen las flores.
+刹|S|さつ・せつ|satsu, setsu|instante, templo|刹那の出来事です。|Setsuna no dekigoto desu.|Es algo de un instante.
+拶|S|さつ|satsu|presionar|挨拶をします。|Aisatsu o shimasu.|Saludo.
+撮|S|さつ・と(る)|satsu, to(ru)|fotografiar|写真を撮ります。|Shashin o torimasu.|Tomo una foto.
+擦|S|さつ・こす(る)|satsu, kosu(ru)|frotar|目を擦ります。|Me o kosurimasu.|Me froto los ojos.
+傘|S|さん・かさ|san, kasa|paraguas|傘を持って行きます。|Kasa o motte ikimasu.|Llevo un paraguas.
+斬|S|ざん・き(る)|zan, ki(ru)|cortar con espada|斬新なデザインです。|Zanshin na dezain desu.|Es un diseño innovador.
+暫|S|ざん|zan|por un momento|暫く待ちます。|Shibaraku machimasu.|Espero un rato.
+旨|S|し・うま(い)|shi, uma(i)|sabroso, propósito|旨いラーメンです。|Umai rāmen desu.|Es un rāmen delicioso.
+伺|S|し・うかが(う)|shi, ukaga(u)|visitar, preguntar (humilde)|明日伺います。|Ashita ukagaimasu.|Mañana lo visitaré.
+刺|S|し・さ(す)|shi, sa(su)|pinchar|蚊に刺されました。|Ka ni sasaremashita.|Me picó un mosquito.
+祉|S|し|shi|bienestar|福祉を学びます。|Fukushi o manabimasu.|Estudio bienestar social.
+肢|S|し|shi|extremidad|選択肢があります。|Sentakushi ga arimasu.|Hay opciones.
+施|S|し・ほどこ(す)|shi, hodoko(su)|aplicar|施設を使います。|Shisetsu o tsukaimasu.|Uso las instalaciones.
+恣|S|し|shi|arbitrario|恣意的です。|Shiteki desu.|Es arbitrario.
+脂|S|し・あぶら|shi, abura|grasa|脂が多い肉です。|Abura ga ōi niku desu.|Es carne grasosa.
+紫|S|し・むらさき|shi, murasaki|púrpura|紫の花です。|Murasaki no hana desu.|Es una flor morada.
+嗣|S|し|shi|heredero|後嗣が生まれました。|Koshi ga umaremashita.|Nació un heredero.
+雌|S|し・めす|shi, mesu|hembra|雌の犬です。|Mesu no inu desu.|Es una perra.
+摯|S|し|shi|sincero|真摯な態度です。|Shinshi na taido desu.|Es una actitud sincera.
+賜|S|し・たまわ(る)|shi, tamawa(ru)|conceder|賞を賜ります。|Shō o tamawarimasu.|Recibo un premio.
+諮|S|し・はか(る)|shi, haka(ru)|consultar|委員会に諮ります。|Iinkai ni hakarimasu.|Lo consulto con el comité.
+侍|S|じ・さむらい|ji, samurai|samurái|侍の映画です。|Samurai no eiga desu.|Es una película de samuráis.
+慈|S|じ・いつく(しむ)|ji, itsuku(shimu)|compasión|慈悲深い人です。|Jihibukai hito desu.|Es una persona compasiva.
+餌|S|じ・えさ|ji, esa|cebo, comida de animales|犬に餌をやります。|Inu ni esa o yarimasu.|Le doy de comer al perro.
+璽|S|じ|ji|sello imperial|国璽を押します。|Kokuji o oshimasu.|Se estampa el sello del Estado.
+軸|S|じく|jiku|eje|地球は軸を中心に回ります。|Chikyū wa jiku o chūshin ni mawarimasu.|La Tierra gira sobre su eje.
+疾|S|しつ|shitsu|rápido, enfermedad|疾病を予防します。|Shippei o yobō shimasu.|Prevengo las enfermedades.
+執|S|しつ・と(る)|shitsu, to(ru)|aferrarse, ejecutar|仕事を執り行います。|Shigoto o toriokonaimasu.|Llevo a cabo el trabajo.
+嫉|S|しつ|shitsu|envidia|嫉妬します。|Shitto shimasu.|Siento celos.
+漆|S|しつ・うるし|shitsu, urushi|laca|漆の器です。|Urushi no utsuwa desu.|Es un recipiente de laca.
+芝|S|し・しば|shi, shiba|césped|芝生に座ります。|Shibafu ni suwarimasu.|Me siento en el césped.
+赦|S|しゃ|sha|perdonar|恩赦が出ました。|Onsha ga demashita.|Se concedió un indulto.
+斜|S|しゃ・なな(め)|sha, nana(me)|oblicuo|斜めに線を引きます。|Naname ni sen o hikimasu.|Trazo una línea en diagonal.
+煮|S|しゃ・に(る)|sha, ni(ru)|hervir, guisar|野菜を煮ます。|Yasai o nimasu.|Hiervo verduras.
+遮|S|しゃ・さえぎ(る)|sha, saegi(ru)|interrumpir|話を遮ります。|Hanashi o saegirimasu.|Interrumpo la conversación.
+邪|S|じゃ|ja|malo, estorbar|邪魔をしないでください。|Jama o shinaide kudasai.|No estorbe, por favor.
+蛇|S|じゃ・へび|ja, hebi|serpiente|蛇が出ました。|Hebi ga demashita.|Apareció una serpiente.
+酌|S|しゃく・く(む)|shaku, ku(mu)|servir bebida|お酌をします。|Oshaku o shimasu.|Sirvo la bebida.
+釈|S|しゃく|shaku|explicar|解釈します。|Kaishaku shimasu.|Interpreto.
+爵|S|しゃく|shaku|título nobiliario|伯爵です。|Hakushaku desu.|Es un conde.
+寂|S|じゃく・さび(しい)|jaku, sabi(shii)|solitario|寂しい夜です。|Sabishii yoru desu.|Es una noche solitaria.
+朱|S|しゅ・あか|shu, aka|bermellón|朱色の門です。|Shuiro no mon desu.|Es un portón bermellón.
+狩|S|しゅ・か(る)|shu, ka(ru)|cazar|狩りに行きます。|Kari ni ikimasu.|Voy de caza.
+殊|S|しゅ・こと|shu, koto|especial|殊に今日は寒いです。|Koto ni kyō wa samui desu.|Hoy hace especialmente frío.
+珠|S|しゅ・たま|shu, tama|perla|真珠のネックレスです。|Shinju no nekkuresu desu.|Es un collar de perlas.
+腫|S|しゅ・は(れる)|shu, ha(reru)|hincharse|足が腫れました。|Ashi ga haremashita.|Se me hinchó el pie.
+趣|S|しゅ・おもむき|shu, omomuki|encanto, gusto|趣味は読書です。|Shumi wa dokusho desu.|Mi pasatiempo es leer.
+寿|S|じゅ・ことぶき|ju, kotobuki|longevidad|長寿を祝います。|Chōju o iwaimasu.|Celebro la longevidad.
+呪|S|じゅ・のろ(う)|ju, noro(u)|maldecir|呪文を唱えます。|Jumon o tonaemasu.|Pronuncio un conjuro.
+需|S|じゅ|ju|demanda|需要が増えます。|Juyō ga fuemasu.|Aumenta la demanda.
+儒|S|じゅ|ju|confucianismo|儒教を学びます。|Jukyō o manabimasu.|Estudio el confucianismo.
+囚|S|しゅう|shū|prisionero|囚人です。|Shūjin desu.|Es un prisionero.
+舟|S|しゅう・ふね|shū, fune|bote|舟に乗ります。|Fune ni norimasu.|Subo a un bote.
+秀|S|しゅう・ひい(でる)|shū, hii(deru)|sobresaliente|優秀な学生です。|Yūshū na gakusei desu.|Es un estudiante destacado.
+臭|S|しゅう・くさ(い)|shū, kusa(i)|apestar|臭い匂いです。|Kusai nioi desu.|Es un olor fétido.
+袖|S|しゅう・そで|shū, sode|manga|袖が長いです。|Sode ga nagai desu.|La manga es larga.
+羞|S|しゅう|shū|vergüenza|羞恥心があります。|Shūchishin ga arimasu.|Tengo sentido del pudor.
+愁|S|しゅう・うれ(える)|shū, ure(eru)|tristeza|哀愁を感じます。|Aishū o kanjimasu.|Siento melancolía.
+酬|S|しゅう|shū|recompensa|報酬をもらいます。|Hōshū o moraimasu.|Recibo una remuneración.
+醜|S|しゅう・みにく(い)|shū, miniku(i)|feo|醜い争いです。|Minikui arasoi desu.|Es una pelea fea.
+蹴|S|しゅう・け(る)|shū, ke(ru)|patear|ボールを蹴ります。|Bōru o kerimasu.|Pateo la pelota.
+襲|S|しゅう・おそ(う)|shū, oso(u)|atacar|台風が襲います。|Taifū ga osoimasu.|Un tifón azota.
+汁|S|じゅう・しる|jū, shiru|jugo, sopa|味噌汁を飲みます。|Misoshiru o nomimasu.|Bebo sopa de miso.
+充|S|じゅう・あ(てる)|jū, a(teru)|llenar|充電します。|Jūden shimasu.|Cargo la batería.
+柔|S|じゅう・やわ(らかい)|jū, yawa(rakai)|suave|柔らかいパンです。|Yawarakai pan desu.|Es un pan blando.
+渋|S|じゅう・しぶ(い)|jū, shibu(i)|astringente, sobrio|渋いお茶です。|Shibui ocha desu.|Es un té astringente.
+銃|S|じゅう|jū|arma de fuego|銃を持つ警官です。|Jū o motsu keikan desu.|Es un policía armado.
+獣|S|じゅう・けもの|jū, kemono|bestia|獣が出ます。|Kemono ga demasu.|Aparece una fiera.
+叔|S|しゅく|shuku|tío menor|叔父が来ます。|Oji ga kimasu.|Viene mi tío.
+淑|S|しゅく|shuku|gracia, dama|淑女です。|Shukujo desu.|Es una dama.
+粛|S|しゅく|shuku|solemne|静粛にお願いします。|Seishuku ni onegai shimasu.|Silencio, por favor.
+塾|S|じゅく|juku|academia|塾に通います。|Juku ni kayoimasu.|Voy a una academia.
+俊|S|しゅん|shun|talentoso|俊足の選手です。|Shunsoku no senshu desu.|Es un jugador veloz.
+瞬|S|しゅん・またた(く)|shun, matata(ku)|parpadear|一瞬で終わります。|Isshun de owarimasu.|Termina en un instante.
+旬|S|じゅん・しゅん|jun, shun|temporada|今が旬の果物です。|Ima ga shun no kudamono desu.|Es una fruta de temporada.
+巡|S|じゅん・めぐ(る)|jun, megu(ru)|recorrer|寺を巡ります。|Tera o megurimasu.|Visito templos.
+盾|S|じゅん・たて|jun, tate|escudo|盾で防ぎます。|Tate de fusegimasu.|Me protejo con el escudo.
+准|S|じゅん|jun|asociado|准教授です。|Junkyōju desu.|Es profesor asociado.
+殉|S|じゅん|jun|sacrificarse|殉職しました。|Junshoku shimashita.|Murió en acto de servicio.
+循|S|じゅん|jun|circular|循環します。|Junkan shimasu.|Circula.
+潤|S|じゅん・うるお(う)|jun, uruo(u)|humedecer|喉を潤します。|Nodo o uruoshimasu.|Humedezco la garganta.
+遵|S|じゅん|jun|acatar|法律を遵守します。|Hōritsu o junshu shimasu.|Acato la ley.
+庶|S|しょ|sho|común|庶民の暮らしです。|Shomin no kurashi desu.|Es la vida del pueblo llano.
+緒|S|しょ・お|sho, o|cordón, comienzo|情緒が豊かです。|Jōcho ga yutaka desu.|Tiene una rica sensibilidad.
+叙|S|じょ|jo|narrar|叙述します。|Jojutsu shimasu.|Describo.
+徐|S|じょ|jo|lentamente|徐々に慣れます。|Jojo ni naremasu.|Me acostumbro poco a poco.
+升|S|しょう・ます|shō, masu|medida masu|升で量ります。|Masu de hakarimasu.|Mido con el masu.
+召|S|しょう・め(す)|shō, me(su)|llamar, vestir (hon.)|ご飯を召し上がります。|Gohan o meshiagarimasu.|Come (hon.) la comida.
+匠|S|しょう・たくみ|shō, takumi|artesano|匠の技です。|Takumi no waza desu.|Es el arte de un maestro.
+床|S|しょう・ゆか|shō, yuka|suelo|床を掃除します。|Yuka o sōji shimasu.|Limpio el suelo.
+抄|S|しょう|shō|extracto|抄録を読みます。|Shōroku o yomimasu.|Leo el resumen.
+肖|S|しょう|shō|parecerse|肖像画です。|Shōzōga desu.|Es un retrato.
+尚|S|しょう・なお|shō, nao|todavía|尚、詳細は後日です。|Nao, shōsai wa gojitsu desu.|Además, los detalles serán después.
+昇|S|しょう・のぼ(る)|shō, nobo(ru)|ascender|給料が昇ります。|Kyūryō ga agarimasu.|Sube el sueldo.
+沼|S|しょう・ぬま|shō, numa|pantano|沼に鳥がいます。|Numa ni tori ga imasu.|Hay aves en el pantano.
+宵|S|しょう・よい|shō, yoi|anochecer|宵の口です。|Yoi no kuchi desu.|Es el comienzo de la noche.
+症|S|しょう|shō|síntoma|症状が軽いです。|Shōjō ga karui desu.|Los síntomas son leves.
+祥|S|しょう|shō|buen presagio|吉祥の印です。|Kisshō no shirushi desu.|Es un signo de buena fortuna.
+称|S|しょう|shō|nombrar|名称を決めます。|Meishō o kimemasu.|Decido el nombre.
+渉|S|しょう|shō|vadear, negociar|交渉します。|Kōshō shimasu.|Negocio.
+紹|S|しょう|shō|presentar|友達を紹介します。|Tomodachi o shōkai shimasu.|Presento a un amigo.
+訟|S|しょう|shō|litigio|訴訟を起こします。|Soshō o okoshimasu.|Presento una demanda.
+掌|S|しょう・てのひら|shō, tenohira|palma|掌に乗せます。|Tenohira ni nosemasu.|Lo pongo en la palma.
+晶|S|しょう|shō|cristal|結晶です。|Kesshō desu.|Es un cristal.
+焦|S|しょう・あせ(る)|shō, ase(ru)|impacientarse|焦らないでください。|Asaranaide kudasai.|No se desespere.
+硝|S|しょう|shō|nitrato|硝酸を使います。|Shōsan o tsukaimasu.|Uso ácido nítrico.
+粧|S|しょう|shō|maquillar|化粧をします。|Keshō o shimasu.|Me maquillo.
+詔|S|しょう・みことのり|shō|edicto imperial|詔を発します。|Mikotonori o hasshimasu.|Se emite un edicto.
+奨|S|しょう|shō|fomentar|奨学金をもらいます。|Shōgakukin o moraimasu.|Recibo una beca.
+詳|S|しょう・くわ(しい)|shō, kuwa(shii)|detallado|詳しく説明します。|Kuwashiku setsumei shimasu.|Explico en detalle.
+彰|S|しょう|shō|honrar|表彰されました。|Hyōshō saremashita.|Fui reconocido con un premio.
+衝|S|しょう|shō|choque|衝突しました。|Shōtotsu shimashita.|Chocaron.
+償|S|しょう・つぐな(う)|shō, tsugu(nau)|compensar|罪を償います。|Tsumi o tsugunaimasu.|Expío mi culpa.
+礁|S|しょう|shō|arrecife|サンゴ礁です。|Sangoshō desu.|Es un arrecife de coral.
+鐘|S|しょう・かね|shō, kane|campana|鐘が鳴ります。|Kane ga narimasu.|Suena la campana.
+丈|S|じょう・たけ|jō, take|longitud|丈夫な布です。|Jōbu na nuno desu.|Es una tela resistente.
+冗|S|じょう|jō|superfluo|冗談を言います。|Jōdan o iimasu.|Hago una broma.
+剰|S|じょう|jō|exceso|余剰があります。|Yojō ga arimasu.|Hay excedente.
+浄|S|じょう|jō|purificar|浄水器を使います。|Jōsuiki o tsukaimasu.|Uso un purificador de agua.
+畳|S|じょう・たたみ|jō, tatami|tatami, doblar|畳の部屋です。|Tatami no heya desu.|Es una habitación de tatami.
+壌|S|じょう|jō|suelo, tierra|土壌を調べます。|Dojō o shirabemasu.|Analizo el suelo.
+嬢|S|じょう|jō|señorita|お嬢さんです。|Ojōsan desu.|Es la señorita.
+錠|S|じょう|jō|píldora, cerradura|錠剤を飲みます。|Jōzai o nomimasu.|Tomo una pastilla.
+譲|S|じょう・ゆず(る)|jō, yuzu(ru)|ceder|席を譲ります。|Seki o yuzurimasu.|Cedo mi asiento.
+醸|S|じょう・かも(す)|jō, kamo(su)|elaborar (licor)|お酒を醸造します。|Osake o jōzō shimasu.|Elaboro sake.
+拭|S|しょく・ふ(く)|shoku, fu(ku)|limpiar|机を拭きます。|Tsukue o fukimasu.|Limpio la mesa.
+殖|S|しょく・ふ(える)|shoku, fu(eru)|aumentar|財産が殖えます。|Zaisan ga fuemasu.|Aumenta el patrimonio.
+飾|S|しょく・かざ(る)|shoku, kaza(ru)|decorar|部屋に花を飾ります。|Heya ni hana o kazarimasu.|Decoro la habitación con flores.
+触|S|しょく・ふ(れる)|shoku, fu(reru)|tocar|手で触ります。|Te de sawarimasu.|Lo toco con la mano.
+嘱|S|しょく|shoku|encargar|委嘱されました。|Ishoku saremashita.|Me lo encomendaron.
+辱|S|じょく・はずかし(める)|joku|humillar|屈辱を感じます。|Kutsujoku o kanjimasu.|Siento humillación.
+伸|S|しん・の(びる)|shin, no(biru)|estirarse|背が伸びます。|Se ga nobimasu.|Crezco en estatura.
+芯|S|しん|shin|núcleo, mina|鉛筆の芯です。|Enpitsu no shin desu.|Es la mina del lápiz.
+辛|S|しん・から(い)|shin, kara(i)|picante|辛いカレーです。|Karai karē desu.|Es un curry picante.
+侵|S|しん・おか(す)|shin, oka(su)|invadir|国境を侵します。|Kokkyō o okashimasu.|Violan la frontera.
+津|S|しん・つ|shin, tsu|puerto|津波が来ます。|Tsunami ga kimasu.|Llega un tsunami.
+唇|S|しん・くちびる|shin, kuchibiru|labio|唇が乾きます。|Kuchibiru ga kawakimasu.|Se me secan los labios.
+娠|S|しん|shin|embarazo|妊娠しています。|Ninshin shite imasu.|Está embarazada.
+振|S|しん・ふ(る)|shin, fu(ru)|agitar|手を振ります。|Te o furimasu.|Agito la mano.
+浸|S|しん・ひた(す)|shin, hita(su)|sumergir|水に浸します。|Mizu ni hitashimasu.|Lo sumerjo en agua.
+紳|S|しん|shin|caballero|紳士です。|Shinshi desu.|Es un caballero.
+診|S|しん・み(る)|shin, mi(ru)|examinar|医者に診てもらいます。|Isha ni mite moraimasu.|Me examina el médico.
+寝|S|しん・ね(る)|shin, ne(ru)|dormir|早く寝ます。|Hayaku nemasu.|Me acuesto temprano.
+慎|S|しん・つつし(む)|shin, tsutsushi(mu)|ser prudente|言葉を慎みます。|Kotoba o tsutsushimimasu.|Cuido mis palabras.
+審|S|しん|shin|examinar|審査を受けます。|Shinsa o ukemasu.|Paso la evaluación.
+震|S|しん・ふる(える)|shin, furu(eru)|temblar|地震がありました。|Jishin ga arimashita.|Hubo un sismo.
+薪|S|しん・まき|shin, maki|leña|薪を割ります。|Maki o warimasu.|Parto leña.
+尋|S|じん・たず(ねる)|jin, tazu(neru)|preguntar|道を尋ねます。|Michi o tazunemasu.|Pregunto el camino.
+腎|S|じん|jin|riñón|腎臓が悪いです。|Jinzō ga warui desu.|Tengo mal los riñones.
+須|S|す|su|necesario|必須の科目です。|Hissu no kamoku desu.|Es una asignatura obligatoria.
+吹|S|すい・ふ(く)|sui, fu(ku)|soplar|風が吹きます。|Kaze ga fukimasu.|Sopla el viento.
+炊|S|すい・た(く)|sui, ta(ku)|cocer (arroz)|ご飯を炊きます。|Gohan o takimasu.|Cuezo el arroz.
+帥|S|すい|sui|comandante|元帥です。|Gensui desu.|Es un mariscal.
+粋|S|すい・いき|sui, iki|elegante|粋な計らいです。|Iki na hakarai desu.|Es un gesto elegante.
+衰|S|すい・おとろ(える)|sui, otoro(eru)|decaer|体力が衰えます。|Tairyoku ga otoroemasu.|Decae la fuerza física.
+酔|S|すい・よ(う)|sui, yo(u)|emborracharse, marearse|船に酔います。|Fune ni yoimasu.|Me mareo en el barco.
+遂|S|すい・と(げる)|sui, to(geru)|lograr|目的を遂げます。|Mokuteki o togemasu.|Cumplo mi objetivo.
+睡|S|すい|sui|dormir|睡眠をとります。|Suimin o torimasu.|Duermo.
+穂|S|すい・ほ|sui, ho|espiga|稲の穂です。|Ine no ho desu.|Es la espiga del arroz.
+随|S|ずい|zui|seguir|随分暑いです。|Zuibun atsui desu.|Hace bastante calor.
+髄|S|ずい|zui|médula|骨髄です。|Kotsuzui desu.|Es médula ósea.
+枢|S|すう|sū|pivote|中枢神経です。|Chūsū shinkei desu.|Es el sistema nervioso central.
+崇|S|すう|sū|venerar|崇拝します。|Sūhai shimasu.|Venero.
+据|S|す(える)|su(eru)|colocar|机を据えます。|Tsukue o suemasu.|Coloco el escritorio.
+杉|S|さん・すぎ|san, sugi|cedro japonés|杉の木です。|Sugi no ki desu.|Es un cedro japonés.
+裾|S|きょ・すそ|kyo, suso|bajo (prenda)|裾が長いです。|Suso ga nagai desu.|El bajo es largo.
+瀬|S|らい・せ|rai, se|rápidos|川の瀬です。|Kawa no se desu.|Son los rápidos del río.
+是|S|ぜ|ze|correcto|是非来てください。|Zehi kite kudasai.|Venga sin falta, por favor.
+姓|S|せい・しょう|sei, shō|apellido|姓と名を書きます。|Sei to mei o kakimasu.|Escribo apellido y nombre.
+征|S|せい|sei|conquistar|遠征します。|Ensei shimasu.|Salgo de expedición.
+牲|S|せい|sei|sacrificio|犠牲になりました。|Gisei ni narimashita.|Fue una víctima.
+凄|S|せい・すご(い)|sei, sugo(i)|asombroso|凄い景色です。|Sugoi keshiki desu.|Es un paisaje impresionante.
+逝|S|せい・ゆ(く)|sei, yu(ku)|fallecer|祖父が逝去しました。|Sofu ga seikyo shimashita.|Mi abuelo falleció.
+婿|S|せい・むこ|sei, muko|yerno|婿が来ました。|Muko ga kimashita.|Vino mi yerno.
+誓|S|せい・ちか(う)|sei, chika(u)|jurar|約束を誓います。|Yakusoku o chikaimasu.|Juro cumplir la promesa.
+請|S|せい・こ(う)|sei, ko(u)|solicitar|申請します。|Shinsei shimasu.|Hago la solicitud.
+醒|S|せい|sei|despertar|覚醒しました。|Kakusei shimashita.|Desperté.
+斥|S|せき|seki|rechazar|排斥します。|Haiseki shimasu.|Excluyo.
+析|S|せき|seki|analizar|分析します。|Bunseki shimasu.|Analizo.
+脊|S|せき|seki|columna|脊椎が痛いです。|Sekitsui ga itai desu.|Me duele la columna.
+隻|S|せき|seki|contador de barcos|船が二隻あります。|Fune ga nisō arimasu.|Hay dos barcos.
+惜|S|せき・お(しい)|seki, o(shii)|lamentable|惜しい試合でした。|Oshii shiai deshita.|Fue un partido lamentablemente cerrado.
+戚|S|せき|seki|pariente|親戚が来ます。|Shinseki ga kimasu.|Vienen los parientes.
+跡|S|せき・あと|seki, ato|huella|足跡があります。|Ashiato ga arimasu.|Hay huellas.
+籍|S|せき|seki|registro|国籍は日本です。|Kokuseki wa Nihon desu.|Mi nacionalidad es japonesa.
+拙|S|せつ・つたな(い)|setsu, tsutana(i)|torpe|拙い文章です。|Tsutanai bunshō desu.|Es un texto torpe.
+窃|S|せつ|setsu|robar|窃盗事件です。|Settō jiken desu.|Es un caso de robo.
+摂|S|せつ|setsu|tomar, sustituir|栄養を摂ります。|Eiyō o torimasu.|Tomo nutrientes.
+仙|S|せん|sen|ermitaño|水仙が咲きます。|Suisen ga sakimasu.|Florecen los narcisos.
+占|S|せん・うらな(う)|sen, uranau|adivinar|運勢を占います。|Unsei o uranaimasu.|Adivino la suerte.
+扇|S|せん・おうぎ|sen, ōgi|abanico|扇で扇ぎます。|Ōgi de aogimasu.|Me abanico.
+栓|S|せん|sen|tapón|栓を抜きます。|Sen o nukimasu.|Saco el tapón.
+旋|S|せん|sen|girar|旋回します。|Senkai shimasu.|Giro.
+煎|S|せん・い(る)|sen, i(ru)|tostar|豆を煎ります。|Mame o irimasu.|Tuesto granos.
+羨|S|せん・うらや(む)|sen, urayama(shii)|envidiar|羨ましいです。|Urayamashii desu.|Qué envidia.
+腺|S|せん|sen|glándula|汗腺です。|Kansen desu.|Es una glándula sudorípara.
+詮|S|せん|sen|investigar|詮索しません。|Sensaku shimasen.|No indago.
+践|S|せん|sen|pisar, llevar a la práctica|実践します。|Jissen shimasu.|Lo pongo en práctica.
+箋|S|せん|sen|papel de carta|処方箋です。|Shohōsen desu.|Es una receta médica.
+潜|S|せん・もぐ(る)|sen, mogu(ru)|bucear|海に潜ります。|Umi ni mogurimasu.|Buceo en el mar.
+遷|S|せん|sen|trasladar|都を遷します。|Miyako o utsushimasu.|Traslado la capital.
+薦|S|せん・すす(める)|sen, susu(meru)|recomendar|友達に薦めます。|Tomodachi ni susumemasu.|Se lo recomiendo a un amigo.
+繊|S|せん|sen|fino|繊維が丈夫です。|Sen'i ga jōbu desu.|La fibra es resistente.
+鮮|S|せん・あざ(やか)|sen, aza(yaka)|fresco, vívido|新鮮な魚です。|Shinsen na sakana desu.|Es pescado fresco.
+禅|S|ぜん|zen|zen|禅を学びます。|Zen o manabimasu.|Estudio zen.
+漸|S|ぜん|zen|gradualmente|漸く着きました。|Yōyaku tsukimashita.|Por fin llegué.
+膳|S|ぜん|zen|bandeja de comida|お膳を運びます。|Ozen o hakobimasu.|Llevo la bandeja de comida.
+繕|S|ぜん・つくろ(う)|zen, tsukuro(u)|remendar|服を繕います。|Fuku o tsukuroimasu.|Remiendo la ropa.
+狙|S|そ・ねら(う)|so, nera(u)|apuntar|的を狙います。|Mato o neraimasu.|Apunto al blanco.
+阻|S|そ・はば(む)|so, haba(mu)|obstruir|進行を阻みます。|Shinkō o habamimasu.|Obstruyo el avance.
+租|S|そ|so|impuesto|租税を払います。|Sozei o haraimasu.|Pago impuestos.
+措|S|そ|so|colocar|措置をとります。|Sochi o torimasu.|Tomo medidas.
+粗|S|そ・あら(い)|so, ara(i)|tosco|粗い布です。|Arai nuno desu.|Es una tela áspera.
+疎|S|そ・うと(い)|so, uto(i)|distante|疎遠になりました。|Soen ni narimashita.|Nos distanciamos.
+訴|S|そ・うった(える)|so, utta(eru)|demandar|裁判所に訴えます。|Saibansho ni uttaemasu.|Presento una demanda al tribunal.
+塑|S|そ|so|modelar|彫塑を学びます。|Chōso o manabimasu.|Estudio escultura.
+遡|S|そ・さかのぼ(る)|so, sakanobo(ru)|remontarse|川を遡ります。|Kawa o sakanoborimasu.|Remonto el río.
+礎|S|そ・いしずえ|so, ishizue|cimiento|基礎が大切です。|Kiso ga taisetsu desu.|Los cimientos son importantes.
+双|S|そう・ふた|sō, futa|par|双子です。|Futago desu.|Son gemelos.
+壮|S|そう|sō|magnífico|壮大な景色です。|Sōdai na keshiki desu.|Es un paisaje grandioso.
+荘|S|そう|sō|villa|別荘に行きます。|Bessō ni ikimasu.|Voy a la casa de campo.
+捜|S|そう・さが(す)|sō, saga(su)|buscar|犯人を捜します。|Hannin o sagashimasu.|Busco al culpable.
+挿|S|そう・さ(す)|sō, sa(su)|insertar|花を花瓶に挿します。|Hana o kabin ni sashimasu.|Pongo la flor en el florero.
+桑|S|そう・くわ|sō, kuwa|morera|桑の葉を蚕が食べます。|Kuwa no ha o kaiko ga tabemasu.|El gusano de seda come hojas de morera.
+掃|S|そう・は(く)|sō, ha(ku)|barrer|部屋を掃除します。|Heya o sōji shimasu.|Limpio la habitación.
+曹|S|そう|sō|funcionario, compañero|法曹界で働きます。|Hōsōkai de hatarakimasu.|Trabajo en el ámbito jurídico.
+曽|S|そう・ぞう|sō, zō|antes, bis-|曽祖父です。|Sōsofu desu.|Es mi bisabuelo.
+爽|S|そう・さわ(やか)|sō, sawa(yaka)|refrescante|爽やかな朝です。|Sawayaka na asa desu.|Es una mañana fresca.
+喪|S|そう・も|sō, mo|luto|喪に服します。|Mo ni fukushimasu.|Estoy de luto.
+痩|S|そう・や(せる)|sō, ya(seru)|adelgazar|少し痩せました。|Sukoshi yasemashita.|Adelgacé un poco.
+葬|S|そう・ほうむ(る)|sō, hōmu(ru)|enterrar|葬式に行きます。|Sōshiki ni ikimasu.|Voy al funeral.
+僧|S|そう|sō|monje|僧侶がお経を読みます。|Sōryo ga okyō o yomimasu.|El monje recita sutras.
+遭|S|そう・あ(う)|sō, a(u)|encontrarse con (algo malo)|事故に遭いました。|Jiko ni aimashita.|Tuve un accidente.
+槽|S|そう|sō|tanque|浴槽に入ります。|Yokusō ni hairimasu.|Entro en la bañera.
+踪|S|そう|sō|huella|失踪しました。|Shissō shimashita.|Desapareció.
+燥|S|そう|sō|secarse|乾燥しています。|Kansō shite imasu.|Está seco.
+霜|S|そう・しも|sō, shimo|escarcha|朝、霜が降りました。|Asa, shimo ga orimashita.|Cayó escarcha por la mañana.
+騒|S|そう・さわ(ぐ)|sō, sawa(gu)|alborotar|子供が騒ぎます。|Kodomo ga sawagimasu.|Los niños arman alboroto.
+藻|S|そう・も|sō, mo|alga|海藻を食べます。|Kaisō o tabemasu.|Como algas marinas.
+憎|S|ぞう・にく(む)|zō, niku(mu)|odiar|憎しみを捨てます。|Nikushimi o sutemasu.|Dejo atrás el odio.
+贈|S|ぞう・おく(る)|zō, oku(ru)|obsequiar|花を贈ります。|Hana o okurimasu.|Regalo flores.
+即|S|そく|soku|inmediato|即座に答えます。|Sokuza ni kotaemasu.|Respondo de inmediato.
+促|S|そく・うなが(す)|soku, unaga(su)|instar|注意を促します。|Chūi o unagashimasu.|Llamo la atención.
+捉|S|そく・とら(える)|soku, tora(eru)|capturar|要点を捉えます。|Yōten o toraemasu.|Capto lo esencial.
+俗|S|ぞく|zoku|vulgar, popular|俗語を覚えます。|Zokugo o oboemasu.|Aprendo jerga.
+賊|S|ぞく|zoku|bandido|海賊です。|Kaizoku desu.|Es un pirata.
+遜|S|そん|son|humilde|謙遜します。|Kenson shimasu.|Soy modesto.
+汰|S|た|ta|seleccionar|淘汰されます。|Tōta saremasu.|Es eliminado por selección.
+妥|S|だ|da|conciliar|妥協します。|Dakyō shimasu.|Hago concesiones.
+唾|S|だ・つば|da, tsuba|saliva|唾を飲み込みます。|Tsuba o nomikomimasu.|Trago saliva.
+堕|S|だ|da|caer|堕落しません。|Daraku shimasen.|No me corrompo.
+惰|S|だ|da|pereza|惰性で続けます。|Dasei de tsuzukemasu.|Sigo por inercia.
+駄|S|だ|da|inútil|無駄な買い物です。|Muda na kaimono desu.|Es una compra inútil.
+耐|S|たい・た(える)|tai, ta(eru)|aguantar|暑さに耐えます。|Atsusa ni taemasu.|Aguanto el calor.
+怠|S|たい・なま(ける)|tai, nama(keru)|holgazanear|宿題を怠けます。|Shukudai o namakemasu.|Descuido la tarea.
+胎|S|たい|tai|útero|胎児です。|Taiji desu.|Es un feto.
+泰|S|たい|tai|tranquilo|安泰です。|Antai desu.|Hay tranquilidad.
+堆|S|たい|tai|apilar|堆積します。|Taiseki shimasu.|Se acumula.
+袋|S|たい・ふくろ|tai, fukuro|bolsa|袋に入れます。|Fukuro ni iremasu.|Lo meto en la bolsa.
+逮|S|たい|tai|capturar|犯人を逮捕します。|Hannin o taiho shimasu.|Arrestan al culpable.
+替|S|たい・か(える)|tai, ka(eru)|reemplazar|服を着替えます。|Fuku o kigaemasu.|Me cambio de ropa.
+滞|S|たい・とどこお(る)|tai, todokoo(ru)|estancarse|道が渋滞しています。|Michi ga jūtai shite imasu.|Hay atasco.
+戴|S|たい・いただ(く)|tai, itada(ku)|recibir (humilde)|お土産を頂戴します。|Omiyage o chōdai shimasu.|Recibo un recuerdo.
+滝|S|ろう・たき|rō, taki|cascada|滝を見に行きます。|Taki o mi ni ikimasu.|Voy a ver la cascada.
+択|S|たく|taku|elegir|選択します。|Sentaku shimasu.|Elijo.
+沢|S|たく・さわ|taku, sawa|pantano, arroyo|沢で遊びます。|Sawa de asobimasu.|Juego en el arroyo.
+卓|S|たく|taku|mesa, destacado|食卓を囲みます。|Shokutaku o kakomimasu.|Nos reunimos en torno a la mesa.
+拓|S|たく|taku|abrir terreno|開拓します。|Kaitaku shimasu.|Abro nuevo terreno.
+託|S|たく|taku|encomendar|荷物を託します。|Nimotsu o takushimasu.|Encomiendo el equipaje.
+濯|S|たく|taku|lavar|洗濯します。|Sentaku shimasu.|Lavo la ropa.
+諾|S|だく|daku|consentir|承諾します。|Shōdaku shimasu.|Acepto.
+濁|S|だく・にご(る)|daku, nigo(ru)|enturbiarse|水が濁っています。|Mizu ga nigotte imasu.|El agua está turbia.
+但|S|たん・ただ(し)|tan, tada(shi)|sin embargo|但し、雨の場合は中止です。|Tadashi, ame no baai wa chūshi desu.|Pero si llueve, se cancela.
+脱|S|だつ・ぬ(ぐ)|datsu, nu(gu)|quitarse|靴を脱ぎます。|Kutsu o nugimasu.|Me quito los zapatos.
+奪|S|だつ・うば(う)|datsu, uba(u)|arrebatar|自由を奪います。|Jiyū o ubaimasu.|Priva de libertad.
+棚|S|ほう・たな|hō, tana|estante|棚に本を置きます。|Tana ni hon o okimasu.|Pongo libros en el estante.
+丹|S|たん|tan|rojo cinabrio|丹念に作ります。|Tannen ni tsukurimasu.|Lo hago con esmero.
+嘆|S|たん・なげ(く)|tan, nage(ku)|lamentar|失敗を嘆きます。|Shippai o nagekimasu.|Lamento el fracaso.
+淡|S|たん・あわ(い)|tan, awa(i)|tenue|淡い色です。|Awai iro desu.|Es un color tenue.
+端|S|たん・はし|tan, hashi|extremo|道の端を歩きます。|Michi no hashi o arukimasu.|Camino por el borde del camino.
+胆|S|たん|tan|valor, bilis|大胆な計画です。|Daitan na keikaku desu.|Es un plan audaz.
+鍛|S|たん・きた(える)|tan, kita(eru)|forjar|体を鍛えます。|Karada o kitaemasu.|Entreno mi cuerpo.
+弾|S|だん・ひ(く)|dan, hi(ku)|bala, tocar|ピアノを弾きます。|Piano o hikimasu.|Toco el piano.
+壇|S|だん|dan|tarima|演壇に立ちます。|Endan ni tachimasu.|Subo a la tribuna.
+恥|S|ち・は(じる)|chi, ha(jiru)|vergüenza|恥ずかしいです。|Hazukashii desu.|Me da vergüenza.
+致|S|ち・いた(す)|chi, ita(su)|hacer (humilde)|失礼致します。|Shitsurei itashimasu.|Con su permiso.
+遅|S|ち・おく(れる)|chi, oku(reru)|tardar|電車が遅れます。|Densha ga okuremasu.|El tren se retrasa.
+痴|S|ち|chi|tonto|愚痴を言います。|Guchi o iimasu.|Me quejo.
+稚|S|ち|chi|infantil|幼稚園に行きます。|Yōchien ni ikimasu.|Voy al jardín de infancia.
+緻|S|ち|chi|fino|緻密な計画です。|Chimitsu na keikaku desu.|Es un plan minucioso.
+畜|S|ちく|chiku|ganado|家畜を飼います。|Kachiku o kaimasu.|Crío ganado.
+逐|S|ちく|chiku|perseguir|逐一報告します。|Chikuichi hōkoku shimasu.|Informo punto por punto.
+蓄|S|ちく・たくわ(える)|chiku, takuwa(eru)|almacenar|お金を蓄えます。|Okane o takuwaemasu.|Ahorro dinero.
+秩|S|ちつ|chitsu|orden|秩序を守ります。|Chitsujo o mamorimasu.|Mantengo el orden.
+窒|S|ちつ|chitsu|asfixia, nitrógeno|窒素です。|Chisso desu.|Es nitrógeno.
+嫡|S|ちゃく|chaku|legítimo|嫡男です。|Chakunan desu.|Es el hijo primogénito legítimo.
+衷|S|ちゅう|chū|interior|折衷案です。|Secchūan desu.|Es una propuesta de compromiso.
+酎|S|ちゅう|chū|licor destilado|焼酎を飲みます。|Shōchū o nomimasu.|Bebo shōchū.
+鋳|S|ちゅう・い(る)|chū, i(ru)|fundir|鐘を鋳ます。|Kane o imasu.|Fundo una campana.
+駐|S|ちゅう|chū|estacionar|駐車します。|Chūsha shimasu.|Estaciono.
+弔|S|ちょう・とむら(う)|chō, tomura(u)|dar el pésame|弔電を送ります。|Chōden o okurimasu.|Envío un telegrama de condolencia.
+彫|S|ちょう・ほ(る)|chō, ho(ru)|tallar|木を彫ります。|Ki o horimasu.|Tallo madera.
+眺|S|ちょう・なが(める)|chō, naga(meru)|contemplar|景色を眺めます。|Keshiki o nagamemasu.|Contemplo el paisaje.
+釣|S|ちょう・つ(る)|chō, tsu(ru)|pescar con caña|川で釣りをします。|Kawa de tsuri o shimasu.|Pesco en el río.
+貼|S|ちょう・は(る)|chō, ha(ru)|pegar|切手を貼ります。|Kitte o harimasu.|Pego el sello.
+超|S|ちょう・こ(える)|chō, ko(eru)|superar|限界を超えます。|Genkai o koemasu.|Supero el límite.
+跳|S|ちょう・と(ぶ)|chō, to(bu)|saltar|高く跳びます。|Takaku tobimasu.|Salto alto.
+徴|S|ちょう|chō|señal, recaudar|特徴を述べます。|Tokuchō o nobemasu.|Describo la característica.
+嘲|S|ちょう・あざけ(る)|chō, azake(ru)|burlarse|嘲笑されました。|Chōshō saremashita.|Se rieron de mí.
+澄|S|ちょう・す(む)|chō, su(mu)|aclararse|空気が澄んでいます。|Kūki ga sunde imasu.|El aire está limpio.
+聴|S|ちょう・き(く)|chō, ki(ku)|escuchar|音楽を聴きます。|Ongaku o kikimasu.|Escucho música.
+懲|S|ちょう・こ(りる)|chō, ko(riru)|escarmentar|もう懲りました。|Mō korimashita.|Ya escarmenté.
+勅|S|ちょく|choku|edicto imperial|勅語を読みます。|Chokugo o yomimasu.|Leo el edicto imperial.
+捗|S|ちょく|choku|avanzar|仕事が捗ります。|Shigoto ga hakadorimasu.|El trabajo avanza.
+沈|S|ちん・しず(む)|chin, shizu(mu)|hundirse|船が沈みます。|Fune ga shizumimasu.|El barco se hunde.
+珍|S|ちん・めずら(しい)|chin, mezura(shii)|raro|珍しい花です。|Mezurashii hana desu.|Es una flor rara.
+朕|S|ちん|chin|nosotros (imperial)|朕は国家なり。|Chin wa kokka nari.|El Estado soy yo (forma imperial).
+陳|S|ちん|chin|exponer|陳列します。|Chinretsu shimasu.|Exhibo.
+鎮|S|ちん・しず(める)|chin, shizu(meru)|calmar|痛みを鎮めます。|Itami o shizumemasu.|Calmo el dolor.
+椎|S|つい|tsui|vértebra|頸椎が痛いです。|Keitsui ga itai desu.|Me duele la cervical.
+墜|S|つい|tsui|caer|飛行機が墜落します。|Hikōki ga tsuiraku shimasu.|El avión se estrella.
+塚|S|ちょう・つか|chō, tsuka|montículo|貝塚を見ます。|Kaizuka o mimasu.|Veo un conchero.
+漬|S|し・つ(ける)|shi, tsu(keru)|encurtir|野菜を漬けます。|Yasai o tsukemasu.|Encurto verduras.
+坪|S|へい・つぼ|hei, tsubo|tsubo (unidad de área)|十坪の土地です。|Jittsubo no tochi desu.|Es un terreno de diez tsubo.
+爪|S|そう・つめ|sō, tsume|uña|爪を切ります。|Tsume o kirimasu.|Me corto las uñas.
+鶴|S|かく・つる|kaku, tsuru|grulla|折り鶴を作ります。|Origazuru o tsukurimasu.|Hago una grulla de papel.
+呈|S|てい|tei|presentar|結果を呈示します。|Kekka o teiji shimasu.|Presento el resultado.
+廷|S|てい|tei|corte|法廷に立ちます。|Hōtei ni tachimasu.|Me presento ante el tribunal.
+抵|S|てい|tei|resistir|抵抗します。|Teikō shimasu.|Resisto.
+邸|S|てい|tei|mansión|邸宅です。|Teitaku desu.|Es una mansión.
+亭|S|てい|tei|pabellón, restaurante|料亭で食べます。|Ryōtei de tabemasu.|Como en un restaurante tradicional.
+貞|S|てい|tei|fidelidad|貞節を守ります。|Teisetsu o mamorimasu.|Guardo la fidelidad.
+帝|S|てい|tei|emperador|帝国です。|Teikoku desu.|Es un imperio.
+訂|S|てい|tei|corregir|間違いを訂正します。|Machigai o teisei shimasu.|Corrijo el error.
+逓|S|てい|tei|enviar en orden|郵便を逓送します。|Yūbin o teisō shimasu.|Se transporta el correo.
+偵|S|てい|tei|espiar|探偵です。|Tantei desu.|Es un detective.
+堤|S|てい・つつみ|tei, tsutsumi|dique|堤防を歩きます。|Teibō o arukimasu.|Camino por el dique.
+艇|S|てい|tei|bote|ボートの艇です。|Bōto no tei desu.|Es el casco del bote.
+締|S|てい・し(める)|tei, shi(meru)|apretar|ネクタイを締めます。|Nekutai o shimemasu.|Me anudo la corbata.
+諦|S|てい・あきら(める)|tei, akira(meru)|resignarse|諦めません。|Akiramemasen.|No me rindo.
+泥|S|でい・どろ|dei, doro|barro|泥で汚れました。|Doro de yogoremashita.|Me ensucié de barro.
+摘|S|てき・つ(む)|teki, tsu(mu)|recoger|花を摘みます。|Hana o tsumimasu.|Recojo flores.
+滴|S|てき・しずく|teki, shizuku|gota|水の滴です。|Mizu no shizuku desu.|Es una gota de agua.
+溺|S|でき・おぼ(れる)|deki, obo(reru)|ahogarse|川で溺れました。|Kawa de oboremashita.|Me ahogué en el río.
+迭|S|てつ|tetsu|alternar|更迭されました。|Kōtetsu saremashita.|Fue destituido.
+哲|S|てつ|tetsu|filosofía|哲学を学びます。|Tetsugaku o manabimasu.|Estudio filosofía.
+徹|S|てつ|tetsu|atravesar|徹夜しました。|Tetsuya shimashita.|Pasé la noche en vela.
+撤|S|てつ|tetsu|retirar|撤去します。|Tekkyo shimasu.|Retiro.
+添|S|てん・そ(える)|ten, so(eru)|añadir|手紙を添えます。|Tegami o soemasu.|Adjunto una carta.
+塡|S|てん|ten|rellenar|補塡します。|Hoten shimasu.|Compenso.
+殿|S|でん・どの|den, dono|palacio, señor|宮殿を見ます。|Kyūden o mimasu.|Veo el palacio.
+斗|S|と|to|unidad de capacidad|北斗七星です。|Hokuto shichisei desu.|Es la Osa Mayor.
+吐|S|と・は(く)|to, ha(ku)|vomitar, exhalar|息を吐きます。|Iki o hakimasu.|Exhalo.
+妬|S|と・ねた(む)|to, neta(mu)|tener celos|嫉妬しません。|Shitto shimasen.|No tengo celos.
+途|S|と|to|camino|途中で降ります。|Tochū de orimasu.|Me bajo a mitad de camino.
+渡|S|と・わた(る)|to, wata(ru)|cruzar|橋を渡ります。|Hashi o watarimasu.|Cruzo el puente.
+奴|S|ど・やつ|do, yatsu|esclavo, tipo|奴隷制度です。|Dorei seido desu.|Es el sistema esclavista.
+怒|S|ど・いか(る)|do, ika(ru)|enojarse|先生が怒ります。|Sensei ga okorimasu.|El profesor se enoja.
+倒|S|とう・たお(れる)|tō, tao(reru)|caer|木が倒れます。|Ki ga taoremasu.|Cae el árbol.
+凍|S|とう・こお(る)|tō, kōru|congelarse|池が凍ります。|Ike ga kōrimasu.|Se congela el estanque.
+唐|S|とう・から|tō, kara|dinastía Tang|唐辛子を入れます。|Tōgarashi o iremasu.|Agrego ají.
+塔|S|とう|tō|torre|塔に登ります。|Tō ni noborimasu.|Subo a la torre.
+悼|S|とう・いた(む)|tō, ita(mu)|llorar un fallecimiento|追悼します。|Tsuitō shimasu.|Rindo homenaje.
+搭|S|とう|tō|embarcar|搭乗します。|Tōjō shimasu.|Abordo.
+桃|S|とう・もも|tō, momo|melocotón|桃を食べます。|Momo o tabemasu.|Como un melocotón.
+棟|S|とう・むね|tō, mune|edificio, cumbrera|三棟あります。|Santō arimasu.|Hay tres edificios.
+盗|S|とう・ぬす(む)|tō, nusu(mu)|robar|財布を盗まれました。|Saifu o nusumaremashita.|Me robaron la cartera.
+痘|S|とう|tō|viruela|水痘です。|Suitō desu.|Es varicela.
+筒|S|とう・つつ|tō, tsutsu|tubo|水筒を持ちます。|Suitō o mochimasu.|Llevo una cantimplora.
+到|S|とう|tō|llegar|到着します。|Tōchaku shimasu.|Llego.
+謄|S|とう|tō|copiar|謄本をもらいます。|Tōhon o moraimasu.|Recibo una copia certificada.
+踏|S|とう・ふ(む)|tō, fu(mu)|pisar|足を踏みます。|Ashi o fumimasu.|Piso un pie.
+逃|S|とう・に(げる)|tō, ni(geru)|huir|犬が逃げました。|Inu ga nigemashita.|El perro se escapó.
+透|S|とう・す(く)|tō, su(ku)|transparentar|透明なガラスです。|Tōmei na garasu desu.|Es un vidrio transparente.
+陶|S|とう|tō|cerámica|陶器を買います。|Tōki o kaimasu.|Compro cerámica.
+騰|S|とう|tō|subir|物価が高騰します。|Bukka ga kōtō shimasu.|Suben los precios.
+闘|S|とう・たたか(う)|tō, tataka(u)|luchar|病気と闘います。|Byōki to tatakaimasu.|Lucho contra la enfermedad.
+洞|S|どう・ほら|dō, hora|cueva|洞穴に入ります。|Hora-ana ni hairimasu.|Entro en una cueva.
+胴|S|どう|dō|torso|胴体です。|Dōtai desu.|Es el torso.
+峠|S|とうげ|tōge|paso de montaña|峠を越えます。|Tōge o koemasu.|Cruzo el paso de montaña.
+匿|S|とく|toku|ocultar|匿名です。|Tokumei desu.|Es anónimo.
+督|S|とく|toku|supervisar|監督に従います。|Kantoku ni shitagaimasu.|Sigo al director.
+篤|S|とく・あつ(い)|toku, atsu(i)|ferviente|篤い信仰です。|Atsui shinkō desu.|Es una fe ferviente.
+凸|S|とつ|totsu|convexo|凸凹の道です。|Dekoboko no michi desu.|Es un camino irregular.
+突|S|とつ・つ(く)|totsu, tsu(ku)|golpear, súbito|突然雨が降りました。|Totsuzen ame ga furimashita.|De repente llovió.
+屯|S|とん|ton|acuartelar|屯所です。|Tonsho desu.|Es un puesto de guardia.
+豚|S|とん・ぶた|ton, buta|cerdo|豚肉を食べます。|Butaniku o tabemasu.|Como carne de cerdo.
+頓|S|とん|ton|de golpe|整頓します。|Seiton shimasu.|Ordeno.
+貪|S|どん・むさぼ(る)|don, musabo(ru)|codiciar|貪欲です。|Don'yoku desu.|Es codicioso.
+鈍|S|どん・にぶ(い)|don, nibu(i)|romo, lento|刃が鈍いです。|Ha ga nibui desu.|El filo está romo.
+曇|S|どん・くも(る)|don, kumo(ru)|nublarse|今日は曇りです。|Kyō wa kumori desu.|Hoy está nublado.
+丼|S|どん・どんぶり|don, donburi|tazón|牛丼を食べます。|Gyūdon o tabemasu.|Como gyūdon.
+那|S|な|na|(fonético)|刹那です。|Setsuna desu.|Es un instante.
+謎|S|めい・なぞ|mei, nazo|enigma|謎を解きます。|Nazo o tokimasu.|Resuelvo el enigma.
+鍋|S|か・なべ|ka, nabe|olla|鍋を食べます。|Nabe o tabemasu.|Como nabe.
+軟|S|なん・やわ(らかい)|nan, yawa(rakai)|blando|軟らかい布です。|Yawarakai nuno desu.|Es una tela suave.
+尼|S|に・あま|ni, ama|monja|尼寺です。|Amadera desu.|Es un convento.
+弐|S|に|ni|dos (formal)|弐千円です。|Nisen'en desu.|Son dos mil yenes.
+匂|S|にお(う)|nio(u)|oler|いい匂いです。|Ii nioi desu.|Huele bien.
+虹|S|こう・にじ|kō, niji|arcoíris|虹が出ました。|Niji ga demashita.|Salió un arcoíris.
+尿|S|にょう|nyō|orina|検尿をします。|Kennyō o shimasu.|Me hago un análisis de orina.
+妊|S|にん|nin|embarazo|妊婦さんです。|Ninpu-san desu.|Es una embarazada.
+忍|S|にん・しの(ぶ)|nin, shino(bu)|soportar, ninja|忍耐が必要です。|Nintai ga hitsuyō desu.|Se necesita paciencia.
+寧|S|ねい|nei|cortés|丁寧に話します。|Teinei ni hanashimasu.|Hablo con cortesía.
+捻|S|ねん・ひね(る)|nen, hine(ru)|torcer|足首を捻りました。|Ashikubi o hinerimashita.|Me torcí el tobillo.
+粘|S|ねん・ねば(る)|nen, neba(ru)|pegajoso|粘り強い人です。|Nebarizuyoi hito desu.|Es una persona tenaz.
+悩|S|のう・なや(む)|nō, naya(mu)|preocuparse|悩みがあります。|Nayami ga arimasu.|Tengo una preocupación.
+濃|S|のう・こ(い)|nō, ko(i)|denso, fuerte|濃いお茶です。|Koi ocha desu.|Es un té fuerte.
+把|S|は|ha|agarrar|把握します。|Haaku shimasu.|Comprendo.
+覇|S|は|ha|hegemonía|優勝して覇者になります。|Yūshō shite hasha ni narimasu.|Gano y me convierto en campeón.
+婆|S|ば|ba|anciana|お婆さんです。|Obā-san desu.|Es una abuela.
+罵|S|ば・ののし(る)|ba, nonoshi(ru)|insultar|罵声を浴びました。|Basei o abimashita.|Recibí abucheos.
+杯|S|はい・さかずき|hai, sakazuki|copa|乾杯します。|Kanpai shimasu.|Brindo.
+排|S|はい|hai|expulsar|排水します。|Haisui shimasu.|Drenar.
+廃|S|はい・すた(れる)|hai, sutare(ru)|abolir|廃止します。|Haishi shimasu.|Abolimos.
+輩|S|はい|hai|compañero|先輩です。|Senpai desu.|Es un compañero mayor.
+培|S|ばい・つちか(う)|bai, tsuchika(u)|cultivar|経験を培います。|Keiken o tsuchikaimasu.|Cultivo experiencia.
+陪|S|ばい|bai|acompañar|陪審員です。|Baishin'in desu.|Es miembro del jurado.
+媒|S|ばい|bai|intermediario|媒体です。|Baitai desu.|Es un medio.
+賠|S|ばい|bai|indemnizar|賠償します。|Baishō shimasu.|Indemnizo.
+伯|S|はく|haku|conde, tío mayor|伯父です。|Oji desu.|Es mi tío (mayor).
+拍|S|はく・ひょう|haku, hyō|palmada, compás|拍手します。|Hakushu shimasu.|Aplaudo.
+泊|S|はく・と(まる)|haku, to(maru)|pasar la noche|ホテルに泊まります。|Hoteru ni tomarimasu.|Me alojo en un hotel.
+迫|S|はく・せま(る)|haku, sema(ru)|acercarse, presionar|締め切りが迫ります。|Shimekiri ga semarimasu.|Se acerca la fecha límite.
+剝|S|はく・は(がす)|haku, ha(gasu)|pelar|皮を剝きます。|Kawa o mukimasu.|Pelo la cáscara.
+舶|S|はく|haku|barco grande|舶来品です。|Hakuraihin desu.|Es un producto importado.
+薄|S|はく・うす(い)|haku, usu(i)|delgado, tenue|薄いコートです。|Usui kōto desu.|Es un abrigo fino.
+漠|S|ばく|baku|vago, desierto|砂漠を歩きます。|Sabaku o arukimasu.|Camino por el desierto.
+縛|S|ばく・しば(る)|baku, shiba(ru)|atar|ひもで縛ります。|Himo de shibarimasu.|Ato con una cuerda.
+爆|S|ばく|baku|explotar|爆発しました。|Bakuhatsu shimashita.|Explotó.
+箸|S|ちょ・はし|cho, hashi|palillos|箸を使います。|Hashi o tsukaimasu.|Uso palillos.
+肌|S|き・はだ|ki, hada|piel|肌が綺麗です。|Hada ga kirei desu.|Tiene la piel hermosa.
+鉢|S|はち|hachi|cuenco, maceta|植木鉢です。|Uekibachi desu.|Es una maceta.
+髪|S|はつ・かみ|hatsu, kami|cabello|髪を切ります。|Kami o kirimasu.|Me corto el pelo.
+伐|S|ばつ|batsu|talar|森林を伐採します。|Shinrin o bassai shimasu.|Se talan los bosques.
+抜|S|ばつ・ぬ(く)|batsu, nu(ku)|sacar|歯を抜きます。|Ha o nukimasu.|Me sacan un diente.
+罰|S|ばつ・ばち|batsu, bachi|castigo|罰を受けます。|Batsu o ukemasu.|Recibo un castigo.
+閥|S|ばつ|batsu|facción|派閥があります。|Habatsu ga arimasu.|Hay facciones.
+氾|S|はん|han|desbordar|氾濫します。|Hanran shimasu.|Se desborda.
+帆|S|はん・ほ|han, ho|vela|帆を張ります。|Ho o harimasu.|Icé la vela.
+汎|S|はん|han|general|汎用性があります。|Han'yōsei ga arimasu.|Es de uso general.
+伴|S|はん・ばん・ともな(う)|han, ban, tomona(u)|acompañar|友達を伴います。|Tomodachi o tomonaimasu.|Voy acompañado de un amigo.
+畔|S|はん|han|orilla|湖畔を歩きます。|Kohan o arukimasu.|Camino por la orilla del lago.
+般|S|はん|han|general|一般的です。|Ippanteki desu.|Es general.
+販|S|はん|han|vender|販売します。|Hanbai shimasu.|Vendo.
+斑|S|はん・まだら|han, madara|manchado|斑点があります。|Hanten ga arimasu.|Tiene manchas.
+搬|S|はん|han|transportar|運搬します。|Unpan shimasu.|Transporto.
+煩|S|はん・わずら(う)|han, wazura(u)|molestia|煩わしい仕事です。|Wazurawashii shigoto desu.|Es un trabajo molesto.
+頒|S|はん|han|distribuir|頒布します。|Hanpu shimasu.|Distribuyo.
+範|S|はん|han|modelo|範囲が広いです。|Han'i ga hiroi desu.|El alcance es amplio.
+繁|S|はん・しげ(る)|han, shige(ru)|prosperar|草が繁ります。|Kusa ga shigerimasu.|Crece la hierba espesa.
+藩|S|はん|han|feudo|藩の殿様です。|Han no tonosama desu.|Es el señor del feudo.
+蛮|S|ばん|ban|bárbaro|野蛮な行為です。|Yaban na kōi desu.|Es un acto bárbaro.
+盤|S|ばん|ban|tablero|将棋盤です。|Shōgiban desu.|Es un tablero de shōgi.
+妃|S|ひ|hi|princesa consorte|王妃です。|Ōhi desu.|Es la reina consorte.
+彼|S|ひ・かれ|hi, kare|él|彼は先生です。|Kare wa sensei desu.|Él es profesor.
+披|S|ひ|hi|abrir, revelar|披露宴です。|Hirōen desu.|Es un banquete de boda.
+卑|S|ひ・いや(しい)|hi, iya(shii)|vil|卑怯な行いです。|Hikyō na okonai desu.|Es un acto cobarde.
+疲|S|ひ・つか(れる)|hi, tsuka(reru)|cansarse|疲れました。|Tsukaremashita.|Estoy cansado.
+被|S|ひ・こうむ(る)|hi, kōmu(ru)|sufrir, cubrir|被害を受けました。|Higai o ukemashita.|Sufrí daños.
+扉|S|ひ・とびら|hi, tobira|puerta|扉を開けます。|Tobira o akemasu.|Abro la puerta.
+碑|S|ひ|hi|lápida|記念碑を見ます。|Kinenhi o mimasu.|Veo el monumento.
+罷|S|ひ|hi|dimitir|罷免されました。|Himen saremashita.|Fue destituido.
+避|S|ひ・さ(ける)|hi, sa(keru)|evitar|混雑を避けます。|Konzatsu o sakemasu.|Evito las aglomeraciones.
+尾|S|び・お|bi, o|cola|犬が尾を振ります。|Inu ga o o furimasu.|El perro mueve la cola.
+眉|S|び・まゆ|bi, mayu|ceja|眉を上げます。|Mayu o agemasu.|Levanto las cejas.
+微|S|び|bi|diminuto|微笑みます。|Hohoemimasu.|Sonrío.
+膝|S|しつ・ひざ|shitsu, hiza|rodilla|膝が痛いです。|Hiza ga itai desu.|Me duele la rodilla.
+肘|S|ちゅう・ひじ|chū, hiji|codo|肘をつきます。|Hiji o tsukimasu.|Apoyo el codo.
+匹|S|ひつ・ひき|hitsu, hiki|contador de animales|犬が二匹います。|Inu ga nihiki imasu.|Hay dos perros.
+泌|S|ひつ・ひ|hitsu|secretar|分泌します。|Bunpi shimasu.|Secreta.
+姫|S|き・ひめ|ki, hime|princesa|お姫様です。|Ohimesama desu.|Es una princesa.
+漂|S|ひょう・ただよ(う)|hyō, tadayo(u)|flotar|船が漂います。|Fune ga tadayoimasu.|El barco va a la deriva.
+苗|S|びょう・なえ|byō, nae|plántula|苗を植えます。|Nae o uemasu.|Planto plántulas.
+描|S|びょう・えが(く)|byō, egaku|dibujar|絵を描きます。|E o egakimasu.|Dibujo un cuadro.
+猫|S|びょう・ねこ|byō, neko|gato|猫が好きです。|Neko ga suki desu.|Me gustan los gatos.
+浜|S|ひん・はま|hin, hama|playa|浜辺を歩きます。|Hamabe o arukimasu.|Camino por la playa.
+賓|S|ひん|hin|invitado|来賓が来ます。|Raihin ga kimasu.|Llegan los invitados.
+頻|S|ひん|hin|frecuente|頻繁に来ます。|Hinpan ni kimasu.|Viene con frecuencia.
+敏|S|びん|bin|ágil|敏感な耳です。|Binkan na mimi desu.|Tiene un oído sensible.
+瓶|S|びん|bin|botella|瓶を洗います。|Bin o araimasu.|Lavo la botella.
+扶|S|ふ|fu|ayudar|扶養します。|Fuyō shimasu.|Mantengo a mi familia.
+怖|S|ふ・こわ(い)|fu, kowa(i)|temible|怖い映画です。|Kowai eiga desu.|Es una película de miedo.
+附|S|ふ|fu|adjuntar|附属します。|Fuzoku shimasu.|Está adscrito.
+訃|S|ふ|fu|noticia de fallecimiento|訃報が届きました。|Fuhō ga todokimashita.|Llegó la noticia de un fallecimiento.
+赴|S|ふ・おもむ(く)|fu, omomu(ku)|dirigirse|現地に赴きます。|Genchi ni omomukimasu.|Me traslado al lugar.
+浮|S|ふ・う(く)|fu, u(ku)|flotar|船が浮かびます。|Fune ga ukabimasu.|El barco flota.
+符|S|ふ|fu|signo, talismán|音符を読みます。|Onpu o yomimasu.|Leo las notas musicales.
+普|S|ふ|fu|común|普通の日です。|Futsū no hi desu.|Es un día normal.
+腐|S|ふ・くさ(る)|fu, kusa(ru)|pudrirse|牛乳が腐りました。|Gyūnyū ga kusarimashita.|Se echó a perder la leche.
+敷|S|ふ・し(く)|fu, shi(ku)|extender|布団を敷きます。|Futon o shikimasu.|Tiendo el futón.
+膚|S|ふ|fu|piel|皮膚が弱いです。|Hifu ga yowai desu.|Tengo la piel sensible.
+賦|S|ふ|fu|repartir|月賦で買います。|Geppu de kaimasu.|Compro a plazos mensuales.
+譜|S|ふ|fu|partitura|楽譜を読みます。|Gakufu o yomimasu.|Leo la partitura.
+侮|S|ぶ・あなど(る)|bu, anado(ru)|menospreciar|相手を侮りません。|Aite o anadorimasen.|No subestimo al rival.
+舞|S|ぶ・ま(う)|bu, ma(u)|danzar|花びらが舞います。|Hanabira ga maimasu.|Los pétalos bailan en el aire.
+封|S|ふう・ほう|fū, hō|sellar|手紙に封をします。|Tegami ni fū o shimasu.|Sello la carta.
+伏|S|ふく・ふ(せる)|fuku, fu(seru)|tumbarse|地面に伏せます。|Jimen ni fusemasu.|Me tumbo en el suelo.
+幅|S|ふく・はば|fuku, haba|anchura|道の幅が広いです。|Michi no haba ga hiroi desu.|El camino es ancho.
+覆|S|ふく・おお(う)|fuku, oo(u)|cubrir|布で覆います。|Nuno de ōimasu.|Cubro con una tela.
+払|S|ふつ・はら(う)|futsu, hara(u)|pagar|お金を払います。|Okane o haraimasu.|Pago el dinero.
+沸|S|ふつ・わ(く)|futsu, wa(ku)|hervir|お湯が沸きます。|Oyu ga wakimasu.|Hierve el agua.
+紛|S|ふん・まぎ(れる)|fun, magi(reru)|confundirse|紛失しました。|Funshitsu shimashita.|Lo perdí.
+雰|S|ふん|fun|atmósfera|雰囲気がいいです。|Fun'iki ga ii desu.|El ambiente es bueno.
+噴|S|ふん・ふ(く)|fun, fu(ku)|brotar|火山が噴火します。|Kazan ga funka shimasu.|Entra en erupción el volcán.
+墳|S|ふん|fun|túmulo|古墳を見ます。|Kofun o mimasu.|Veo un túmulo antiguo.
+憤|S|ふん・いきどお(る)|fun, ikidoo(ru)|indignarse|憤慨します。|Fungai shimasu.|Me indigno.
+丙|S|へい|hei|tercero|甲乙丙で並べます。|Kō-otsu-hei de narabemasu.|Ordeno como A, B, C.
+併|S|へい・あわ(せる)|hei, awa(seru)|combinar|二つを併用します。|Futatsu o heiyō shimasu.|Uso ambos a la vez.
+柄|S|へい・がら|hei, gara|mango, estampado|花柄の服です。|Hanagara no fuku desu.|Es ropa con estampado floral.
+塀|S|へい|hei|muro|塀の上に猫がいます。|Hei no ue ni neko ga imasu.|Hay un gato sobre el muro.
+幣|S|へい|hei|moneda, ofrenda|紙幣です。|Shihei desu.|Es un billete.
+弊|S|へい|hei|nuestro (humilde), daño|弊社の製品です。|Heisha no seihin desu.|Es un producto de nuestra empresa.
+蔽|S|へい|hei|cubrir|隠蔽します。|Inpei shimasu.|Encubro.
+餅|S|へい・もち|hei, mochi|pastel de arroz|お餅を食べます。|Omochi o tabemasu.|Como mochi.
+壁|S|へき・かべ|heki, kabe|pared|壁に絵を掛けます。|Kabe ni e o kakemasu.|Cuelgo un cuadro en la pared.
+璧|S|へき|heki|jade|完璧です。|Kanpeki desu.|Es perfecto.
+癖|S|へき・くせ|heki, kuse|manía, hábito|癖を直します。|Kuse o naoshimasu.|Corrijo una manía.
+蔑|S|べつ・さげす(む)|betsu, sagesu(mu)|despreciar|軽蔑しません。|Keibetsu shimasen.|No desprecio.
+偏|S|へん・かたよ(る)|hen, katayo(ru)|sesgado|偏った意見です。|Katayotta iken desu.|Es una opinión sesgada.
+遍|S|へん|hen|universal|普遍的です。|Fuhenteki desu.|Es universal.
+哺|S|ほ|ho|amamantar|哺乳瓶です。|Honyūbin desu.|Es un biberón.
+舗|S|ほ|ho|tienda, pavimento|店舗に行きます。|Tenpo ni ikimasu.|Voy a la tienda.
+募|S|ぼ・つの(る)|bo, tsuno(ru)|reclutar|参加者を募ります。|Sankasha o tsunorimasu.|Recluto participantes.
+慕|S|ぼ・した(う)|bo, shita(u)|añorar|先生を慕います。|Sensei o shitaimasu.|Admiro y estimo al profesor.
+簿|S|ぼ|bo|libro de registro|帳簿をつけます。|Chōbo o tsukemasu.|Llevo los libros contables.
+芳|S|ほう・かんば(しい)|hō, kanba(shii)|fragante|芳しい香りです。|Kanbashii kaori desu.|Es un aroma fragante.
+邦|S|ほう|hō|país|邦楽を聞きます。|Hōgaku o kikimasu.|Escucho música japonesa tradicional.
+奉|S|ほう・たてまつ(る)|hō, tatematsu(ru)|ofrecer, servir|神に奉納します。|Kami ni hōnō shimasu.|Hago una ofrenda a los dioses.
+抱|S|ほう・だ(く)|hō, da(ku)|abrazar|赤ちゃんを抱きます。|Akachan o dakimasu.|Abrazo al bebé.
+泡|S|ほう・あわ|hō, awa|espuma|石鹸の泡です。|Sekken no awa desu.|Es espuma de jabón.
+胞|S|ほう|hō|célula, placenta|細胞を調べます。|Saibō o shirabemasu.|Examino las células.
+俸|S|ほう|hō|salario|年俸が上がります。|Nenpō ga agarimasu.|Sube el salario anual.
+倣|S|ほう・なら(う)|hō, nara(u)|imitar|先輩に倣います。|Senpai ni naraimasu.|Sigo el ejemplo del mayor.
+峰|S|ほう・みね|hō, mine|cumbre|山の峰です。|Yama no mine desu.|Es la cumbre de la montaña.
+砲|S|ほう|hō|cañón|大砲です。|Taihō desu.|Es un cañón.
+崩|S|ほう・くず(れる)|hō, kuzu(reru)|derrumbarse|山が崩れます。|Yama ga kuzuremasu.|Se derrumba la montaña.
+蜂|S|ほう・はち|hō, hachi|abeja|蜂に刺されました。|Hachi ni sasaremashita.|Me picó una abeja.
+飽|S|ほう・あ(きる)|hō, a(kiru)|hartarse|もう飽きました。|Mō akimashita.|Ya me cansé.
+褒|S|ほう・ほ(める)|hō, ho(meru)|elogiar|先生が褒めます。|Sensei ga homemasu.|El profesor elogia.
+縫|S|ほう・ぬ(う)|hō, nu(u)|coser|服を縫います。|Fuku o nuimasu.|Coso ropa.
+乏|S|ぼう・とぼ(しい)|bō, tobo(shii)|escaso|資源が乏しいです。|Shigen ga toboshii desu.|Los recursos son escasos.
+忙|S|ぼう・いそが(しい)|bō, isoga(shii)|ocupado|今日は忙しいです。|Kyō wa isogashii desu.|Hoy estoy ocupado.
+坊|S|ぼう|bō|monje, niño|坊ちゃんです。|Botchan desu.|Es el hijo del señor.
+妨|S|ぼう・さまた(げる)|bō, samata(geru)|obstaculizar|邪魔を妨げます。|Jama o samatagemasu.|Evito el estorbo.
+房|S|ぼう・ふさ|bō, fusa|racimo, sala|冷房を入れます。|Reibō o iremasu.|Enciendo el aire acondicionado.
+肪|S|ぼう|bō|grasa|脂肪が増えます。|Shibō ga fuemasu.|Aumenta la grasa.
+某|S|ぼう|bō|cierto, fulano|某氏です。|Boshi desu.|Es cierto señor.
+冒|S|ぼう・おか(す)|bō, oka(su)|arriesgar|危険を冒します。|Kiken o okashimasu.|Corro el riesgo.
+剖|S|ぼう|bō|disecar|解剖します。|Kaibō shimasu.|Hago una disección.
+紡|S|ぼう・つむ(ぐ)|bō, tsumu(gu)|hilar|糸を紡ぎます。|Ito o tsumugimasu.|Hilo hilo.
+傍|S|ぼう・かたわ(ら)|bō, katawa(ra)|al lado|道の傍に立ちます。|Michi no katawara ni tachimasu.|Me paro al lado del camino.
+帽|S|ぼう|bō|sombrero|帽子をかぶります。|Bōshi o kaburimasu.|Me pongo un sombrero.
+貌|S|ぼう|bō|apariencia|変貌しました。|Henbō shimashita.|Se transformó.
+膨|S|ぼう・ふく(らむ)|bō, fuku(ramu)|hincharse|風船が膨らみます。|Fūsen ga fukuramimasu.|Se infla el globo.
+謀|S|ぼう・はか(る)|bō, haka(ru)|planear, conspirar|計画を謀ります。|Keikaku o hakarimasu.|Trazo un plan.
+頰|S|きょう・ほお|kyō, hoo|mejilla|頰が赤いです。|Hoo ga akai desu.|Tiene las mejillas rojas.
+朴|S|ぼく|boku|sencillo|素朴な人です。|Soboku na hito desu.|Es una persona sencilla.
+睦|S|ぼく・むつ(まじい)|boku, mutsu(majii)|armonía|仲睦まじい夫婦です。|Nakamutsumajii fūfu desu.|Es una pareja muy unida.
+僕|S|ぼく|boku|yo (masc.)|僕は学生です。|Boku wa gakusei desu.|Soy estudiante.
+墨|S|ぼく・すみ|boku, sumi|tinta china|墨で書きます。|Sumi de kakimasu.|Escribo con tinta china.
+撲|S|ぼく|boku|golpear|打撲しました。|Dabokku shimashita.|Me di un golpe.
+没|S|ぼつ|botsu|hundirse, fallecer|日が没します。|Hi ga botsushimasu.|Se pone el sol.
+勃|S|ぼつ|botsu|surgir|勃発しました。|Boppatsu shimashita.|Estalló.
+堀|S|くつ・ほり|kutsu, hori|foso|堀に水があります。|Hori ni mizu ga arimasu.|Hay agua en el foso.
+奔|S|ほん|hon|correr|奔走します。|Honsō shimasu.|Me afano.
+翻|S|ほん・ひるがえ(る)|hon, hirugae(ru)|ondear, traducir|旗が翻ります。|Hata ga hirugaerimasu.|La bandera ondea.
+凡|S|ぼん・はん|bon, han|ordinario|平凡な毎日です。|Heibon na mainichi desu.|Son días ordinarios.
+盆|S|ぼん|bon|bandeja, Obon|お盆に帰ります。|Obon ni kaerimasu.|Vuelvo para Obon.
+麻|S|ま・あさ|ma, asa|cáñamo, lino|麻のシャツです。|Asa no shatsu desu.|Es una camisa de lino.
+摩|S|ま|ma|frotar|摩擦が起きます。|Masatsu ga okimasu.|Se produce fricción.
+磨|S|ま・みが(く)|ma, miga(ku)|pulir|歯を磨きます。|Ha o migakimasu.|Me cepillo los dientes.
+魔|S|ま|ma|demonio|魔法を使います。|Mahō o tsukaimasu.|Uso magia.
+昧|S|まい|mai|oscuro|曖昧です。|Aimai desu.|Es ambiguo.
+埋|S|まい・う(める)|mai, u(meru)|enterrar|穴を埋めます。|Ana o umemasu.|Relleno el hoyo.
+膜|S|まく|maku|membrana|粘膜です。|Nenmaku desu.|Es una mucosa.
+枕|S|ちん・まくら|chin, makura|almohada|枕を使います。|Makura o tsukaimasu.|Uso una almohada.
+又|S|ゆう・また|yū, mata|otra vez|又来ます。|Mata kimasu.|Vendré otra vez.
+抹|S|まつ|matsu|frotar|抹茶を飲みます。|Matcha o nomimasu.|Bebo matcha.
+慢|S|まん|man|lento, arrogante|自慢します。|Jiman shimasu.|Me jacto.
+漫|S|まん|man|vago, cómic|漫画を読みます。|Manga o yomimasu.|Leo manga.
+魅|S|み|mi|fascinar|魅力があります。|Miryoku ga arimasu.|Tiene encanto.
+岬|S|こう・みさき|kō, misaki|cabo|岬に灯台があります。|Misaki ni tōdai ga arimasu.|Hay un faro en el cabo.
+蜜|S|みつ|mitsu|miel|蜂蜜を食べます。|Hachimitsu o tabemasu.|Como miel.
+妙|S|みょう|myō|extraño, exquisito|妙な音がします。|Myō na oto ga shimasu.|Hay un sonido extraño.
+眠|S|みん・ねむ(る)|min, nemu(ru)|dormir|よく眠ります。|Yoku nemurimasu.|Duermo bien.
+矛|S|む・ほこ|mu, hoko|lanza|矛盾しています。|Mujun shite imasu.|Es contradictorio.
+霧|S|む・きり|mu, kiri|niebla|霧が出ました。|Kiri ga demashita.|Salió niebla.
+娘|S|じょう・むすめ|jō, musume|hija|娘が二人います。|Musume ga futari imasu.|Tengo dos hijas.
+銘|S|めい|mei|inscripción|座右の銘です。|Zayū no mei desu.|Es mi lema.
+滅|S|めつ・ほろ(びる)|metsu, horo(biru)|perecer|恐竜が滅びました。|Kyōryū ga horobimashita.|Se extinguieron los dinosaurios.
+免|S|めん・まぬか(れる)|men, manuka(reru)|eximir|運転免許を取ります。|Unten menkyo o torimasu.|Saco el carné de conducir.
+麺|S|めん|men|fideos|麺を食べます。|Men o tabemasu.|Como fideos.
+茂|S|も・しげ(る)|mo, shige(ru)|crecer espeso|木が茂ります。|Ki ga shigerimasu.|Los árboles se vuelven frondosos.
+妄|S|もう・ぼう|mō, bō|delirio|妄想します。|Mōsō shimasu.|Fantaseo.
+盲|S|もう|mō|ciego|盲導犬です。|Mōdōken desu.|Es un perro guía.
+耗|S|もう・こう|mō, kō|desgastar|消耗します。|Shōmō shimasu.|Me desgasto.
+猛|S|もう|mō|feroz|猛暑です。|Mōsho desu.|Es un calor abrasador.
+網|S|もう・あみ|mō, ami|red|魚を網で捕ります。|Sakana o ami de torimasu.|Atrapo peces con una red.
+黙|S|もく・だま(る)|moku, dama(ru)|callar|黙って聞きます。|Damatte kikimasu.|Escucho en silencio.
+紋|S|もん|mon|escudo, patrón|家紋です。|Kamon desu.|Es un escudo familiar.
+冶|S|や|ya|fundir|鍛冶屋です。|Kajiya desu.|Es un herrero.
+弥|S|や・いや|ya, iya|aún más|弥生時代です。|Yayoi jidai desu.|Es el periodo Yayoi.
+厄|S|やく|yaku|desgracia|厄を払います。|Yaku o haraimasu.|Ahuyento la mala suerte.
+躍|S|やく・おど(る)|yaku, odo(ru)|saltar|魚が躍ります。|Sakana ga odorimasu.|Los peces saltan.
+闇|S|あん・やみ|an, yami|oscuridad|闇の中を歩きます。|Yami no naka o arukimasu.|Camino en la oscuridad.
+喩|S|ゆ|yu|metáfora|比喩を使います。|Hiyu o tsukaimasu.|Uso una metáfora.
+愉|S|ゆ|yu|alegre|愉快な話です。|Yukai na hanashi desu.|Es una historia divertida.
+諭|S|ゆ・さと(す)|yu, sato(su)|aconsejar|子供を諭します。|Kodomo o satoshimasu.|Aconsejo al niño.
+癒|S|ゆ・い(える)|yu, i(eru)|sanar|傷が癒えます。|Kizu ga iemasu.|Sana la herida.
+唯|S|ゆい・い|yui, i|solo|唯一の方法です。|Yuitsu no hōhō desu.|Es el único método.
+幽|S|ゆう|yū|tenue, fantasma|幽霊です。|Yūrei desu.|Es un fantasma.
+悠|S|ゆう|yū|calmo, lejano|悠々と歩きます。|Yūyū to arukimasu.|Camino sin prisa.
+湧|S|ゆう・わ(く)|yū, wa(ku)|brotar|水が湧きます。|Mizu ga wakimasu.|Brota agua.
+猶|S|ゆう|yū|todavía|猶予があります。|Yūyo ga arimasu.|Hay una prórroga.
+裕|S|ゆう|yū|abundante|余裕があります。|Yoyū ga arimasu.|Tengo margen.
+雄|S|ゆう・お|yū, o|macho, héroe|雄の犬です。|Osu no inu desu.|Es un perro macho.
+誘|S|ゆう・さそ(う)|yū, sasō(u)|invitar|友達を誘います。|Tomodachi o sasoimasu.|Invito a un amigo.
+融|S|ゆう|yū|derretir|氷が融けます。|Kōri ga tokemasu.|Se derrite el hielo.
+与|S|よ・あた(える)|yo, ata(eru)|dar|機会を与えます。|Kikai o ataemasu.|Doy una oportunidad.
+誉|S|よ・ほま(れ)|yo, homa(re)|honor|名誉です。|Meiyo desu.|Es un honor.
+庸|S|よう|yō|común|凡庸な人です。|Bon'yō na hito desu.|Es una persona mediocre.
+揚|S|よう・あ(げる)|yō, a(geru)|alzar, freír|旗を揚げます。|Hata o agemasu.|Izo la bandera.
+揺|S|よう・ゆ(れる)|yō, yu(reru)|temblar, mecerse|地震で揺れます。|Jishin de yuremasu.|Tiembla por el sismo.
+溶|S|よう・と(ける)|yō, to(keru)|disolverse|砂糖が溶けます。|Satō ga tokemasu.|Se disuelve el azúcar.
+腰|S|よう・こし|yō, koshi|cintura|腰が痛いです。|Koshi ga itai desu.|Me duele la cintura.
+瘍|S|よう|yō|tumor, úlcera|腫瘍です。|Shuyō desu.|Es un tumor.
+踊|S|よう・おど(る)|yō, odo(ru)|bailar|音楽に合わせて踊ります。|Ongaku ni awasete odorimasu.|Bailo al ritmo de la música.
+窯|S|よう・かま|yō, kama|horno de cerámica|窯で焼きます。|Kama de yakimasu.|Cuezo en el horno de cerámica.
+擁|S|よう|yō|abrazar, proteger|擁護します。|Yōgo shimasu.|Defiendo.
+謡|S|よう・うたい|yō, utai|canto noh|謡を習います。|Utai o naraimasu.|Aprendo canto noh.
+抑|S|よく・おさ(える)|yoku, osa(eru)|reprimir|感情を抑えます。|Kanjō o osaemasu.|Contengo mis emociones.
+沃|S|よく|yoku|fértil|肥沃な土地です。|Hiyoku na tochi desu.|Es una tierra fértil.
+翼|S|よく・つばさ|yoku, tsubasa|ala|鳥の翼です。|Tori no tsubasa desu.|Son las alas del ave.
+拉|S|ら|ra|arrastrar|拉致されました。|Rachi saremashita.|Fue secuestrado.
+裸|S|ら・はだか|ra, hadaka|desnudo|裸足で歩きます。|Hadashi de arukimasu.|Camino descalzo.
+羅|S|ら|ra|red, enumerar|網羅します。|Mōra shimasu.|Abarco todo.
+雷|S|らい・かみなり|rai, kaminari|trueno|雷が鳴ります。|Kaminari ga narimasu.|Truena.
+頼|S|らい・たよ(る)|rai, tayo(ru)|depender, pedir|友達に頼ります。|Tomodachi ni tayorimasu.|Confío en mis amigos.
+絡|S|らく・から(む)|raku, kara(mu)|enredar|連絡します。|Renraku shimasu.|Me comunico.
+酪|S|らく|raku|lácteo|酪農家です。|Rakunōka desu.|Es productor lechero.
+辣|S|らつ|ratsu|picante, agudo|辛辣な意見です。|Shinratsu na iken desu.|Es una opinión mordaz.
+濫|S|らん|ran|desbordar|濫用しません。|Ran'yō shimasen.|No abuso.
+藍|S|らん・あい|ran, ai|índigo|藍色の着物です。|Ai-iro no kimono desu.|Es un kimono índigo.
+欄|S|らん|ran|columna, campo|記入欄に書きます。|Kinyūran ni kakimasu.|Escribo en el campo de registro.
+吏|S|り|ri|funcionario|官吏です。|Kanri desu.|Es un funcionario.
+痢|S|り|ri|diarrea|下痢をしました。|Geri o shimashita.|Tuve diarrea.
+履|S|り・は(く)|ri, ha(ku)|calzar|靴を履きます。|Kutsu o hakimasu.|Me pongo los zapatos.
+璃|S|り|ri|lapislázuli|瑠璃色です。|Ruriiro desu.|Es de color lapislázuli.
+離|S|り・はな(れる)|ri, hana(reru)|separarse|家を離れます。|Ie o hanaremasu.|Me alejo de casa.
+慄|S|りつ|ritsu|temblar de miedo|戦慄が走りました。|Senritsu ga hashirimashita.|Me recorrió un escalofrío.
+柳|S|りゅう・やなぎ|ryū, yanagi|sauce|柳が揺れます。|Yanagi ga yuremasu.|El sauce se mece.
+竜|S|りゅう・りょう|ryū, ryō|dragón|竜が空を飛びます。|Ryū ga sora o tobimasu.|El dragón vuela por el cielo.
+粒|S|りゅう・つぶ|ryū, tsubu|grano|米粒です。|Kometsubu desu.|Es un grano de arroz.
+隆|S|りゅう|ryū|próspero|隆盛を極めます。|Ryūsei o kiwamemasu.|Alcanza su apogeo.
+硫|S|りゅう|ryū|azufre|硫黄の匂いです。|Iō no nioi desu.|Es olor a azufre.
+侶|S|りょ|ryo|compañero|伴侶です。|Hanryo desu.|Es mi pareja de vida.
+虜|S|りょ・とりこ|ryo, toriko|prisionero, cautivo|音楽の虜になります。|Ongaku no toriko ni narimasu.|Quedo cautivo de la música.
+慮|S|りょ|ryo|reflexionar|遠慮します。|Enryo shimasu.|Prefiero declinar.
+了|S|りょう|ryō|terminar|了解しました。|Ryōkai shimashita.|Entendido.
+涼|S|りょう・すず(しい)|ryō, suzu(shii)|fresco|涼しい風です。|Suzushii kaze desu.|Es una brisa fresca.
+猟|S|りょう|ryō|caza|猟に出ます。|Ryō ni demasu.|Salgo de caza.
+陵|S|りょう|ryō|tumba imperial, colina|丘陵です。|Kyūryō desu.|Es una zona de colinas.
+僚|S|りょう|ryō|compañero de trabajo|同僚と話します。|Dōryō to hanashimasu.|Hablo con un colega.
+寮|S|りょう|ryō|residencia|寮に住んでいます。|Ryō ni sunde imasu.|Vivo en una residencia.
+療|S|りょう|ryō|curar|治療を受けます。|Chiryō o ukemasu.|Recibo tratamiento.
+瞭|S|りょう|ryō|claro|明瞭です。|Meiryō desu.|Es claro.
+糧|S|りょう・かて|ryō, kate|alimento|食糧を運びます。|Shokuryō o hakobimasu.|Transporto alimentos.
+厘|S|りん|rin|centésima parte|一割二分三厘です。|Ichiwari nibu sanrin desu.|Es 0,123.
+倫|S|りん|rin|ética|倫理を守ります。|Rinri o mamorimasu.|Respeto la ética.
+隣|S|りん・とな(り)|rin, tona(ri)|vecino|隣の家です。|Tonari no ie desu.|Es la casa de al lado.
+瑠|S|る|ru|lapislázuli|瑠璃色の空です。|Ruriiro no sora desu.|Es un cielo lapislázuli.
+涙|S|るい・なみだ|rui, namida|lágrima|涙が出ます。|Namida ga demasu.|Me salen lágrimas.
+累|S|るい|rui|acumular|累計を出します。|Ruikei o dashimasu.|Calculo el total acumulado.
+塁|S|るい|rui|base (béisbol)|一塁に走ります。|Ichirui ni hashirimasu.|Corro a primera base.
+励|S|れい・はげ(む)|rei, hage(mu)|animar|勉強に励みます。|Benkyō ni hagemimasu.|Me aplico en el estudio.
+戻|S|れい・もど(る)|rei, modo(ru)|volver|家に戻ります。|Ie ni modorimasu.|Vuelvo a casa.
+鈴|S|れい・すず|rei, suzu|cascabel|鈴が鳴ります。|Suzu ga narimasu.|Suena el cascabel.
+零|S|れい|rei|cero|零度です。|Reido desu.|Es cero grados.
+霊|S|れい|rei|espíritu|霊魂です。|Reikon desu.|Es un alma.
+隷|S|れい|rei|siervo|奴隷です。|Dorei desu.|Es un esclavo.
+齢|S|れい・よわい|rei, yowai|edad|年齢を聞きます。|Nenrei o kikimasu.|Pregunto la edad.
+麗|S|れい・うるわ(しい)|rei, uruwa(shii)|hermoso|美麗です。|Birei desu.|Es bello.
+暦|S|れき・こよみ|reki, koyomi|calendario|暦を見ます。|Koyomi o mimasu.|Miro el calendario.
+劣|S|れつ・おと(る)|retsu, oto(ru)|inferior|品質が劣ります。|Hinshitsu ga otorimasu.|La calidad es inferior.
+烈|S|れつ|retsu|intenso|猛烈な風です。|Mōretsu na kaze desu.|Es un viento violento.
+裂|S|れつ・さ(く)|retsu, sa(ku)|desgarrar|布が裂けます。|Nuno ga sakemasu.|Se rasga la tela.
+廉|S|れん|ren|barato, íntegro|廉価です。|Renka desu.|Es de bajo precio.
+錬|S|れん・ね(る)|ren, ne(ru)|forjar|心を鍛錬します。|Kokoro o tanren shimasu.|Entreno el espíritu.
+呂|S|ろ|ro|espina dorsal, tono|風呂に入ります。|Furo ni hairimasu.|Me doy un baño.
+炉|S|ろ|ro|horno, hogar|炉に火を入れます。|Ro ni hi o iremasu.|Enciendo el hogar.
+賂|S|ろ|ro|soborno|賄賂は禁止です。|Wairo wa kinshi desu.|El soborno está prohibido.
+露|S|ろ・つゆ|ro, tsuyu|rocío|露が降ります。|Tsuyu ga orimasu.|Cae el rocío.
+弄|S|ろう・もてあそ(ぶ)|rō, moteaso(bu)|jugar con|運命に翻弄されます。|Unmei ni honrō saremasu.|Soy juguete del destino.
+郎|S|ろう|rō|hombre joven|新郎です。|Shinrō desu.|Es el novio.
+浪|S|ろう|rō|ola, vagar|浪人です。|Rōnin desu.|Es un estudiante que repite examen.
+廊|S|ろう|rō|pasillo|廊下を歩きます。|Rōka o arukimasu.|Camino por el pasillo.
+楼|S|ろう|rō|torre|楼閣です。|Rōkaku desu.|Es un pabellón.
+漏|S|ろう・も(れる)|rō, mo(reru)|filtrarse|水が漏れます。|Mizu ga moremasu.|Se escapa el agua.
+籠|S|ろう・かご|rō, kago|cesta|籠に入れます。|Kago ni iremasu.|Lo pongo en la cesta.
+麓|S|ろく・ふもと|roku, fumoto|pie de montaña|山の麓です。|Yama no fumoto desu.|Es el pie de la montaña.
+賄|S|わい・まかな(う)|wai, makana(u)|proveer|食事を賄います。|Shokuji o makanaimasu.|Preparo las comidas.
+脇|S|きょう・わき|kyō, waki|costado|脇に抱えます。|Waki ni kakaemasu.|Lo llevo bajo el brazo.
+惑|S|わく・まど(う)|waku, mado(u)|desconcertar|迷惑をかけます。|Meiwaku o kakemasu.|Causo molestias.
+枠|S|わく|waku|marco|枠をはめます。|Waku o hamemasu.|Coloco el marco.
+湾|S|わん|wan|bahía|東京湾です。|Tōkyō-wan desu.|Es la bahía de Tokio.
+腕|S|わん・うで|wan, ude|brazo|腕が痛いです。|Ude ga itai desu.|Me duele el brazo.
+尻|S|こう・しり|kō, shiri|trasero|椅子に尻をつけます。|Isu ni shiri o tsukemasu.|Me siento en la silla.
+藤|S|とう・ふじ|tō, fuji|glicina|藤の花が咲きます。|Fuji no hana ga sakimasu.|Florecen las glicinas.
+違|S|い・ちが(う)|i, chiga(u)|diferente, equivocado|答えが違います。|Kotae ga chigaimasu.|La respuesta es incorrecta.
+捕|S|ほ・と(らえる)|ho, tora(eru)|capturar|犯人を捕まえます。|Hannin o tsukamaemasu.|Atrapo al culpable.
+維|S|い|i|mantener, fibra|秩序を維持します。|Chitsujo o iji shimasu.|Mantengo el orden.
+陣|S|じん|jin|campamento, formación|陣を張ります。|Jin o harimasu.|Establezco un campamento.
+稲|S|とう・いね|tō, ine|arroz (planta)|稲を刈ります。|Ine o karimasu.|Siego el arroz.
+誰|S|すい・だれ|sui, dare|quién|あの人は誰ですか。|Ano hito wa dare desu ka.|¿Quién es esa persona?
+斉|S|せい|sei|uniforme, igual|一斉に走ります。|Issei ni hashirimasu.|Todos corren a la vez.
+刃|S|じん・は|jin, ha|filo|刃が鋭いです。|Ha ga surudoi desu.|El filo es agudo.
+叱|S|しつ・しか(る)|shitsu, shika(ru)|regañar|先生に叱られました。|Sensei ni shikararemashita.|Me regañó el profesor.
+賭|S|と・か(ける)|to, ka(keru)|apostar|運に賭けます。|Un ni kakemasu.|Apuesto a la suerte.
+瞳|S|どう・ひとみ|dō, hitomi|pupila|瞳が大きいです。|Hitomi ga ōkii desu.|Tiene pupilas grandes.
+如|S|じょ・にょ|jo, nyo|como|如何ですか。|Ikaga desu ka.|¿Cómo está?
+迅|S|じん|jin|rápido|迅速に対応します。|Jinsoku ni taiō shimasu.|Respondo con rapidez.
+尽|S|じん・つ(きる)|jin, tsu(kiru)|agotarse|力が尽きました。|Chikara ga tsukimashita.|Se me acabaron las fuerzas.
+塗|S|と・ぬ(る)|to, nu(ru)|pintar|壁を塗ります。|Kabe o nurimasu.|Pinto la pared.
+抽|S|ちゅう|chū|extraer|抽選をします。|Chūsen o shimasu.|Hago un sorteo.
+惨|S|さん・ざん・みじ(め)|san, zan, miji(me)|miserable, cruel|惨めな気持ちです。|Mijime na kimochi desu.|Me siento miserable.
+旦|S|たん・だん|tan, dan|amanecer|元旦に初詣に行きます。|Gantan ni hatsumōde ni ikimasu.|El día de Año Nuevo visito el santuario.
+甚|S|じん・はなは(だ)|jin, hanaha(da)|muy|甚だ残念です。|Hanahada zannen desu.|Es muy lamentable.
+桟|S|さん|san|muelle, travesaño|桟橋に立ちます。|Sanbashi ni tachimasu.|Me paro en el muelle.
+綻|S|たん・ほころ(びる)|tan, hokoro(biru)|descoserse, abrirse|花が綻びます。|Hana ga hokorobimasu.|Se abren las flores.
+淫|S|いん・みだ(ら)|in, mida(ra)|lascivo, excesivo|淫らな行為は禁止です。|Midara na kōi wa kinshi desu.|Están prohibidos los actos obscenos.
+冥|S|めい・みょう|mei, myō|oscuro, inframundo|冥福を祈ります。|Meifuku o inorimasu.|Rezo por su descanso eterno.
+妖|S|よう・あや(しい)|yō, aya(shii)|encantador, misterioso|妖精が出てきます。|Yōsei ga detekimasu.|Aparece un hada.`;
+const D=RAW.split("\n").map(l=>{const a=l.split("|");return{k:a[0],l:a[1],r:a[2],ro:a[3],m:a[4],j:a[5],jr:a[6],e:a[7]}});
+const LV=[["all","Todos"],["1","Primaria 1º"],["2","Primaria 2º"],["3","Primaria 3º"],["4","Primaria 4º"],["5","Primaria 5º"],["6","Primaria 6º"],["S","Secundaria"]];
+let cur="all";
+const $=id=>document.getElementById(id);
+const grp=()=>cur=="all"?D:D.filter(d=>d.l==cur);
+const lvName=l=>l=="S"?"Secundaria":"Primaria "+l+"º";
+function render(){
+ $("nav").innerHTML=LV.map(([v,t])=>`<button class="f ${v==cur?"on":""}" data-v="${v}">${t}</button>`).join("");
+ document.querySelectorAll(".f").forEach(b=>b.onclick=()=>{cur=b.dataset.v;render()});
+ const g=grp();
+ $("qb").textContent="Quiz rápido · "+LV.find(x=>x[0]==cur)[1];
+ $("cnt").textContent=g.length+" kanji";
+ $("grid").innerHTML=g.map(d=>`<div class="c"><div class="in"><div class="s fr"><div><b>${d.k}</b><small>${d.m}</small></div></div>
+ <div class="s bk"><span class="k">${d.k}</span><p><b>${d.m}</b></p><p><span class="jp-reading">${d.r}</span><br><i>${d.ro}</i></p><hr style="border:0;border-top:1px solid var(--line)">
+ <p><span class="jp-example">${d.j}</span><br><i>${d.jr}</i><br>${d.e}</p></div></div></div>`).join("");
+ document.querySelectorAll(".c").forEach(c=>c.onclick=()=>c.classList.toggle("fl"));
+}
+const shuf=a=>a.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).map(x=>x[1]);
+const rd=r=>r.split('・').map((p,n)=>n?p:p.replace(/[ぁ-ゖ]/g,c=>String.fromCharCode(c.charCodeAt(0)+96))).join('・');
+let Q=[],i=0,sc=0;
+$("qb").onclick=()=>{Q=shuf(grp()).slice(0,10);i=0;sc=0;$("home").hidden=true;$("quiz").hidden=false;ask()};
+function ask(){
+ const q=Q[i];
+ const ms=[...new Set(D.map(d=>d.m))].filter(m=>m!=q.m);
+ const opts=shuf([q.m,...shuf(ms).slice(0,3)]);
+ $("quiz").innerHTML=`<div class="cnt">Pregunta ${i+1} de ${Q.length}</div><div class="big">${q.k}</div><div class="cnt" style="font-size:1.2rem">${rd(q.r)}</div><p>¿Qué significa?</p>`+
+ opts.map(o=>`<button class="o">${o}</button>`).join("")+`<div class="msg" id="msg"></div><button class="q" id="nx" hidden>Siguiente</button>`;
+ document.querySelectorAll(".o").forEach(b=>b.onclick=()=>{
+  const ok=b.textContent==q.m;if(ok)sc++;
+  document.querySelectorAll(".o").forEach(x=>{x.disabled=true;if(x.textContent==q.m)x.classList.add("ok")});
+  if(!ok)b.classList.add("bad");
+  $("msg").textContent=ok?"✔ ¡Correcto!":"✘ Incorrecto. Respuesta correcta: "+q.m;
+  $("msg").style.color=ok?"var(--ok)":"var(--bad)";
+  $("nx").hidden=false;$("nx").textContent=i+1<Q.length?"Siguiente":"Ver puntaje";
+  $("nx").onclick=()=>{i++;i<Q.length?ask():end()};
+ });
+}
+function end(){
+ $("quiz").innerHTML=`<div class="sun">${sc}</div><h2>Puntaje: ${sc} / ${Q.length}</h2><button class="q" id="bk">Volver a las tarjetas</button>`;
+ $("bk").onclick=()=>{$("quiz").hidden=true;$("home").hidden=false;render()};
+}
+render();
+</script></body></html>
